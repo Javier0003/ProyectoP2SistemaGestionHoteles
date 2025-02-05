@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\SGH.Api\\SGH.Api.csproj": {}
+    "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\SGH.API\\SGH.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\SGH.Api\\SGH.Api.csproj": {
+    "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\SGH.API\\SGH.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\SGH.Api\\SGH.Api.csproj",
-        "projectName": "SGH.Api",
-        "projectPath": "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\SGH.Api\\SGH.Api.csproj",
+        "projectUniqueName": "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\SGH.API\\SGH.API.csproj",
+        "projectName": "SGH.API",
+        "projectPath": "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\SGH.API\\SGH.API.csproj",
         "packagesPath": "C:\\Users\\javie\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\SGH.Api\\obj\\",
+        "outputPath": "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\SGH.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -48,6 +48,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.6.2, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

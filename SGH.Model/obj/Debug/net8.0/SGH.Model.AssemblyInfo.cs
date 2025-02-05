@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SGH.Model")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ae6c5d1b417a5402a667007fa21379db9f822296")]
 [assembly: System.Reflection.AssemblyProductAttribute("SGH.Model")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SGH.Model")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
