@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\Web\\SGH.Web\\SGHT.Web.csproj",
-      "projectName": "SGHT.Web",
-      "projectPath": "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\Web\\SGH.Web\\SGHT.Web.csproj",
+      "projectUniqueName": "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\SGHT.Infraestructure\\SGHT.Infraestructure.csproj",
+      "projectName": "SGHT.Infraestructure",
+      "projectPath": "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\SGHT.Infraestructure\\SGHT.Infraestructure.csproj",
       "packagesPath": "C:\\Users\\javie\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\Web\\SGH.Web\\obj\\",
+      "outputPath": "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\SGHT.Infraestructure\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -67,9 +67,6 @@
         "assetTargetFallback": true,
         "warn": true,
         "frameworkReferences": {
-          "Microsoft.AspNetCore.App": {
-            "privateAssets": "none"
-          },
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }

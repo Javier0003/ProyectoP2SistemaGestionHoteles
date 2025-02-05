@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "dgSpecHash": "0Vq713J3fwI=",
+  "success": false,
+  "projectFilePath": "C:\\Users\\javie\\source\\repos\\ProyectoP2SistemaGestionHoteles\\SGHT.API\\SGHT.API.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Swashbuckle.AspNetCore. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "libraryId": "Swashbuckle.AspNetCore",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
+}
