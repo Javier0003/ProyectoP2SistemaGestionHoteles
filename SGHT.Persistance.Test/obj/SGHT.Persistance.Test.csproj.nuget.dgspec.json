@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\RJ\\OneDrive\\Escritorio\\SGHT\\ProyectoP2SistemaGestionHoteles\\SGHT.Persistance.Test\\SGHT.Persistance.Test.csproj": {}
+    "C:\\Users\\Dell Power\\Source\\Repos\\ProyectoP2SistemaGestionHoteles\\SGHT.Persistance.Test\\SGHT.Persistance.Test.csproj": {}
   },
   "projects": {
-    "C:\\Users\\RJ\\OneDrive\\Escritorio\\SGHT\\ProyectoP2SistemaGestionHoteles\\SGHT.Persistance.Test\\SGHT.Persistance.Test.csproj": {
+    "C:\\Users\\Dell Power\\Source\\Repos\\ProyectoP2SistemaGestionHoteles\\SGHT.Persistance.Test\\SGHT.Persistance.Test.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\RJ\\OneDrive\\Escritorio\\SGHT\\ProyectoP2SistemaGestionHoteles\\SGHT.Persistance.Test\\SGHT.Persistance.Test.csproj",
+        "projectUniqueName": "C:\\Users\\Dell Power\\Source\\Repos\\ProyectoP2SistemaGestionHoteles\\SGHT.Persistance.Test\\SGHT.Persistance.Test.csproj",
         "projectName": "SGHT.Persistance.Test",
-        "projectPath": "C:\\Users\\RJ\\OneDrive\\Escritorio\\SGHT\\ProyectoP2SistemaGestionHoteles\\SGHT.Persistance.Test\\SGHT.Persistance.Test.csproj",
-        "packagesPath": "C:\\Users\\RJ\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\RJ\\OneDrive\\Escritorio\\SGHT\\ProyectoP2SistemaGestionHoteles\\SGHT.Persistance.Test\\obj\\",
+        "projectPath": "C:\\Users\\Dell Power\\Source\\Repos\\ProyectoP2SistemaGestionHoteles\\SGHT.Persistance.Test\\SGHT.Persistance.Test.csproj",
+        "packagesPath": "C:\\Users\\Dell Power\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Dell Power\\Source\\Repos\\ProyectoP2SistemaGestionHoteles\\SGHT.Persistance.Test\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\RJ\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Dell Power\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,7 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -44,7 +43,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -65,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.405/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
