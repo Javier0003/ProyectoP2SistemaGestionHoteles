@@ -6,6 +6,6 @@ namespace SGHT.Domain.Entities
 {
     public class RolUsuarios : Auditoria
     {
-        public int IdRolUsuarios { get; set; }
+        public int IdRolUsuario { get; set; }
     }
 }
