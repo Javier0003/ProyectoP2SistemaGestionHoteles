@@ -7,7 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
+    <Folder Include="Entities\" />
+=======
     <Folder Include="Base\" />
+>>>>>>> b2234b2a6bf435ad42b19956e8cca4e2f06f9bd5
     <Folder Include="Repository\" />
   </ItemGroup>
 

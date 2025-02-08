@@ -1,4 +1,6 @@
-﻿namespace SGHT.Domain.Base
+﻿using System;
+
+namespace SGHT.Domain.Base
 {
     public abstract class Auditoria
     {

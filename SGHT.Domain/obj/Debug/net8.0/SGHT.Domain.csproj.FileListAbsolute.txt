@@ -1,0 +1,12 @@
+C:\Users\RJ\OneDrive\Escritorio\SGHT\ProyectoP2SistemaGestionHoteles\SGHT.Domain\bin\Debug\net8.0\SGHT.Domain.deps.json
+C:\Users\RJ\OneDrive\Escritorio\SGHT\ProyectoP2SistemaGestionHoteles\SGHT.Domain\bin\Debug\net8.0\SGHT.Domain.dll
+C:\Users\RJ\OneDrive\Escritorio\SGHT\ProyectoP2SistemaGestionHoteles\SGHT.Domain\bin\Debug\net8.0\SGHT.Domain.pdb
+C:\Users\RJ\OneDrive\Escritorio\SGHT\ProyectoP2SistemaGestionHoteles\SGHT.Domain\obj\Debug\net8.0\SGHT.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\RJ\OneDrive\Escritorio\SGHT\ProyectoP2SistemaGestionHoteles\SGHT.Domain\obj\Debug\net8.0\SGHT.Domain.AssemblyInfoInputs.cache
+C:\Users\RJ\OneDrive\Escritorio\SGHT\ProyectoP2SistemaGestionHoteles\SGHT.Domain\obj\Debug\net8.0\SGHT.Domain.AssemblyInfo.cs
+C:\Users\RJ\OneDrive\Escritorio\SGHT\ProyectoP2SistemaGestionHoteles\SGHT.Domain\obj\Debug\net8.0\SGHT.Domain.csproj.CoreCompileInputs.cache
+C:\Users\RJ\OneDrive\Escritorio\SGHT\ProyectoP2SistemaGestionHoteles\SGHT.Domain\obj\Debug\net8.0\SGHT.Domain.sourcelink.json
+C:\Users\RJ\OneDrive\Escritorio\SGHT\ProyectoP2SistemaGestionHoteles\SGHT.Domain\obj\Debug\net8.0\SGHT.Domain.dll
+C:\Users\RJ\OneDrive\Escritorio\SGHT\ProyectoP2SistemaGestionHoteles\SGHT.Domain\obj\Debug\net8.0\refint\SGHT.Domain.dll
+C:\Users\RJ\OneDrive\Escritorio\SGHT\ProyectoP2SistemaGestionHoteles\SGHT.Domain\obj\Debug\net8.0\SGHT.Domain.pdb
+C:\Users\RJ\OneDrive\Escritorio\SGHT\ProyectoP2SistemaGestionHoteles\SGHT.Domain\obj\Debug\net8.0\ref\SGHT.Domain.dll
