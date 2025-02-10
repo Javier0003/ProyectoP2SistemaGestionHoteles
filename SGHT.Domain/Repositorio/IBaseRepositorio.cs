@@ -9,16 +9,11 @@ namespace SGHT.Domain.Repositorio
 	public interface IBaseRepositorio <TEntity> where TEntity : class
 	{
 		Task<TEntity> GetEntityByIdAsync(int id);
-
-		Task UpdateEntityAsync(TEntity entity);
-
+		Task<OperationResult> UpdateEntityAsync(TEntity entity);
 		Task DeleteEntityAsync(TEntity entity);
-		Task SaveEntityAsync(TEntity entity);
-
+		Task<OperationResult> SaveEntityAsync(TEntity entity);
 		Task<List<TEntity>> GetAllAsync();
-
 		Task<OperationResult> GetAllAsync(Expression<Func<TEntity, bool>> filter);
-
 		Task<bool> ExistAsync(Expression<Func<TEntity, bool>> filter);
 	}
 }
