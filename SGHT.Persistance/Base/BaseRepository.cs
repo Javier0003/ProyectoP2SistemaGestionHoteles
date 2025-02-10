@@ -10,7 +10,6 @@ namespace SGHT.Persistance.Base
     {
         private readonly SGHTContext _context;
         private DbSet<TEntity> Entity { get; set; }
-
         public BaseRepository(SGHTContext  context)
         {
             _context = context;

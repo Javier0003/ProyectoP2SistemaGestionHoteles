@@ -1,11 +1,13 @@
 ﻿
+using System.ComponentModel.DataAnnotations.Schema;
 using SGHT.Domain.Base;
 
 namespace SGHT.Domain.Entities
 {
-    public class Reservacion : Auditoria
+    [Table("Recepcion", Schema = "dbo")]
+    public class Recepcion : Auditoria
     {
-        public int IdReservacion { get; set; }
+        public int IdRecepcion { get; set; }
         public DateTime? FechaEntrada { get; set; }
         public DateTime? FechaSalida { get; set; }
         public DateTime? FechaSalidaConfirmacion { get; set; }
