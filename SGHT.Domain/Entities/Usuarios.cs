@@ -1,8 +1,10 @@
 ﻿
 using SGHT.Domain.Base;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SGHT.Domain.Entities
 {
+    [Table("Usuario", Schema="dbo")]
     public class Usuarios : Auditoria
     {
         public int IdUsuarios { get; set; }
