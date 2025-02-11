@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SGHT.Domain.Base;
-using SGHT.Domain.Repositorio;
+using SGHT.Domain.Repository;
 using SGHT.Persistance.Context;
 using System.Linq.Expressions;
 
 namespace SGHT.Persistance.Base
 {
-    public abstract class BaseRepository<TEntity> : IBaseRepositorio<TEntity> where TEntity : class
+    public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
         private readonly SGHTContext _context;
         private DbSet<TEntity> Entity { get; set; }
@@ -45,7 +45,7 @@ namespace SGHT.Persistance.Base
             {
 
                 result.Success = false;
-                //result.Message = "Ocurrio un error obteniendo los datos.";
+                result.Message = "Ocurrio un error obteniendo los datos.";
             }
 
             return result;
@@ -68,7 +68,7 @@ namespace SGHT.Persistance.Base
             catch (Exception ex)
             {
                 result.Success = false;
-                //result.Message = "Ocurrio un error guardando los datos.";
+                result.Message = "Ocurrio un error guardando los datos.";
             }
             return result;
         }
@@ -85,7 +85,7 @@ namespace SGHT.Persistance.Base
             {
 
                 result.Success = false;
-                //result.Message = "Ocurrio un error guardando los datos.";
+                result.Message = "Ocurrio un error guardando los datos.";
             }
             return result;
         }
