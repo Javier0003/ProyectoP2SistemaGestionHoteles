@@ -9,6 +9,8 @@ namespace SGHT.Domain.Base
         protected Auditoria() {
             this.Estatus = true;
         }
+        
+        public bool? Estatus { get; set; }
         public DateTime? FechaCreacion {get; set;}
         public string? Descripcion { get; set;}
     }
