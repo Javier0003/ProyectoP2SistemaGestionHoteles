@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Base;
@@ -8,10 +9,8 @@ namespace SGHT.Persistance.Repositories
 {
     public class ClienteRepository : BaseRepository<Cliente>, IClienteRepository
     {
-        public ClienteRepository(SGHTContext context) : base(context)
-        {
-
-        }
+        public ClienteRepository(SGHTContext context) : base(context) 
+        {}
 
         public override Task<OperationResult> SaveEntityAsync(Cliente cliente){
             return base.SaveEntityAsync(cliente);
@@ -20,5 +19,11 @@ namespace SGHT.Persistance.Repositories
         public override Task<OperationResult> UpdateEntityAsync(Cliente cliente){
             return base.UpdateEntityAsync(cliente);
         }
+
+        
+        public ClienteRepository(SGHTContext context) : base(context)
+        {
+        }
+        
     }
 }
