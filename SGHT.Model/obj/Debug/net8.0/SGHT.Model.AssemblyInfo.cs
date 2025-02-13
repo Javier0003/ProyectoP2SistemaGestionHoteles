@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SGHT.Model")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+84e5c2ba199e54cb1666d68779a6fcfeb8c3bce2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+66b2523a769c3e09a094ddf9e2245e6b9c59d177")]
 [assembly: System.Reflection.AssemblyProductAttribute("SGHT.Model")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SGHT.Model")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

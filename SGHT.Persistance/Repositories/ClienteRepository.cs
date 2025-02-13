@@ -10,7 +10,7 @@ namespace SGHT.Persistance.Repositories
     {
         public ClienteRepository(SGHTContext context) : base(context)
         {
-
+            
         }
 
         public override Task<OperationResult> SaveEntityAsync(Cliente cliente){
