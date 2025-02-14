@@ -6,8 +6,6 @@ namespace SGHT.Persistance.Interfaces.Configuration
 {
     public interface IClienteRepository : IBaseRepository<Cliente>
     {
-        Task<OperationResult> GetById(int idCliente);
-    }
 
-    
+    }
 }
