@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +8,8 @@ using SGHT.Domain.Repositorio;
 
 namespace SGHT.Persistance.Interfaces
 {
-    public interface IClienteBaseRepository : IBaseRepository<Cliente>
+    public interface IPisoRepository : IBaseRepositorio<Piso>
     {
+
     }
 }

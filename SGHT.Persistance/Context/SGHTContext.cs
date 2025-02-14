@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Net.Security;
+using Microsoft.EntityFrameworkCore;
 using SGHT.Domain.Entities;
 
 namespace SGHT.Persistance.Context
@@ -10,12 +11,12 @@ namespace SGHT.Persistance.Context
 
         }
 
-        public DbSet<Categoria> catetgorias { get; set; }
+        public DbSet<Categoria> categorias { get; set; }
         public DbSet<Cliente> clientes { get; set; }
         public DbSet<EstadoHabitacion> estadoHabitaciones { get; set; }
         public DbSet<Habitacion> habitaciones { get; set; }
         public DbSet<Piso> piso { get; set; }
-        public DbSet<Recepcion> recepciones { get;set; }
+        public DbSet<Recepcion> recepcion { get;set; }
         public DbSet<RolUsuario> rolUsuarios { get; set; }
         public DbSet<Servicios> servicios { get; set; }
         public DbSet<Tarifas> tarifas { get; set; }
