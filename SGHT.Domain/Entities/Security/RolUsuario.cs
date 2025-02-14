@@ -1,6 +1,4 @@
-﻿
-
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using SGHT.Domain.Base;
 
 namespace SGHT.Domain.Entities
