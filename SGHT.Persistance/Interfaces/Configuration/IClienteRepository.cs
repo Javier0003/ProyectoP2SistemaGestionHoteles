@@ -8,6 +8,4 @@ namespace SGHT.Persistance.Interfaces.Configuration
     {
         // Task<OperationResult> GetClienteById(int idCliente);
     }
-
-    
 }
