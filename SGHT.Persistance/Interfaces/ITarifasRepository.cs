@@ -3,7 +3,7 @@ using SGHT.Domain.Repository;
 
 namespace SGHT.Persistance.Interfaces
 {
-    public interface IServiciosRepository : IBaseRepository<Servicios>
+     public interface ITarifasRepository : IBaseRepository<Tarifas>
     {
     }
 }
