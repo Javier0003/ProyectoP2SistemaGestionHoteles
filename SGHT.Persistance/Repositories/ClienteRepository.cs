@@ -19,11 +19,5 @@ namespace SGHT.Persistance.Repositories
         public override Task<OperationResult> UpdateEntityAsync(Cliente cliente){
             return base.UpdateEntityAsync(cliente);
         }
-
-        
-        public ClienteRepository(SGHTContext context) : base(context)
-        {
-        }
-        
     }
 }
