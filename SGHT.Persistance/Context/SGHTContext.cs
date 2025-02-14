@@ -11,14 +11,14 @@ namespace SGHT.Persistance.Context
 
         }
         public DbSet<Catetgoria> Catetgorias { get; set; }
-        public DbSet<Cliente> clientes { get; set; }
-        public DbSet<EstadoHabitacion> estadoHabitaciones { get; set; }
-        public DbSet<Habitacion> habitaciones { get; set; }
-        public DbSet<Piso> piso { get; set; }
-        public DbSet<Recepcion> recepcion { get;set; }
-        public DbSet<RolUsuario> rolUsuarios { get; set; }
-        public DbSet<Servicios> servicios { get; set; }
-        public DbSet<Tarifas> tarifas { get; set; }
-        public DbSet<Usuarios> usuarios { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
+        public DbSet<EstadoHabitacion> EstadoHabitaciones { get; set; }
+        public DbSet<Habitacion> Habitaciones { get; set; }
+        public DbSet<Piso> Piso { get; set; }
+        public DbSet<Recepcion> Recepcion { get;set; }
+        public DbSet<RolUsuario> RolUsuarios { get; set; }
+        public DbSet<Servicios> Servicios { get; set; }
+        public DbSet<Tarifas> Tarifas { get; set; }
+        public DbSet<Usuarios> Usuarios { get; set; }
     }
 }
