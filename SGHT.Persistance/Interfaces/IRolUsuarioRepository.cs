@@ -3,7 +3,7 @@ using SGHT.Domain.Repository;
 
 namespace SGHT.Persistance.Interfaces
 {
-    internal interface IRolUsuarioRepository : IBaseRepository<RolUsuario>
+    public interface IRolUsuarioRepository : IBaseRepository<RolUsuario>
     {
     }
 }
