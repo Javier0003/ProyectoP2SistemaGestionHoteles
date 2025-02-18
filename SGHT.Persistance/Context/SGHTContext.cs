@@ -10,7 +10,7 @@ namespace SGHT.Persistance.Context
         {
 
         }
-
+        
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<EstadoHabitacion> EstadoHabitaciones { get; set; }

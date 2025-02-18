@@ -7,6 +7,7 @@ namespace SGHT.Domain.Entities
     [Table("Cliente", Schema = "dbo")]
     public class Cliente : Auditoria
     {
+        [Column("IdCliente")]
         [Key]
         public int IdCliente { get; set; }
         public string? TipoDocumento { get; set; }

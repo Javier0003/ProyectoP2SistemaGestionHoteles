@@ -7,6 +7,7 @@ namespace SGHT.Domain.Entities
     [Table("Usuario", Schema="dbo")]
     public class Usuarios : Auditoria
     {
+        [Column("IdUsuario")]
         [Key]
         public int IdUsuario { get; set; }
         public string? NombreCompleto { get; set; }

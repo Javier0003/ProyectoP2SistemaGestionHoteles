@@ -7,7 +7,9 @@ namespace SGHT.Domain.Entities
     [Table("EstadoHabitacion", Schema = "dbo")]
     public class EstadoHabitacion : Auditoria
     {
-       [Key]
+        [Column("IdEstadoHabitacion")]
+        [Key]
        public int IdEstadoHabitacion { get; set; }
+       public string? Descripcion { get; set; }
     }
 }

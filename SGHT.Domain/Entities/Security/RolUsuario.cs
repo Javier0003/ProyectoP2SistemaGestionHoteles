@@ -7,7 +7,10 @@ namespace SGHT.Domain.Entities
     [Table("RolUsuario", Schema = "dbo")]
     public class RolUsuario : Auditoria
     {
+        [Column("IdRolUsuario")]
         [Key]
-        public int IdRolUsuarios { get; set; }
+        public int IdRolUsuario { get; set; }
+        public string? Descripcion { get; set; }
+
     }
 }
