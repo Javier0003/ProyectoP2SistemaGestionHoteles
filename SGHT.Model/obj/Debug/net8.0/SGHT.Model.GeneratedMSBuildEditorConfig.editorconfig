@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = SGHT.Model
-build_property.ProjectDir = C:\Users\RJ\OneDrive\Escritorio\SGHT\ProyectoP2SistemaGestionHoteles\SGHT.Model\
+build_property.ProjectDir = c:\Users\RJ\OneDrive\Escritorio\SGHT\ProyectoP2SistemaGestionHoteles\SGHT.Model\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
