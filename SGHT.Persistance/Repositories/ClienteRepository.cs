@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ﻿using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Base;
