@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SGHT.Persistance.Context;
+using SGHT.Persistance.Interfaces;
+using SGHT.Persistance.Repositories;
 
 namespace SGH.API
 {
@@ -10,6 +12,8 @@ namespace SGH.API
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddDbContext<SGHTContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SHGTDB")));
+
+            builder.Services.AddScoped<IUsuariosRepository, UsuariosRepository>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
