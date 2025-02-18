@@ -7,7 +7,7 @@ using SGHT.Persistance.Interfaces;
 
 namespace SGHT.Persistance.Repositories
 {
-    internal class HabitacionRepository : BaseRepository<Habitacion>, IHabitacionRepository
+    public class HabitacionRepository : BaseRepository<Habitacion>, IHabitacionRepository
     {
         private readonly SGHTContext _context;
         private readonly ILogger<HabitacionRepository> _logger;
