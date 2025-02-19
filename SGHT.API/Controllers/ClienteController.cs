@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SGHT.Domain.Entities;
 using SGHT.Persistance.Interfaces;
 
 namespace SGHT.API.Controllers
@@ -14,11 +15,32 @@ namespace SGHT.API.Controllers
             _clienteRepository = clienteRepository;
         }
 
-        [HttpGet("GetUsuarios")]
+        [HttpGet("GetCliente")]
         public async Task<IActionResult> Get()
         {
-            var Usuarios = await _clienteRepository.GetAllAsync();
-            return Ok(Usuarios);
+            var Clientes = await _clienteRepository.GetAllAsync();
+            return Ok(Clientes);
+        }
+
+        [HttpGet("GetClienteById")]
+        public async Task<IActionResult> Get(int Id)
+        {
+            var Clientes = await _clienteRepository.GetEntityByIdAsync(Id);
+            return Ok(Clientes);
+        }
+
+        [HttpPost("UpdateCliente")]
+        public async Task<IActionResult> Put([FromBody] Cliente cliente)
+        {
+            if (cliente == null)
+                return BadRequest("Cliente no puede ser nulo");
+
+            var result = await _clienteRepository.UpdateEntityAsync(cliente);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            return Ok(result);
         }
     }
 }

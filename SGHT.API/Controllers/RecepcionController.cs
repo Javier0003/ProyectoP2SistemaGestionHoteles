@@ -20,5 +20,12 @@ namespace SGHT.API.Controllers
             var Usuarios = await _recepcionRepository.GetAllAsync();
             return Ok(Usuarios);
         }
+
+        [HttpGet("GetUsuariosByID")]
+        public async Task<IActionResult> GetUsuariosByID(int id)
+        {
+            var Usuarios = await _recepcionRepository.GetEntityByIdAsync(id);
+            return Ok(Usuarios);
+        }
     }
 }

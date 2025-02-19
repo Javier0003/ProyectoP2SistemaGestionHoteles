@@ -2,6 +2,7 @@
 using SGHT.Domain.Base;
 using SGHT.Domain.Repository;
 using SGHT.Persistance.Context;
+using System.Data;
 using System.Linq.Expressions;
 
 namespace SGHT.Persistance.Base
@@ -78,8 +79,36 @@ namespace SGHT.Persistance.Base
             OperationResult result = new OperationResult();
             try
             {
+                if (entity == null)
+                {
+                    result.Success = false;
+                    result.Message = "La entidad es nula";
+                    return result;
+                }
+
+                var entry = _context.Entry(entity);
+                if (entry.State == EntityState.Detached)
+                {
+                    Entity.Attach(entity);
+                }
+
                 Entity.Update(entity);
-                await _context.SaveChangesAsync();
+
+                var saveResult = await _context.SaveChangesAsync();
+
+                result.Success = saveResult > 0;
+                result.Message = result.Success ? "Actualizacion exitosa" : "No se realizaron cambios";
+
+            }
+            catch (DBConcurrencyException dbex)
+            {
+                result.Success = false;
+                result.Message = "Error de concurrencia de los datos";
+            }
+            catch (DbUpdateException dbuEx)
+            {
+                result.Success = false;
+                result.Message = "Error al actualizar de los datos";
             }
             catch (Exception ex)
             {

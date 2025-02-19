@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Base;
 using SGHT.Persistance.Context;
 using SGHT.Persistance.Interfaces;
+
 
 namespace SGHT.Persistance.Repositories
 {
@@ -18,6 +20,16 @@ namespace SGHT.Persistance.Repositories
             _context = context;
             _logger = logger;
             _configuration = configuration;
+        }
+
+        public override Task<OperationResult> SaveEntityAsync(Cliente cliente)
+        {
+            return base.SaveEntityAsync(cliente);
+        }
+
+        public override Task<OperationResult> UpdateEntityAsync(Cliente cliente)
+        {
+            return base.UpdateEntityAsync(cliente);
         }
     }
 }
