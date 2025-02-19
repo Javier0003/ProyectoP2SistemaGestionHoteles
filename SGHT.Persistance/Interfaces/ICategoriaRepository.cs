@@ -7,6 +7,10 @@ namespace SGHT.Persistance.Interfaces
 {
     public interface ICategoriaRepository : IBaseRepository<Categoria>
     {
+<<<<<<< HEAD
         Task<OperationResult> GetHabitacionByCategory(int id);
+=======
+
+>>>>>>> main
     }
 }
