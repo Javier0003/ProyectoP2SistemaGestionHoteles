@@ -1,12 +1,12 @@
 ﻿using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
-using SGHT.Domain.Repositorio;
+using SGHT.Domain.Repository;
 
 namespace SGHT.Persistance.Interfaces.Configuration
 {
-    public interface IClienteRepository : IBaseRepositorio<Cliente>
+    public interface IClienteRepository : IBaseRepository<Cliente>
     {
         // Inicializacion de entidades
-        Task<Cliente> Get(int id);
+        // Task<Cliente> Get(int id);
     }
 }

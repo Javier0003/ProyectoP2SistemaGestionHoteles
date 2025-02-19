@@ -1,16 +1,13 @@
-﻿using System;
-
-namespace SGHT.Domain.Base
+﻿namespace SGHT.Domain.Base
 {
     public abstract class Auditoria
     {
-        protected Auditoria() {
-            this.Estatus = true;
-        }
-        public bool? Estatus {get; set;}
+        public bool? Estado { get; set; }
 
-        public DateTime? FechaCreacion {get; set;}
+        protected Auditoria() {
+            this.Estado = true;
+        }
         
-        public string? Descripcion { get; set;}
+        public DateTime? FechaCreacion {get; set;}
     }
 }
