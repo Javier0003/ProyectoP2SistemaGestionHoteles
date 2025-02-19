@@ -8,6 +8,7 @@ namespace SGHT.Domain.Entities
     public class Categoria : Auditoria
     {
         public int IdCategoria { get; set; }
+        public int HabitacionId { get; set; }
         
     }
 }
