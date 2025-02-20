@@ -38,7 +38,6 @@ namespace SGHT.API.Controllers
         public async Task<IActionResult> Post(Usuarios usuarios)
         {
             if(usuarios == null) return BadRequest("Input can't be null");
-
             var result = await _usuariosRepository.SaveEntityAsync(usuarios);
             if (!result.Success) return Problem();
 
