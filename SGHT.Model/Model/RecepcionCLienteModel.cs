@@ -5,8 +5,7 @@ namespace SGHT.Model.Model
     {
         public int IdRecepcion { get; set; }
         public int IDCliente { get; set; }
-        public string? NombreCliente { get; set;}
-        public decimal? TotalPagado { get; set;}
+        public int IDHabitacion { get; set; }
         public bool? Estado {  get; set; }
     }
 }
