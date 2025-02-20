@@ -21,15 +21,5 @@ namespace SGHT.Persistance.Repositories
             _logger = logger;
             _configuration = configuration;
         }
-
-        public override Task<OperationResult> SaveEntityAsync(Cliente cliente)
-        {
-            return base.SaveEntityAsync(cliente);
-        }
-
-        public override Task<OperationResult> UpdateEntityAsync(Cliente cliente)
-        {
-            return base.UpdateEntityAsync(cliente);
-        }
     }
 }

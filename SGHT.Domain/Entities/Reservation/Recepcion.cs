@@ -20,5 +20,7 @@ namespace SGHT.Domain.Entities
         public decimal? CostoPenalidad { get; set; }
         public string? Observacion { get; set; }
         public bool? Estado { get; set; }
+        public int IdCliente { get; set; }
+        public int IdHabitacion { get; set; }
     }
 }
