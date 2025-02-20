@@ -6,6 +6,6 @@ namespace SGHT.Persistance.Interfaces
 {
     public interface IRecepcionRepository : IBaseRepository<Recepcion>
     {
-        Task<OperationResult> GetRecepcionByClienteID(int recepcionID);
+        Task<OperationResult> GetRecepcionByClienteID(int IDCliente);
     }
 }

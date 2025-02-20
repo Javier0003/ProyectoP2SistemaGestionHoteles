@@ -30,13 +30,12 @@ namespace SGHT.Persistance.Repositories
             {
                 var querys = await (from recepcion in _context.Recepcion
                                     join cliente in _context.Clientes on recepcion.IdRecepcion equals cliente.IdCliente
-                                    where recepcion.IdRecepcion == idCliente
+                                    where recepcion.IdCliente == idCliente
                                     select new RecepcionCLienteModel()
                                     {
                                         IdRecepcion = recepcion.IdRecepcion,
                                         IDCliente = cliente.IdCliente,
-                                        NombreCliente = cliente.NombreCompleto,
-                                        TotalPagado = recepcion.TotalPagado,
+                                        IDHabitacion = recepcion.IdHabitacion,
                                         Estado = recepcion.Estado,
                                     }).ToListAsync();
                 result.Data = querys;

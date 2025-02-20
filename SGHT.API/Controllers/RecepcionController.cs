@@ -23,9 +23,9 @@ namespace SGHT.API.Controllers
         }
 
         [HttpGet("GetRecepcionByIDCliente")]
-        public async Task<IActionResult> GetUsuariosByID(int id)
+        public async Task<IActionResult> GetUsuariosByID(int IDcliente)
         {
-            var result = await _recepcionRepository.GetRecepcionByClienteID(id);
+            var result = await _recepcionRepository.GetRecepcionByClienteID(IDcliente);
             if(result == null) return NotFound();
 
             return Ok(result);
