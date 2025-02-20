@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SGHT.Persistance.Interfaces;
+using SGHT.Persistance.Interfaces.Configuration;
 using SGHT.Persistance.Repositories;
 
 namespace SGHT.API.Controllers

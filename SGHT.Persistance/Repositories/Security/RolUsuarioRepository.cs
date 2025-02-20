@@ -3,16 +3,16 @@ using Microsoft.Extensions.Logging;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Base;
 using SGHT.Persistance.Context;
-using SGHT.Persistance.Interfaces;
+using SGHT.Persistance.Interfaces.Security;
 
-namespace SGHT.Persistance.Repositories
+namespace SGHT.Persistance.Repositories.Security
 {
-    public class EstadoHabitacionRepository : BaseRepository<EstadoHabitacion>, IEstadoHabitacionRepository
+    public class RolUsuarioRepository : BaseRepository<RolUsuario>, IRolUsuarioRepository
     {
         private readonly SGHTContext _context;
-        private readonly ILogger<EstadoHabitacionRepository> _logger;
+        private readonly ILogger<RolUsuarioRepository> _logger;
         private readonly IConfiguration _configuration;
-        public EstadoHabitacionRepository(SGHTContext context, ILogger<EstadoHabitacionRepository> logger, IConfiguration configuration) : base(context)
+        public RolUsuarioRepository(SGHTContext context, ILogger<RolUsuarioRepository> logger, IConfiguration configuration) : base(context)
         {
             _context = context;
             _logger = logger;

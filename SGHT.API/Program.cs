@@ -1,7 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using SGHT.Persistance.Context;
-using SGHT.Persistance.Interfaces;
-using SGHT.Persistance.Repositories;
+using SGHT.Persistance.Interfaces.Configuration;
+using SGHT.Persistance.Interfaces.Reservation;
+using SGHT.Persistance.Interfaces.Security;
+using SGHT.Persistance.Repositories.Configuration;
+using SGHT.Persistance.Repositories.Reservation;
+using SGHT.Persistance.Repositories.Security;
 
 namespace SGH.API
 {

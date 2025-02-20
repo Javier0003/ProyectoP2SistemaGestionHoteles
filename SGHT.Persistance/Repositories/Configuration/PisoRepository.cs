@@ -3,17 +3,16 @@ using Microsoft.Extensions.Logging;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Base;
 using SGHT.Persistance.Context;
-using SGHT.Persistance.Interfaces;
+using SGHT.Persistance.Interfaces.Configuration;
 
-namespace SGHT.Persistance.Repositories
+namespace SGHT.Persistance.Repositories.Configuration
 {
-    public class CategoriaRepository : BaseRepository<Categoria>, ICategoriaRepository
+    public class PisoRepository : BaseRepository<Piso>, IPisoRepository
     {
         private readonly SGHTContext _context;
-        private readonly ILogger<CategoriaRepository> _logger;
+        private readonly ILogger<PisoRepository> _logger;
         private readonly IConfiguration _configuration;
-
-        public CategoriaRepository(SGHTContext context, ILogger<CategoriaRepository> logger, IConfiguration configuration) : base(context)
+        public PisoRepository(SGHTContext context, ILogger<PisoRepository> logger, IConfiguration configuration) : base(context)
         {
             _context = context;
             _logger = logger;
