@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SGHT.Domain.Base;
+using SGHT.Domain.Entities;
 using SGHT.Domain.Repository;
 using SGHT.Persistance.Context;
+using System.Data;
 using System.Linq.Expressions;
 
 namespace SGHT.Persistance.Base
@@ -16,9 +18,23 @@ namespace SGHT.Persistance.Base
             Entity = _context.Set<TEntity>();
         }
 
-        public virtual Task DeleteEntityAsync(TEntity entity)
+        public virtual async Task<OperationResult> DeleteEntityAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            OperationResult result = new OperationResult();
+            try
+            {
+               _context.Remove(entity);
+               await _context.SaveChangesAsync();
+               result.Success = true;
+               result.Message = "Entity deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.Message = $"An error occurred: {ex.Message}";
+            }
+
+            return result;
         }
 
         public virtual async Task<bool> ExistAsync(Expression<Func<TEntity, bool>> filter)
@@ -56,37 +72,115 @@ namespace SGHT.Persistance.Base
             return await Entity.FindAsync(id);
         }
 
+        //public virtual async Task<OperationResult> SaveEntityAsync(TEntity entity)
+        //{
+        //    OperationResult result = new OperationResult();
+
+        //    try
+        //    {
+        //        Entity.Add(entity);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result.Success = false;
+        //        result.Message = "Ocurrio un error guardando los datos.";
+        //    }
+        //    return result;
+        //}
+
+        //public virtual async Task<OperationResult> SaveEntityAsync(TEntity entity)
+        //{
+        //    var result = new OperationResult();
+        //    try
+        //    {
+        //        if (entity == null)
+        //        {
+        //            result.Success = false;
+        //            result.Message = "La entidad es nula";
+        //            return result;
+        //        }
+
+        //        await Entity.AddAsync(entity);
+        //        await _context.SaveChangesAsync();
+
+        //        result.Success = true;
+        //        result.Message = "Entidad guardada exitosamente";
+        //    }
+        //    catch (DbUpdateException ex)
+        //    {
+        //        result.Success = false;
+        //        result.Message = $"Error al guardar en la base de datos: {ex.Message}";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result.Success = false;
+        //        result.Message = $"Error inesperado: {ex.Message}";
+        //    }
+
+        //    return result;
+        //}
+
         public virtual async Task<OperationResult> SaveEntityAsync(TEntity entity)
         {
-            OperationResult result = new OperationResult();
-
+            var result = new OperationResult();
             try
             {
-                Entity.Add(entity);
+                if (entity == null)
+                {
+                    result.Success = false;
+                    result.Message = "La entidad es nula";
+                    return result;
+                }
+
+                await Entity.AddAsync(entity);
                 await _context.SaveChangesAsync();
+
+                result.Success = true;
+                result.Message = "Datos guardados correctamente";
+            }
+            catch (DbUpdateException ex)
+            {
+                var innerException = ex.InnerException;
+                while (innerException?.InnerException != null)
+                {
+                    innerException = innerException.InnerException;
+                }
+
+                result.Success = false;
+                result.Message = $"Error detallado: {innerException?.Message ?? ex.Message}";
+
+                System.Diagnostics.Debug.WriteLine($"Stack trace completo: {ex}");
             }
             catch (Exception ex)
             {
                 result.Success = false;
-                result.Message = "Ocurrio un error guardando los datos.";
+                result.Message = $"Error general: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Stack trace completo: {ex}");
             }
+
             return result;
         }
 
         public virtual async Task<OperationResult> UpdateEntityAsync(TEntity entity)
         {
-            OperationResult result = new OperationResult();
+            var result = new OperationResult();
             try
             {
-                Entity.Update(entity);
-                await _context.SaveChangesAsync();
+                _context.Attach(entity);
+                _context.Entry(entity).State = EntityState.Modified;
+
+                var saveResult = await _context.SaveChangesAsync();
+
+                result.Success = saveResult > 0;
+                result.Message = result.Success ? "Actualización exitosa" : "No se realizaron cambios";
             }
             catch (Exception ex)
             {
-
                 result.Success = false;
-                result.Message = "Ocurrio un error guardando los datos.";
+                result.Message = $"Error al actualizar: {ex.Message}";
             }
+
             return result;
         }
     }

@@ -21,5 +21,16 @@ namespace SGHT.Persistance.Context
         public DbSet<Servicios> Servicios { get; set; }
         public DbSet<Tarifas> Tarifas { get; set; }
         public DbSet<Usuarios> Usuarios { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Cliente>(entity =>
+            {
+                entity.HasKey(e => e.IdCliente);
+                entity.Property(e => e.IdCliente).ValueGeneratedOnAdd();            
+            });
+        }
     }
 }

@@ -15,7 +15,13 @@ namespace SGH.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<SGHTContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SHGTDB")));
+            // builder.Services.AddDbContext<SGHTContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SHGTDB")));
+
+            builder.Services.AddDbContext<SGHTContext>(options =>
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("SHGTDB"))
+                        .EnableSensitiveDataLogging()
+                        .LogTo(Console.WriteLine, LogLevel.Information));
 
             builder.Services.AddScoped<IUsuariosRepository, UsuariosRepository>();
             builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
