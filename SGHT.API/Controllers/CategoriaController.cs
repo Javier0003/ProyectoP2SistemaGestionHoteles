@@ -21,5 +21,7 @@ namespace SGHT.API.Controllers
             var Usuarios = await _categoriaRepository.GetAllAsync();
             return Ok(Usuarios);
         }
+
+       
     }
 }
