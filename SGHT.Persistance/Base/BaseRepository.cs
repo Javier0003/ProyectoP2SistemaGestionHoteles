@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SGHT.Domain.Base;
+using SGHT.Domain.Entities;
 using SGHT.Domain.Repository;
 using SGHT.Persistance.Context;
 using System.Data;
@@ -17,9 +18,23 @@ namespace SGHT.Persistance.Base
             Entity = _context.Set<TEntity>();
         }
 
-        public virtual Task DeleteEntityAsync(TEntity entity)
+        public virtual async Task<OperationResult> DeleteEntityAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            OperationResult result = new OperationResult();
+            try
+            {
+               _context.Remove(entity);
+               await _context.SaveChangesAsync();
+               result.Success = true;
+               result.Message = "Entity deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.Message = $"An error occurred: {ex.Message}";
+            }
+
+            return result;
         }
 
         public virtual async Task<bool> ExistAsync(Expression<Func<TEntity, bool>> filter)
@@ -76,46 +91,23 @@ namespace SGHT.Persistance.Base
 
         public virtual async Task<OperationResult> UpdateEntityAsync(TEntity entity)
         {
-            OperationResult result = new OperationResult();
+            var result = new OperationResult();
             try
             {
-                if (entity == null)
-                {
-                    result.Success = false;
-                    result.Message = "La entidad es nula";
-                    return result;
-                }
-
-                var entry = _context.Entry(entity);
-                if (entry.State == EntityState.Detached)
-                {
-                    Entity.Attach(entity);
-                }
-
-                Entity.Update(entity);
+                _context.Attach(entity);
+                _context.Entry(entity).State = EntityState.Modified;
 
                 var saveResult = await _context.SaveChangesAsync();
 
                 result.Success = saveResult > 0;
-                result.Message = result.Success ? "Actualizacion exitosa" : "No se realizaron cambios";
-
-            }
-            catch (DBConcurrencyException dbex)
-            {
-                result.Success = false;
-                result.Message = "Error de concurrencia de los datos";
-            }
-            catch (DbUpdateException dbuEx)
-            {
-                result.Success = false;
-                result.Message = "Error al actualizar de los datos";
+                result.Message = result.Success ? "Actualización exitosa" : "No se realizaron cambios";
             }
             catch (Exception ex)
             {
-
                 result.Success = false;
-                result.Message = "Ocurrio un error guardando los datos.";
+                result.Message = $"Error al actualizar: {ex.Message}";
             }
+
             return result;
         }
     }

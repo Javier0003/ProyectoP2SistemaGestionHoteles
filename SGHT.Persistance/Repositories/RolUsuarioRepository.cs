@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Base;
 using SGHT.Persistance.Context;
