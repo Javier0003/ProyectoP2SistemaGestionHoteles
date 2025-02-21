@@ -10,11 +10,7 @@ namespace SGHT.Domain.Entities
         [Column("IdCategoria")]
         [Key]
         public int IdCategoria { get; set; }
-<<<<<<< HEAD
         public int HabitacionId { get; set; }
-        
-=======
         public string? Descripcion { get; set; }
->>>>>>> main
     }
 }

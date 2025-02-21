@@ -6,7 +6,6 @@ using SGHT.Domain.Entities;
 using SGHT.Persistance.Base;
 using SGHT.Persistance.Context;
 using SGHT.Persistance.Interfaces;
-using SGHT.Persistance.Interfaces.Configuration;
 
 namespace SGHT.Persistance.Repositories
 {
