@@ -45,7 +45,7 @@ namespace SGHT.API.Controllers
             if (!result.Success)
                 return Problem("Hubo un error al guardar el servicio");
 
-            return Ok();
+            return Ok("Servicio creado exitosamente");
         }
 
         [HttpPatch("UpdateServicios")]
