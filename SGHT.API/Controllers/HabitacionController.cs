@@ -45,7 +45,7 @@ namespace SGHT.API.Controllers
             if (!result.Success)
                 return Problem("Hubo un error al guardar la habitacion");
 
-            return Ok();
+            return Ok("Habitacion creada exitosamente");
         }
 
         [HttpPatch("UpdateHabitacion")]
