@@ -49,7 +49,7 @@ namespace SGHT.API.Controllers
         }
 
         [HttpPatch("UpdateCategoria")]
-        public async Task<IActionResult> ActualizarCategoria([FromBody] Categoria categoria)
+        public async Task<IActionResult> ActualizarCategoria(Categoria categoria)
          {
             if (categoria is null)
                 return BadRequest("Categoria no puede ser nula");
