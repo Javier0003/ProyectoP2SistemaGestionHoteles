@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using SGHT.Domain.Base;
 
 namespace SGHT.Domain.Entities
 {
     [Table("Habitacion", Schema = "dbo")]
-    public class Habitacion
+    public class Habitacion : Auditoria
     {
         [Column("IdHabitacion")]
         [Key]

@@ -5,7 +5,7 @@ using SGHT.Domain.Base;
 namespace SGHT.Domain.Entities
 {
     [Table("Servicios", Schema = "dbo")]
-    public class Servicios
+    public class Servicios 
     {
         [Column("IdServicio")]
         [Key]
