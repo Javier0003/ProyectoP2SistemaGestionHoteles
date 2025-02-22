@@ -38,7 +38,7 @@ namespace SGHT.API.Controllers
         public async Task<IActionResult> CrearCategoria(Categoria categoria)
         {
             if (categoria is null) 
-                return BadRequest("Esto no puede ser null");
+                return BadRequest("Esto no puede ser nulo");
             
             var result = await _categoriaRepository.SaveEntityAsync(categoria);
             
@@ -52,7 +52,7 @@ namespace SGHT.API.Controllers
         public async Task<IActionResult> ActualizarCategoria(Categoria categoria)
          {
             if (categoria is null)
-                return BadRequest("Categoria no puede ser nulo");
+                return BadRequest("Categoria no puede ser nula");
 
             var result = await _categoriaRepository.UpdateEntityAsync(categoria);
 
