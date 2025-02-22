@@ -14,7 +14,7 @@ CREATE TABLE [dbo].[Categoria](
 	[IdCategoria] [int] IDENTITY(1,1) NOT NULL,
 	[Descripcion] [varchar](50) NULL,
 	[Estado] [bit] NULL,
-	[IdServicio] [smallint] NOT NULL,
+	[IdServicio] [int] NOT NULL,
 	[FechaCreacion] [datetime] NULL,
  CONSTRAINT [PK__Categori__A3C02A10EE752289] PRIMARY KEY CLUSTERED 
 (
@@ -141,7 +141,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Servicios](
-	[IdServicio] [smallint] NOT NULL,
+	[IdServicio] [int] IDENTITY(1,1) NOT NULL,
 	[Nombre] [varchar](200) NOT NULL,
 	[Descripcion] [varchar](max) NOT NULL,
  CONSTRAINT [PK_Servicios] PRIMARY KEY CLUSTERED 
