@@ -43,7 +43,7 @@ namespace SGHT.API.Controllers
             var result = await _categoriaRepository.SaveEntityAsync(categoria);
             
             if (!result.Success) 
-                return Problem("Hubo un error al guardar la categoría");
+                return Problem("Hubo un error al crear la categoría");
 
             return Ok("Creada exitosamente");
         }
