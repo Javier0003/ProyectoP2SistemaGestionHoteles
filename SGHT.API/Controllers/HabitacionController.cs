@@ -16,14 +16,14 @@ namespace SGHT.API.Controllers
             _habitacionRepository = habitacionRepository;
         }
 
-        [HttpGet("GetUsuarios")]
+        [HttpGet("GetHabitaciones")]
         public async Task<IActionResult> Get()
         {
             var Usuarios = await _habitacionRepository.GetAllAsync();
             return Ok(Usuarios);
         }
 
-        [HttpGet("GetHabitacionId")]
+        [HttpGet("GetHabitacionId/{id}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
             var habitacion = await _habitacionRepository.GetEntityByIdAsync(id);

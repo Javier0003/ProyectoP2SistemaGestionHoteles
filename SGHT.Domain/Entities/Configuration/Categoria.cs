@@ -11,5 +11,6 @@ namespace SGHT.Domain.Entities
         [Key]
         public int IdCategoria { get; set; }
         public string? Descripcion { get; set; }
+        public int IdServicio { get; set; }
     }
 }
