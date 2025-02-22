@@ -51,17 +51,16 @@ namespace SGHT.API.Controllers
         [HttpPatch("UpdateHabitacion")]
         public async Task<IActionResult> ActualizarHabitacion(Habitacion habitacion)
         {
-            if (habitacion is null)
+            if (habitacion == null)
                 return BadRequest("Habitacion no puede ser nulo");
 
             var result = await _habitacionRepository.UpdateEntityAsync(habitacion);
 
             if (!result.Success)
                 return BadRequest(result.Message);
-
-            return Ok(result);
+           return Ok(result);
         }
-
+       
         [HttpDelete("DeleteHabitacion")]
         public async Task<IActionResult> EliminarHabitacion(int id)
         {
