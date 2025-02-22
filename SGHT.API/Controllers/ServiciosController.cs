@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Interfaces;
 using SGHT.Persistance.Repositories;
@@ -16,17 +17,19 @@ namespace SGHT.API.Controllers
             _serviciosRepository = serviciosRepository;
         }
 
-        [HttpGet("GetUsuarios")]
+        [HttpGet("GetServicios")]
         public async Task<IActionResult> Get()
         {
             var Usuarios = await _serviciosRepository.GetAllAsync();
             return Ok(Usuarios);
         }
 
-        [HttpGet("GetServicioId")]
-        public async Task<IActionResult> BuscarPorId(int id)
+        [HttpGet("GetServicioId/{id}")]
+        public async Task<IActionResult> BuscarPorId(string id)
         {
-            var categorias = await _serviciosRepository.GetEntityByIdAsync(id);
+            bool isParsed = int.TryParse(id, out int result);
+
+            var categorias = await _serviciosRepository.GetEntityByIdAsync(result);
 
             if (categorias is null)
                 return NotFound("Servicio no encontrado");
