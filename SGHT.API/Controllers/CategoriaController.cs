@@ -38,18 +38,18 @@ namespace SGHT.API.Controllers
         public async Task<IActionResult> CrearCategoria(Categoria categoria)
         {
             if (categoria is null) 
-                return BadRequest("Esto no puede ser nulo");
+                return BadRequest("Esto no puede ser null");
             
             var result = await _categoriaRepository.SaveEntityAsync(categoria);
             
             if (!result.Success) 
                 return Problem("Hubo un error al guardar la categoría");
 
-            return Ok();
+            return Ok("Creada exitosamente");
         }
 
         [HttpPatch("UpdateCategoria")]
-        public async Task<IActionResult> ActualizarCategoria(Categoria categoria)
+        public async Task<IActionResult> ActualizarCategoria([FromBody] Categoria categoria)
          {
             if (categoria is null)
                 return BadRequest("Categoria no puede ser nula");
