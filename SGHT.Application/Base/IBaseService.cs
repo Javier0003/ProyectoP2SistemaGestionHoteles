@@ -2,7 +2,7 @@
 
 namespace SGHT.Application.Base
 {
-    internal interface IBaseService<TDtoSave, TDtoUpdate, TDtoDelete>
+    public interface IBaseService<TDtoSave, TDtoUpdate, TDtoDelete>
     {
         Task<OperationResult> GetAll();
         Task<OperationResult> GetById(int id);
