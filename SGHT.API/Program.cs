@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SGHT.Persistance.Context;
-using SGHT.Persistance.Interfaces;
-using SGHT.Persistance.Repositories;
+using SGHT.IOC.Dependancies;
 
 namespace SGH.API
 {
@@ -13,16 +12,17 @@ namespace SGH.API
 
             builder.Services.AddDbContext<SGHTContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SHGTDB")));
 
-            builder.Services.AddScoped<IUsuariosRepository, UsuariosRepository>();
-            builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
-            builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
-            builder.Services.AddScoped<IEstadoHabitacionRepository, EstadoHabitacionRepository>();
-            builder.Services.AddScoped<IHabitacionRepository, HabitacionRepository>();
-            builder.Services.AddScoped<IPisoRepository, PisoRepository>();
-            builder.Services.AddScoped<IRecepcionRepository, RecepcionRepository>();
-            builder.Services.AddScoped<IRolUsuarioRepository, RolUsuarioRepository>();
-            builder.Services.AddScoped<IServiciosRepository, ServiciosRepository>();
-            builder.Services.AddScoped<ITarifasRepository, TarifasRepository>();
+            builder.Services.AddRolUsuarioDependancy();
+            builder.Services.AddCategoriaDependancy();
+            builder.Services.AddCLienteDependacny();
+            builder.Services.AddEstadoHabitacionDependancy();
+            builder.Services.AddHabitacionDependancy();
+            builder.Services.AddPisoDependancy();
+            builder.Services.AddRecepcionDependancy();
+            builder.Services.AddRolUsuarioDependancy();
+            builder.Services.AddServiciosDependancy();
+            builder.Services.AddTarifasDependancy();
+            builder.Services.AddUsuariosDependancy();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
