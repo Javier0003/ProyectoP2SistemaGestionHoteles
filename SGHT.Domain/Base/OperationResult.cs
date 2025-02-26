@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SGHT.Domain.Base
+﻿namespace SGHT.Domain.Base
 {
     public class OperationResult
     {
@@ -15,5 +9,25 @@ namespace SGHT.Domain.Base
         public bool Success { get; set; }
         public string? Message { get; set; }
         public dynamic? Data { get; set; }
+
+        public static OperationResult GetErrorResult(string message, dynamic? data)
+        {
+            return new()
+            {
+                Success = false,
+                Message = message,
+                Data = data
+            };
+        }
+
+        public static OperationResult GetSuccesResult(string message, dynamic? data)
+        {
+            return new()
+            {
+                Success = true,
+                Message = message,
+                Data = data
+            };
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace SGH.Application
 {
-    public class App
+    public class AppService
     {
 
     }
