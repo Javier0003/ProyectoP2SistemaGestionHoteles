@@ -1,6 +1,7 @@
 ﻿namespace SGHT.Application.Dtos.Usuarios
 {
-    public class DeleteUsuarioDto : UsuarioDto
+    public class DeleteUsuarioDto
     {
+        public int IdUsuario { get; set; }
     }
 }

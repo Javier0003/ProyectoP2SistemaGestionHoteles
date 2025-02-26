@@ -1,82 +1,56 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SGHT.Domain.Entities;
-using SGHT.Persistance.Interfaces;
-using SGHT.Persistance.Repositories;
+using SGHT.API.Utils;
+using SGHT.Application.Dtos.Tarifa;
+using SGHT.Application.Interfaces;
 
 namespace SGHT.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class TarifasController : ControllerBase
+    [Route("api/[controller]")]
+    public class TarifasController : BaseController
     {
-        private readonly ITarifasRepository _tarifasRepository;
+        private readonly ITarifaService _tarifasService;
 
-        public TarifasController(ITarifasRepository tarifasRepository, ILogger<UsuarioController> logger)
+        public TarifasController(ITarifaService tarifasService, ILogger<TarifasController> logger)
         {
-            _tarifasRepository = tarifasRepository;
+            _tarifasService = tarifasService;
         }
 
-        [HttpGet("GetTarifas")]
+        [HttpGet]
         public async Task<IActionResult> GetTarifas()
         {
-            var Usuarios = await _tarifasRepository.GetAllAsync();
-            return Ok(Usuarios);
+            var tarifas = await _tarifasService.GetAll();
+            return HandleResponse(tarifas);
         }
 
-        [HttpGet("GetTarifas/{id}")]
-        public async Task<IActionResult> GetTarifaById(string id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTarifaById(int id)
         {
-            if (id == null) return BadRequest();
-            bool isParsed = int.TryParse(id, out var parsedId);
-            if(!isParsed) return BadRequest("Id must be a number");
-
-            var result = await _tarifasRepository.GetEntityByIdAsync(parsedId);
-            if (result == null) return NotFound();
-
-            return Ok(result);
+            var tarifa = await _tarifasService.GetById(id);
+            return HandleResponse(tarifa);
         }
 
-        [HttpPost("CreateTarifa")]
-        public async Task<IActionResult> CreateTarifa(Tarifas tarifas)
+        [HttpPost("crear")]
+        public async Task<IActionResult> CreateTarifa(SaveTarifaDto tarifas)
         {
-            if (tarifas == null) return BadRequest(new {Success = false, Msg = "Body is null"});
-            if (tarifas.Estado != "inactivo" && tarifas.Estado != "activo") return BadRequest(new {Success = false, Msg = "estado tiene que ser 'activo' o 'inactivo'" });
+            var result = await _tarifasService.Save(tarifas);
 
-            var result = await _tarifasRepository.SaveEntityAsync(tarifas);
-
-            return Ok(new
-            {
-                Success = true,
-                Tarifa = result
-            });
+            return HandleResponse(result);
         }
 
-        [HttpDelete("EliminarTarifa/{id}")]
-        public async Task<IActionResult> EliminarTarifa(string id)
+        [HttpDelete("eliminar")]
+        public async Task<IActionResult> EliminarTarifa(DeleteTarifaDto dto)
         {
-            if (id == null) return BadRequest();
-            bool isParsed = int.TryParse(id, out int parseResult);
-            if (!isParsed) return BadRequest("Id must be a number");
-
-            var entityToRemove = await _tarifasRepository.GetEntityByIdAsync(parseResult);
-            if (entityToRemove == null) return NotFound("Tarifa no encontrada");
-
-            var result = await _tarifasRepository.DeleteEntityAsync(entityToRemove);
-            if (!result.Success) return Problem();
-
-            return Ok(new {Success = true});
+            var result = await _tarifasService.DeleteById(dto);
+            return HandleResponse(result);
         }
 
-        [HttpPatch("ActualizarUsuario")]
-        public async Task<IActionResult> ActualizarTarifa(Tarifas tarifas)
+        [HttpPatch("actualizar")]
+        public async Task<IActionResult> ActualizarTarifa(UpdateTarifaDto tarifas)
         {
-            if (tarifas == null) return BadRequest();
-            if (tarifas.Estado != "inactivo" && tarifas.Estado != "activo") return BadRequest(new {Success = false, Msg = "estado tiene que ser 'activo' o 'inactivo'" });
+            var result = await _tarifasService.UpdateById(tarifas);
 
-            var queryResult = await _tarifasRepository.UpdateEntityAsync(tarifas);
-            if (!queryResult.Success) return Problem();
-
-            return Ok(queryResult);
+            return HandleResponse(result);
         }
     }
 }

@@ -1,75 +1,60 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SGHT.Domain.Entities;
-using SGHT.Persistance.Interfaces;
+using SGHT.API.Utils;
+using SGHT.Application.Dtos.RolUsuario;
+using SGHT.Application.Dtos.Usuarios;
+using SGHT.Application.Interfaces;
 
 namespace SGHT.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RolUsuarioController : ControllerBase
+    public class RolUsuarioController : BaseController
     {
-        private readonly IRolUsuarioRepository _rolUsuarioRepository;
+        private readonly IRolUsuarioService _rolUsuarioService;
 
-        public RolUsuarioController(IRolUsuarioRepository rolUsuarioRepository, ILogger<RolUsuarioController> logger)
+        public RolUsuarioController(IRolUsuarioService rolUsuarioService, ILogger<RolUsuarioController> logger)
         {
-            _rolUsuarioRepository = rolUsuarioRepository;
+            _rolUsuarioService = rolUsuarioService;
         }
 
-        [HttpGet("GetRolUsuario")]
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var Usuarios = await _rolUsuarioRepository.GetAllAsync();
-            return Ok(Usuarios);
+            var rolUsuarioList = await _rolUsuarioService.GetAll();
+            return HandleResponse(rolUsuarioList);
         }
 
-        [HttpGet("GetRolUsuarioById/{id}")]
-        public async Task<IActionResult> GetById(string id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            bool isParsed = int.TryParse(id, out int result);
-            if (!isParsed) return BadRequest("Id must be a number");
+            var rolUsuario = await _rolUsuarioService.GetById(id);
+            if (!rolUsuario.Success) return NotFound("user not found");
 
-            var Usuarios = await _rolUsuarioRepository.GetEntityByIdAsync(result);
-            if (Usuarios == null) return NotFound("Role not found");
-
-            return Ok(Usuarios);
+            return HandleResponse(rolUsuario);
         }
 
-        [HttpPost("CrearRolUsuario")]
-        public async Task<IActionResult> Post(RolUsuario rolUsuario)
+        [HttpPost("crear")]
+        public async Task<IActionResult> Post(SaveRolUsuarioDto rolUsuario)
         {
-            if (rolUsuario == null) return BadRequest("Peticion invalida");
+            var result = await _rolUsuarioService.Save(rolUsuario);
 
-            var result = await _rolUsuarioRepository.SaveEntityAsync(rolUsuario);
-
-            if (!result.Success) return BadRequest();
-            return Ok("Rol Creado");
+            return HandleResponse(result);
         }
 
 
-        [HttpDelete("EliminarRolUsuario/{id}")]
-        public async Task<IActionResult> Delete(string id)
+        [HttpDelete("eliminar")]
+        public async Task<IActionResult> Delete(DeleteRolUsuarioDto id)
         {
-            if (id == null) return BadRequest("Id is null");
-            bool isParsed = int.TryParse(id, out int result);
-            if (!isParsed) return BadRequest("Id must be a String");
+            var result = await _rolUsuarioService.DeleteById(id);
 
-            var entity = await _rolUsuarioRepository.GetEntityByIdAsync(result);
-            if (entity == null) return NotFound("Rol no encontrado");
-
-            var queryResult = await _rolUsuarioRepository.DeleteEntityAsync(entity);
-            if (!queryResult.Success) return Problem();
-
-            return Ok("Rol Eliminado");
+            return HandleResponse(result);
         }
 
-        [HttpPatch("ActualizarRolUsuario")]
-        public async Task<IActionResult> Put(RolUsuario rolUsuario)
+        [HttpPatch("actualizar")]
+        public async Task<IActionResult> Put(UpdateRolUsuarioDto rolUsuario)
         {
-            if (rolUsuario == null) return BadRequest("body is null");
-            var queryResult = await _rolUsuarioRepository.UpdateEntityAsync(rolUsuario);
-            if (!queryResult.Success) return Problem();
-
-            return Ok();
+            var result = await _rolUsuarioService.UpdateById(rolUsuario);
+            return HandleResponse(result);
         }
     }
 }
