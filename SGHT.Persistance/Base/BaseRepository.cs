@@ -99,7 +99,7 @@ namespace SGHT.Persistance.Base
 
                 var saveResult = await _context.SaveChangesAsync();
 
-                result.Success = saveResult > 0;
+                result.Success = true;
                 result.Message = result.Success ? "Actualización exitosa" : "No se realizaron cambios";
             }
             catch (Exception ex)
