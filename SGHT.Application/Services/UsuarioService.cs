@@ -42,7 +42,7 @@ namespace SGHT.Application.Services
             }
             catch (Exception ex) {
                 _logger.LogError ($"UsuarioService.GetById: {ex}");
-                return OperationResult.GetErrorResult("Error finding user");
+                return OperationResult.GetErrorResult("Error finding user", 500);
             }
         }
 
@@ -57,10 +57,11 @@ namespace SGHT.Application.Services
                     Correo = dto.Correo,
                     Estado = dto.Estado,
                     IdRolUsuario = dto.IdRolUsuario,
+                    FechaCreacion = DateTime.Now
                 };
 
                 var result = await _usuariosRepository.SaveEntityAsync(usuario);
-                return OperationResult.GetSuccesResult(result, "User created successfully", code: 200);
+                return OperationResult.GetSuccesResult(result, 200 , "User created successfully");
             }
             catch (Exception ex)
             {
@@ -81,11 +82,12 @@ namespace SGHT.Application.Services
                     Correo = dto.Correo,
                     Estado = dto.Estado,
                     IdRolUsuario = dto.IdRolUsuario,
+                    FechaCreacion = dto.FechaCreacion,
                 };
 
                 var queryResult = await _usuariosRepository.UpdateEntityAsync(usuario);
 
-                return OperationResult.GetSuccesResult(queryResult, "Usuario Actualizado Correctamente", code: 200);
+                return OperationResult.GetSuccesResult(queryResult, 200 , "Usuario Actualizado Correctamente");
             }
             catch (Exception ex)
             {
@@ -100,7 +102,7 @@ namespace SGHT.Application.Services
                 var entityToRemove = await _usuariosRepository.GetEntityByIdAsync(dto.IdUsuario);
                 var result = await _usuariosRepository.DeleteEntityAsync(entityToRemove);
 
-                return OperationResult.GetSuccesResult(result, "Usuario eliminado", code: 200);
+                return OperationResult.GetSuccesResult(result, 200, "Usuario eliminado");
             }
             catch (Exception ex)
             {

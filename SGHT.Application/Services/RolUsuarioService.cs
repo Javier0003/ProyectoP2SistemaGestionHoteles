@@ -42,7 +42,7 @@ namespace SGHT.Application.Services
                 var rolUsuarios = await _rolUsuarioRepository.GetEntityByIdAsync(id);
                 if (rolUsuarios == null) return OperationResult.GetErrorResult("rol no encontrado", code: 404);
 
-                return OperationResult.GetSuccesResult(rolUsuarios);
+                return OperationResult.GetSuccesResult(rolUsuarios, code: 200);
             }
             catch (Exception ex) 
             {
@@ -57,7 +57,7 @@ namespace SGHT.Application.Services
             {
                 Descripcion = dto.Descripcion,
                 Estado = dto.Estado,
-                FechaCreacion = dto.FechaCreacion
+                FechaCreacion = DateTime.Now
             };
 
             try
@@ -108,7 +108,7 @@ namespace SGHT.Application.Services
                 var queryResult = await _rolUsuarioRepository.DeleteEntityAsync(entity);
                 if (!queryResult.Success) return OperationResult.GetErrorResult("error eliminando este rol", code: 500);
 
-                return OperationResult.GetSuccesResult(queryResult, "Rol eliminado correctamente", code: 200);
+                return OperationResult.GetSuccesResult(queryResult,200, "Rol eliminado correctamente");
             }
             catch (Exception ex) 
             {
