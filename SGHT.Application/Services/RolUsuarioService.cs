@@ -108,7 +108,7 @@ namespace SGHT.Application.Services
                 var queryResult = await _rolUsuarioRepository.DeleteEntityAsync(entity);
                 if (!queryResult.Success) return OperationResult.GetErrorResult("error eliminando este rol", code: 500);
 
-                return OperationResult.GetSuccesResult(queryResult,200, "Rol eliminado correctamente");
+                return OperationResult.GetSuccesResult(queryResult,"Rol eliminado correctamente", 200);
             }
             catch (Exception ex) 
             {

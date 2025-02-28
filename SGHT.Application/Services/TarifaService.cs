@@ -27,7 +27,7 @@ namespace SGHT.Application.Services
             try
             {
                 var Usuarios = await _tarifasRepository.GetAllAsync();
-                return OperationResult.GetSuccesResult(Usuarios, 200);
+                return OperationResult.GetSuccesResult(Usuarios, code: 200);
             }
             catch (Exception) 
             {
@@ -69,7 +69,7 @@ namespace SGHT.Application.Services
 
                 var result = await _tarifasRepository.SaveEntityAsync(tarifas);
 
-                return OperationResult.GetSuccesResult(result,200, "Tarifa guardada correctamente");
+                return OperationResult.GetSuccesResult(result,"Tarifa guardada correctamente", 200);
             }
             catch (Exception ex) 
             {
@@ -96,7 +96,7 @@ namespace SGHT.Application.Services
 
                 var result = await _tarifasRepository.UpdateEntityAsync(tarifas);
 
-                return OperationResult.GetSuccesResult(result,200, "Tarifa guardada correctamente");
+                return OperationResult.GetSuccesResult(result,"Tarifa guardada correctamente", 200);
             }
             catch (Exception ex)
             {
@@ -111,7 +111,7 @@ namespace SGHT.Application.Services
                 var entityToRemove = await _tarifasRepository.GetEntityByIdAsync(dto.IdTarifa);
                 var result = await _tarifasRepository.DeleteEntityAsync(entityToRemove);
 
-                return OperationResult.GetSuccesResult(result,200, "Tarifa eliminada");
+                return OperationResult.GetSuccesResult(result,"Tarifa eliminada", 200);
             }
             catch (Exception ex)
             {

@@ -13,7 +13,7 @@ namespace SGHT.Domain.Base
         public dynamic? Data { get; set; }
         public int? Code { get; set; }
 
-        public static OperationResult GetErrorResult(string message, int code, dynamic? data = null)
+        public static OperationResult GetErrorResult(string message, dynamic? data = null, int? code = null)
         {
             return new()
             {
@@ -24,7 +24,7 @@ namespace SGHT.Domain.Base
             };
         }
 
-        public static OperationResult GetSuccesResult(dynamic data, int code, string? message = null)
+        public static OperationResult GetSuccesResult(dynamic data, string? message = null, int? code = null)
         {
             return new()
             {

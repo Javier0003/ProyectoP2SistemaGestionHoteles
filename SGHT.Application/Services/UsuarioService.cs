@@ -61,7 +61,7 @@ namespace SGHT.Application.Services
                 };
 
                 var result = await _usuariosRepository.SaveEntityAsync(usuario);
-                return OperationResult.GetSuccesResult(result, 200 , "User created successfully");
+                return OperationResult.GetSuccesResult(result, "User created successfully", 200);
             }
             catch (Exception ex)
             {
@@ -87,7 +87,7 @@ namespace SGHT.Application.Services
 
                 var queryResult = await _usuariosRepository.UpdateEntityAsync(usuario);
 
-                return OperationResult.GetSuccesResult(queryResult, 200 , "Usuario Actualizado Correctamente");
+                return OperationResult.GetSuccesResult(queryResult , "Usuario Actualizado Correctamente", 200);
             }
             catch (Exception ex)
             {
@@ -102,7 +102,7 @@ namespace SGHT.Application.Services
                 var entityToRemove = await _usuariosRepository.GetEntityByIdAsync(dto.IdUsuario);
                 var result = await _usuariosRepository.DeleteEntityAsync(entityToRemove);
 
-                return OperationResult.GetSuccesResult(result, 200, "Usuario eliminado");
+                return OperationResult.GetSuccesResult(result, "Usuario eliminado", 200);
             }
             catch (Exception ex)
             {
