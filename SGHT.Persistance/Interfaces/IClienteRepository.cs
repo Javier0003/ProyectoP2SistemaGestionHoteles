@@ -6,6 +6,6 @@ namespace SGHT.Persistance.Interfaces
 {
     public interface IClienteRepository : IBaseRepository<Cliente>
     {
-        Task<dynamic> SaveEntityAsync(Cliente cliente);
+        //Task<dynamic> SaveEntityAsync(Cliente cliente);
     }
 }

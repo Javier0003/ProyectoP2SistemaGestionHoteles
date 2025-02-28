@@ -7,6 +7,7 @@ using SGHT.Persistance.Base;
 using SGHT.Persistance.Context;
 using SGHT.Persistance.Interfaces;
 using SGHT.Model.Model;
+using SGHT.Domain.Entities.Reservation;
 
 namespace SGHT.Persistance.Repositories
 {
@@ -59,5 +60,10 @@ namespace SGHT.Persistance.Repositories
         {
             return base.UpdateEntityAsync(recepcion);
         }
+
+        /*Task<dynamic> IRecepcionRepository.SaveEntityAsync(Recepcion recepcion)
+        {
+            throw new NotImplementedException();
+        }*/
     }
 }

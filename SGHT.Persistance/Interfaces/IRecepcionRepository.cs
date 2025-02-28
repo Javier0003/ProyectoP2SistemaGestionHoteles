@@ -8,6 +8,6 @@ namespace SGHT.Persistance.Interfaces
     public interface IRecepcionRepository : IBaseRepository<Recepcion>
     {
         Task<OperationResult> GetRecepcionByClienteID(int IDCliente);
-        Task<dynamic> SaveEntityAsync(Recepcion recepcion);
+        //Task<dynamic> SaveEntityAsync(Recepcion recepcion);
     }
 }

@@ -28,7 +28,21 @@ namespace SGHT.Application.Services
 
         public async Task<OperationResult> DeleteById(DeleteRecepcionDto dto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await _recepcionRepository.GetEntityByIdAsync(dto.IdCliente);
+                if (entity == null) return OperationResult.GetErrorResult("Recepcion con ese ID no existe", code: 404);
+
+                var queryResult = await _recepcionRepository.DeleteEntityAsync(entity);
+                if (!queryResult.Success) return OperationResult.GetErrorResult("error eliminando esta recepcion", code: 500);
+
+                return OperationResult.GetSuccesResult(queryResult, "Recepcion eliminada correctamente", code: 200);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"RecepcionService.DeleteById: {ex.ToString()}");
+                return OperationResult.GetErrorResult("idk how u got an error here", code: 500);
+            }
         }
 
         public async Task<OperationResult> GetAll()
@@ -87,7 +101,7 @@ namespace SGHT.Application.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError($"RecepcionService.Create: {ex.ToString()}");
+                _logger.LogError($"RecepcionService.Save: {ex.ToString()}");
                 return OperationResult.GetErrorResult("idk how u got an error here", code: 500);
             }
         }
@@ -120,7 +134,7 @@ namespace SGHT.Application.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError($"RecepcionService.Update: {ex.ToString()}");
+                _logger.LogError($"RecepcionService.UpdateById: {ex.ToString()}");
                 return OperationResult.GetErrorResult("idk how u got an error here", code: 500);
             }
         }
