@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using SGHT.Domain.Base;
 
-namespace SGHT.Domain.Entities
+namespace SGHT.Domain.Entities.Configuration
 {
     [Table("Cliente", Schema = "dbo")]
     public class Cliente : Auditoria

@@ -7,6 +7,7 @@ using SGHT.Persistance.Base;
 using SGHT.Persistance.Context;
 using SGHT.Persistance.Interfaces;
 using SGHT.Model.Model;
+using SGHT.Domain.Entities.Reservation;
 
 namespace SGHT.Persistance.Repositories
 {
@@ -30,14 +31,14 @@ namespace SGHT.Persistance.Repositories
             {
                 var querys = await (from recepcion in _context.Recepcion
                                     join cliente in _context.Clientes on recepcion.IdRecepcion equals cliente.IdCliente
-                                    where recepcion.IdCliente == idCliente
+                                    where cliente.IdCliente == idCliente
                                     select new RecepcionCLienteModel()
                                     {
                                         IdRecepcion = recepcion.IdRecepcion,
                                         IDCliente = cliente.IdCliente,
                                         IDHabitacion = recepcion.IdHabitacion,
                                         Estado = recepcion.Estado,
-                                    }).ToListAsync();
+                                    }).ToListAsync(); // Estamos trabajando en ello.
                 result.Data = querys;
             }
             catch (Exception ex)
@@ -59,5 +60,10 @@ namespace SGHT.Persistance.Repositories
         {
             return base.UpdateEntityAsync(recepcion);
         }
+
+        /*Task<dynamic> IRecepcionRepository.SaveEntityAsync(Recepcion recepcion)
+        {
+            throw new NotImplementedException();
+        }*/
     }
 }

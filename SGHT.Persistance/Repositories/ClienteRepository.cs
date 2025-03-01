@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Logging;
 using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
+using SGHT.Domain.Entities.Configuration;
 using SGHT.Persistance.Base;
 using SGHT.Persistance.Context;
 using SGHT.Persistance.Interfaces;
-
 
 namespace SGHT.Persistance.Repositories
 {
@@ -21,5 +21,10 @@ namespace SGHT.Persistance.Repositories
             _logger = logger;
             _configuration = configuration;
         }
+
+        /*Task<dynamic> IClienteRepository.SaveEntityAsync(Cliente cliente)
+        {
+            throw new NotImplementedException();
+        }*/
     }
 }

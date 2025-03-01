@@ -1,6 +1,8 @@
 ﻿using System.Net.Security;
 using Microsoft.EntityFrameworkCore;
 using SGHT.Domain.Entities;
+using SGHT.Domain.Entities.Reservation;
+using SGHT.Domain.Entities.Configuration;
 
 namespace SGHT.Persistance.Context
 {
