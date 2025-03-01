@@ -1,83 +1,59 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SGHT.Domain.Entities;
-using SGHT.Persistance.Interfaces;
+using SGHT.API.Utils;
+using SGHT.Application.Dtos.EstadoHabitacion;
+using SGHT.Application.Interfaces;
 
 namespace SGHT.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EstadoHabitacionController : ControllerBase
+    public class EstadoHabitacionController : BaseController
     {
-        private readonly IEstadoHabitacionRepository _estadoHabitacionRepository;
+        private readonly IEstadoHabitacionService _estadoHabitacionService;
 
-        public EstadoHabitacionController(IEstadoHabitacionRepository estadoHabitacionRepository, ILogger<EstadoHabitacionController> logger)
+        public EstadoHabitacionController(IEstadoHabitacionService estadoHabitacionService, ILogger<EstadoHabitacionController> logger)
         {
-            _estadoHabitacionRepository = estadoHabitacionRepository;
+            _estadoHabitacionService = estadoHabitacionService;
         }
-        
 
-      [HttpGet("GetEstadoHabitacion")]
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var Estado = await _estadoHabitacionRepository.GetAllAsync();
-            return Ok(Estado);
+            var estadoHabitacionList = await _estadoHabitacionService.GetAll();
+            return HandleResponse(estadoHabitacionList);
         }
 
-        [HttpGet("GetEstadoHabitacionById/{id}")]
-        public async Task<IActionResult> GetById(string id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            bool isParsed = int.TryParse(id, out int result);
-            if (!isParsed) return BadRequest("Id must be a number");
+            var estadoHabitacion = await _estadoHabitacionService.GetById(id);
+            if (!estadoHabitacion.Success) return NotFound("estate not found");
 
-            var Estado = await _estadoHabitacionRepository.GetEntityByIdAsync(result);
-            if (Estado == null) return NotFound("Role not found");
-
-            return Ok(Estado);
+            return HandleResponse(estadoHabitacion);
         }
 
-
-
-
- [HttpPost("CrearEstadoHabitacion")]
-        public async Task<IActionResult> Post(EstadoHabitacion estadoHabitacion)
+        [HttpPost("crear")]
+        public async Task<IActionResult> Post(SaveEstadoHabitacionDto estadoHabitacion)
         {
-            if (estadoHabitacion == null) return BadRequest("Peticion invalida");
+            var result = await _estadoHabitacionService.Save(estadoHabitacion);
 
-            var result = await _estadoHabitacionRepository.SaveEntityAsync(estadoHabitacion);
-
-            if (!result.Success) return BadRequest();
-            return Ok("Estado Asignado");
+            return HandleResponse(result);
         }
 
 
-        [HttpDelete("EliminarEstadoHabitacion/{id}")]
-        public async Task<IActionResult> Delete(string id)
+        [HttpDelete("eliminar")]
+        public async Task<IActionResult> Delete(DeleteEstadoHabitacionDto id)
         {
-            if (id == null) return BadRequest("Id is null");
-            bool isParsed = int.TryParse(id, out int result);
-            if (!isParsed) return BadRequest("Id must be a String");
+            var result = await _estadoHabitacionService.DeleteById(id);
 
-            var entity = await _estadoHabitacionRepository.GetEntityByIdAsync(result);
-            if (entity == null) return NotFound("Estado no encontrado");
-
-            var queryResult = await _estadoHabitacionRepository.DeleteEntityAsync(entity);
-            if (!queryResult.Success) return Problem();
-
-            return Ok("Estado eliminado");
+            return HandleResponse(result);
         }
 
-
-         [HttpPatch("ActualizarEstadoHabitacion")]
-        public async Task<IActionResult> Put(EstadoHabitacion estadoHabitacion)
+        [HttpPatch("actualizar")]
+        public async Task<IActionResult> Put(UpdateEstadoHabitacionDto estadoHabitacion)
         {
-            if (estadoHabitacion == null) return BadRequest("body is null");
-            var queryResult = await _estadoHabitacionRepository.UpdateEntityAsync(estadoHabitacion);
-            if (!queryResult.Success) return Problem();
-
-            return Ok();
+            var result = await _estadoHabitacionService.UpdateById(estadoHabitacion);
+            return HandleResponse(result);
         }
-
-    
-
     }
 }
