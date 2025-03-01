@@ -1,74 +1,55 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SGHT.Domain.Entities;
-using SGHT.Persistance.Interfaces;
+using SGHT.Application.Interfaces;
+using SGHT.Application.Dtos.Usuarios;
+using SGHT.API.Utils;
 
 namespace SGHT.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class UsuarioController : ControllerBase
+    [Route("api/[controller]")]
+    public class UsuarioController : BaseController
     {
-        private readonly IUsuariosRepository _usuariosRepository;
+        private readonly IUsuarioService _usuarioService;
 
-        public UsuarioController(IUsuariosRepository usuariosRepository, ILogger<UsuarioController> logger) {
-            _usuariosRepository = usuariosRepository;
+        public UsuarioController(IUsuarioService usuarioService)
+        {
+            _usuarioService = usuarioService;
         }
 
-        [HttpGet("getUsuarios")]
-        public async Task<IActionResult> GetUsuarios()
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
-            var usuarios = await _usuariosRepository.GetAllAsync();
-
-            return Ok(usuarios);
+            var result = await _usuarioService.GetAll();
+            return HandleResponse(result);
         }
 
-        [HttpGet("getUsuarioById/{id}")]
-        public async Task<IActionResult> Get(string id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            bool isParsed =  int.TryParse(id, out int result);
-            if (!isParsed) return BadRequest("Id must be a number");
-
-            var Usuarios = await _usuariosRepository.GetEntityByIdAsync(result);
-            if (Usuarios == null) return NotFound("User with that Id was not found");
-
-            return Ok(Usuarios);
+            var result = await _usuarioService.GetById(id);
+            return HandleResponse(result);
         }
 
-        [HttpPost("CrearUsuario")]
-        public async Task<IActionResult> Post(Usuarios usuarios)
+        [HttpPost("crear")]
+        public async Task<IActionResult> Save(SaveUsuarioDto dto)
         {
-            if(usuarios == null) return BadRequest("Input can't be null");
-            var result = await _usuariosRepository.SaveEntityAsync(usuarios);
-            if (!result.Success) return Problem();
-
-            return Ok();
+            var result = await _usuarioService.Save(dto);
+            return HandleResponse(result);
         }
 
-        [HttpDelete("EliminarUsuario/{id}")]
-        public async Task<IActionResult> EliminarUsuario(string id)
+        [HttpPatch("actualizar")]
+        public async Task<IActionResult> Update(UpdateUsuarioDto dto)
         {
-            if (id == null) return BadRequest();
-            bool isParsed = int.TryParse(id, out int parseResult);
-            if (!isParsed) return BadRequest("Id must be a number");
-
-            var entityToRemove = await _usuariosRepository.GetEntityByIdAsync(parseResult);
-            if (entityToRemove == null) return NotFound("Usuario no encontrado");
-
-            var result = await _usuariosRepository.DeleteEntityAsync(entityToRemove);
-            if(!result.Success) return Problem();
-
-            return Ok();
+            var result = await _usuarioService.UpdateById(dto);
+            return HandleResponse(result);
         }
 
-        [HttpPatch("ActualizarUsuario")]
-        public async Task<IActionResult> ActualizarUsuario(Usuarios usuarios)
+        [HttpDelete("eliminar")]
+        public async Task<IActionResult> Delete(DeleteUsuarioDto dto)
         {
-            if (usuarios == null) return BadRequest();
+            var result = await _usuarioService.DeleteById(dto);
 
-            var queryResult = await _usuariosRepository.UpdateEntityAsync(usuarios);
-            if (!queryResult.Success) return Problem();
-
-            return Ok();
+            return HandleResponse(result);
         }
     }
 }
