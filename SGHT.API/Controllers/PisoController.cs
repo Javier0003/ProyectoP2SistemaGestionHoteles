@@ -1,75 +1,60 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SGHT.Domain.Entities;
-using SGHT.Persistance.Interfaces;
+using SGHT.API.Utils;
+using SGHT.Application.Dtos.Piso;
+using SGHT.Application.Interfaces;
+
 
 namespace SGHT.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PisoController : ControllerBase
+    public class PisoController : BaseController
     {
-        private readonly IPisoRepository _pisoRepository;
+        private readonly IPisoService _pisoService;
 
-        public PisoController(IPisoRepository pisoRepository, ILogger<PisoController> logger)
+        public PisoController(IPisoService pisoService, ILogger<PisoController> logger)
         {
-            _pisoRepository = pisoRepository;
+            _pisoService = pisoService;
         }
 
-        [HttpGet("GetPiso")]
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var Piso = await _pisoRepository.GetAllAsync();
-            return Ok(Piso);
+            var pisoList = await _pisoService.GetAll();
+            return HandleResponse(pisoList);
         }
 
-         [HttpGet("GetPisoById/{id}")]
-        public async Task<IActionResult> GetById(string id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            bool isParsed = int.TryParse(id, out int result);
-            if (!isParsed) return BadRequest("Id must be a number");
+            var piso = await _pisoService.GetById(id);
+            if (!piso.Success) return NotFound("floor not found");
 
-            var Piso = await _pisoRepository.GetEntityByIdAsync(result);
-            if (Piso == null) return NotFound("Role not found");
-
-            return Ok(Piso);
+            return HandleResponse(piso);
         }
 
-        [HttpPost("CrearPiso")]
-        public async Task<IActionResult> Post(Piso piso)
+        [HttpPost("crear")]
+        public async Task<IActionResult> Post(SavePisoDto piso)
         {
-            if (piso == null) return BadRequest("Peticion invalida");
+            var result = await _pisoService.Save(piso);
 
-            var result = await _pisoRepository.SaveEntityAsync(piso);
-
-            if (!result.Success) return BadRequest();
-            return Ok("Piso Asignado");
+            return HandleResponse(result);
         }
 
 
-        [HttpDelete("EliminarPiso/{id}")]
-        public async Task<IActionResult> Delete(string id)
+        [HttpDelete("eliminar")]
+        public async Task<IActionResult> Delete(DeletePisoDto id)
         {
-            if (id == null) return BadRequest("Id is null");
-            bool isParsed = int.TryParse(id, out int result);
-            if (!isParsed) return BadRequest("Id must be a String");
+            var result = await _pisoService.DeleteById(id);
 
-            var entity = await _pisoRepository.GetEntityByIdAsync(result);
-            if (entity == null) return NotFound("Piso no encontrado");
-
-            var queryResult = await _pisoRepository.DeleteEntityAsync(entity);
-            if (!queryResult.Success) return Problem();
-
-            return Ok("piso eliminado");
+            return HandleResponse(result);
         }
 
-        [HttpPatch("ActualizarPiso")]
-        public async Task<IActionResult> Put(Piso piso)
+        [HttpPatch("actualizar")]
+        public async Task<IActionResult> Put(UpdatePisoDto piso)
         {
-            if (piso == null) return BadRequest("body is null");
-            var queryResult = await _pisoRepository.UpdateEntityAsync(piso);
-            if (!queryResult.Success) return Problem();
-
-            return Ok();
+            var result = await _pisoService.UpdateById(piso);
+            return HandleResponse(result);
         }
     }
 }
