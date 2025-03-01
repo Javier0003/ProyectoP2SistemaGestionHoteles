@@ -31,7 +31,7 @@ namespace SGHT.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError($"ClienteService.GetALl: {ex.ToString()}");
-                return OperationResult.GetErrorResult("idk how u got an error here", code: 500);
+                return OperationResult.GetErrorResult("no se encontro el cliente", code: 500);
             }
         }
 
@@ -40,12 +40,14 @@ namespace SGHT.Application.Services
             try
             {
                 var cliente = await _clienteRepository.GetEntityByIdAsync(id);
+                if (cliente == null) return OperationResult.GetErrorResult("no se encontro un Cliente con esa Id", code: 404);
+
                 return OperationResult.GetSuccesResult(cliente, code: 200);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"ClienteService.GetById: {ex.ToString()}");
-                return OperationResult.GetErrorResult("idk how u got an error here", code: 500);
+                return OperationResult.GetErrorResult("no se encontro el cliente", code: 500);
             }
         }
 
@@ -71,7 +73,7 @@ namespace SGHT.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError($"ClienteService.Create: {ex.ToString()}");
-                return OperationResult.GetErrorResult("idk how u got an error here", code: 500);
+                return OperationResult.GetErrorResult("no se pudo guardar el cliente", code: 500);
             }
         }
 
@@ -97,7 +99,7 @@ namespace SGHT.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError($"ClienteService.Update: {ex.ToString()}");
-                return OperationResult.GetErrorResult("idk how u got an error here", code: 500);
+                return OperationResult.GetErrorResult("no se pudo actualizar el cliente", code: 500);
             }
         }
 
@@ -106,17 +108,17 @@ namespace SGHT.Application.Services
             try
             {
                 var entity = await _clienteRepository.GetEntityByIdAsync(dto.IdCliente);
-                if (entity == null) return OperationResult.GetErrorResult("rol con esa id no existe", code: 404);
+                if (entity == null) return OperationResult.GetErrorResult("Cliente con esa id no existe", code: 404);
 
                 var queryResult = await _clienteRepository.DeleteEntityAsync(entity);
-                if (!queryResult.Success) return OperationResult.GetErrorResult("error eliminando este rol", code: 500);
+                if (!queryResult.Success) return OperationResult.GetErrorResult("error eliminando este Cliente", code: 500);
 
-                return OperationResult.GetSuccesResult(queryResult, "Rol eliminado correctamente", code: 200);
+                return OperationResult.GetSuccesResult(queryResult, "Cliente eliminado correctamente", code: 200);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"ClienteService.Delete: {ex.ToString()}");
-                return OperationResult.GetErrorResult("idk how u got an error here", code: 500);
+                return OperationResult.GetErrorResult("No se pudo eliminar el cliente", code: 500);
             }
         }
     }
