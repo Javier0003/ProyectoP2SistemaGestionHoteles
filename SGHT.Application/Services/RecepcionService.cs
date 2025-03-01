@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using SGHT.Application.Dtos.RecepcionDto;
 using SGHT.Application.Interfaces;
 using SGHT.Domain.Base;
+using SGHT.Domain.Entities.Configuration;
 using SGHT.Domain.Entities.Reservation;
 using SGHT.Persistance.Interfaces;
 
@@ -59,6 +60,8 @@ namespace SGHT.Application.Services
             try
             {
                 var cliente = await _recepcionRepository.GetEntityByIdAsync(id);
+                if (cliente == null) return OperationResult.GetErrorResult("Recepcion con esa id no encontrada", code: 404);
+
                 return OperationResult.GetSuccesResult(cliente, code: 200);
             }
             catch (Exception ex)
