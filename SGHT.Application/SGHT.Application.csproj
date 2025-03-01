@@ -11,4 +11,9 @@
     <ProjectReference Include="..\SGHT.Persistance\SGHT.Persistance.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dtos\Habitacion\" />
+    <Folder Include="Dtos\Servicio\" />
+  </ItemGroup>
+
 </Project>
