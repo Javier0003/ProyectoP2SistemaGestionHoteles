@@ -24,7 +24,7 @@ namespace SGHT.Domain.Base
             };
         }
 
-        public static OperationResult GetSuccesResult(dynamic data, string? message = null , int? code = null)
+        public static OperationResult GetSuccesResult(dynamic data, string? message = null, int? code = null)
         {
             return new()
             {

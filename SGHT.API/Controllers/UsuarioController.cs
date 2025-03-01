@@ -37,7 +37,7 @@ namespace SGHT.API.Controllers
             return HandleResponse(result);
         }
 
-        [HttpPut("actualizar")]
+        [HttpPatch("actualizar")]
         public async Task<IActionResult> Update(UpdateUsuarioDto dto)
         {
             var result = await _usuarioService.UpdateById(dto);

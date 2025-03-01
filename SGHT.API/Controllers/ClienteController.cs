@@ -1,95 +1,55 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SGHT.Domain.Entities;
-using SGHT.Persistance.Interfaces;
+using SGHT.API.Utils;
+using SGHT.Application.Interfaces;
+using SGHT.Application.Dtos.ClienteDto;
+
 
 namespace SGHT.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClienteController : ControllerBase
+    public class ClienteController : BaseController
     {
-        private readonly IClienteRepository _clienteRepository;
+        private readonly IClienteService _clienteService;
 
-        public ClienteController(IClienteRepository clienteRepository, ILogger<ClienteController> logger)
+        public ClienteController(IClienteService clienteService, ILogger<ClienteController> logger)
         {
-            _clienteRepository = clienteRepository;
+            _clienteService = clienteService;
         }
 
-        [HttpGet("GetCliente")]
-        public async Task<IActionResult> Get()
+        [HttpGet("GetClientes")]
+        public async Task<IActionResult> GetClientes()
         {
-            var Usuarios = await _clienteRepository.GetAllAsync();
-            return Ok(Usuarios);
+            var clientes = await _clienteService.GetAll();
+            return HandleResponse(clientes);
         }
 
         [HttpGet("GetClienteById")]
-        public async Task<IActionResult> Get(int Id)
+        public async Task<IActionResult> GetClientesByID(int Id)
         {
-            var Clientes = await _clienteRepository.GetEntityByIdAsync(Id);
-            return Ok(Clientes);
+            var cliente = await _clienteService.GetById(Id);
+            return HandleResponse(cliente);
         }
 
         [HttpPatch("UpdateCliente")]
-        public async Task<IActionResult> Put([FromBody] Cliente cliente)
+        public async Task<IActionResult> Put([FromBody] UpdateClienteDto cliente)
         {
-            if (cliente == null)
-                return BadRequest("Cliente no puede ser nulo");
-
-            var result = await _clienteRepository.UpdateEntityAsync(cliente);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result);
+            var clientes = await _clienteService.UpdateById(cliente);
+            return HandleResponse(clientes);
         }
 
         [HttpPost("CreateClient")]
-        public async Task<IActionResult> CreateClient([FromBody] Cliente cliente)
+        public async Task<IActionResult> CreateClient([FromBody] SaveClienteDto cliente)
         {
-            try
-            {
-                if (cliente == null)
-                    return BadRequest("El cliente no puede ser nulo");
-
-                // Validaciones básicas
-                if (string.IsNullOrEmpty(cliente.Documento))
-                    return BadRequest("El documento es requerido");
-
-                if (string.IsNullOrEmpty(cliente.NombreCompleto))
-                    return BadRequest("El nombre es requerido");
-
-                var result = await _clienteRepository.SaveEntityAsync(cliente);
-
-                if (!result.Success)
-                    return BadRequest(result.Message);
-
-                return Ok(new
-                {
-                    Message = "Cliente creado exitosamente",
-                    Cliente = cliente
-                });
-            }
-            catch (Exception ex)
-            {
-
-                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
-            }
+           var clientes = await _clienteService.Save(cliente);
+           return HandleResponse(clientes);
         }
 
         [HttpDelete("DeleteClient")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(DeleteClienteDto clienteDto)
         {
-            var cliente = await _clienteRepository.GetEntityByIdAsync(id);
-
-            if (cliente == null)
-                return NotFound("Cliente no encontrado");
-
-            var result = await _clienteRepository.DeleteEntityAsync(cliente);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok("Cliente eliminado");
+           var clientes = await _clienteService.DeleteById(clienteDto);
+            return HandleResponse(clientes);
         }
     }
 }
