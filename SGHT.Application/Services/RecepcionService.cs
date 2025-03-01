@@ -25,7 +25,7 @@ namespace SGHT.Application.Services
         {
             try
             {
-                var entity = await _recepcionRepository.GetEntityByIdAsync(dto.IdCliente);
+                var entity = await _recepcionRepository.GetEntityByIdAsync(dto.IdRecepcion);
                 if (entity == null) return OperationResult.GetErrorResult("Recepcion con ese ID no existe", code: 404);
 
                 var queryResult = await _recepcionRepository.DeleteEntityAsync(entity);
