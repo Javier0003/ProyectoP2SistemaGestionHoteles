@@ -14,7 +14,7 @@ namespace SGH.API
 
             builder.Services.AddRolUsuarioDependancy();
             builder.Services.AddCategoriaDependancy();
-            builder.Services.AddCLienteDependacny();
+            builder.Services.AddCLienteDependancy();
             builder.Services.AddEstadoHabitacionDependancy();
             builder.Services.AddHabitacionDependancy();
             builder.Services.AddPisoDependancy();

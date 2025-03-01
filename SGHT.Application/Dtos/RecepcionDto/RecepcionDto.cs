@@ -1,15 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using SGHT.Domain.Base;
+﻿
 
-namespace SGHT.Domain.Entities.Reservation
+namespace SGHT.Application.Dtos.RecepcionDto
 {
-    [Table("Recepcion", Schema = "dbo")]
-    public class Recepcion
+    public class RecepcionDto 
     {
-        [Column("IdRecepcion")]
-        [Key]
-        public int IdRecepcion { get; set; }
         public DateTime? FechaEntrada { get; set; }
         public DateTime? FechaSalida { get; set; }
         public DateTime? FechaSalidaConfirmacion { get; set; }
@@ -19,8 +13,9 @@ namespace SGHT.Domain.Entities.Reservation
         public decimal? TotalPagado { get; set; }
         public decimal? CostoPenalidad { get; set; }
         public string? Observacion { get; set; }
-        public bool? Estado { get; set; }
-        public int IdCliente { get; set; }
-        public int IdHabitacion { get; set; }
+        public required bool? Estado { get; set; }
+        public required int IdCliente { get; set; }
+        public required int IdHabitacion { get; set; }
+
     }
 }
