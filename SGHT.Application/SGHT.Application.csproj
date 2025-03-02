@@ -7,14 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dtos\Servicio\**" />
+    <EmbeddedResource Remove="Dtos\Servicio\**" />
+    <None Remove="Dtos\Servicio\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SGHT.Domain\SGHT.Domain.csproj" />
     <ProjectReference Include="..\SGHT.Persistance\SGHT.Persistance.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Dtos\Habitacion\" />
-
-    <Folder Include="Dtos\Servicio\" />
   </ItemGroup>
 
 </Project>
