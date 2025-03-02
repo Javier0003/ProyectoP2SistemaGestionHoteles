@@ -1,10 +1,21 @@
+<<<<<<< HEAD
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+=======
+﻿using System.Data;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using SGHT.Application.Base;
+>>>>>>> 5afcdb74881b35982bc35e15ef6cecc1c460bb41
 using SGHT.Application.Dtos.Categoria;
 using SGHT.Application.Interfaces;
 using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Interfaces;
+<<<<<<< HEAD
+=======
+using SGHT.Persistance.Repositories;
+>>>>>>> 5afcdb74881b35982bc35e15ef6cecc1c460bb41
 
 namespace SGHT.Application.Services
 {
@@ -57,10 +68,16 @@ namespace SGHT.Application.Services
         {
             Categoria categoria = new()
             {
+<<<<<<< HEAD
                 IdServicio = dto.IdServicio,
                 Descripcion = dto.Descripcion,
                 Estado = dto.Estado,
                 FechaCreacion = dto.FechaCreacion
+=======
+                Descripcion = dto.Descripcion,
+                Estado = dto.Estado,
+                FechaCreacion = DateTime.Now
+>>>>>>> 5afcdb74881b35982bc35e15ef6cecc1c460bb41
             };
 
             try
@@ -81,11 +98,18 @@ namespace SGHT.Application.Services
         {
             Categoria categoria = new()
             {
+<<<<<<< HEAD
                 IdServicio = dto.IdServicio,
                 Descripcion = dto.Descripcion,
                 Estado = dto.Estado,
                 FechaCreacion = dto.FechaCreacion,
                 IdCategoria = dto.IdCategoria
+=======
+                IdCategoria = dto.IdCategoria,
+                Descripcion = dto.Descripcion,
+                Estado = dto.Estado,
+                FechaCreacion = DateTime.Now
+>>>>>>> 5afcdb74881b35982bc35e15ef6cecc1c460bb41
             };
 
             try
