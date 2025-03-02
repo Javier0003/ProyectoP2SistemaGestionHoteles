@@ -1,17 +1,11 @@
 
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-﻿using System.Data;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using SGHT.Application.Base;
 using SGHT.Application.Dtos.Categoria;
 using SGHT.Application.Interfaces;
 using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Interfaces;
-using SGHT.Persistance.Repositories;
-
 
 namespace SGHT.Application.Services
 {
@@ -131,5 +125,6 @@ namespace SGHT.Application.Services
                 return OperationResult.GetErrorResult("Ha ocurrido un rrror eliminando categoria", code: 500);
             }
         }
+
     }
 }
