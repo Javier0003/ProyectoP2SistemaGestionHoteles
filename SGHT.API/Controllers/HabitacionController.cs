@@ -2,52 +2,52 @@
 using SGHT.API.Utils;
 using SGHT.Application.Dtos.Habitacion;
 using SGHT.Application.Interfaces;
-
 namespace SGHT.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class HabitacionController : BaseController
     {
-        private readonly IHabitacionService _habitacionRepository;
 
-        public HabitacionController(IHabitacionService habitacionRepository, ILogger<HabitacionController> logger)
+        private readonly IHabitacionService _habitacionService;
+
+        public HabitacionController(IHabitacionService habitacionService, ILogger<HabitacionController> logger)
         {
-            _habitacionRepository = habitacionRepository;
+            _habitacionService = habitacionService;
         }
 
         [HttpGet("GetHabitaciones")]
         public async Task<IActionResult> Get()
         {
-            var Usuarios = await _habitacionRepository.GetAll();
-            return HandleResponse(Usuarios);
+            var result = await _habitacionService.GetAll();
+            return HandleResponse(result);
         }
 
         [HttpGet("GetHabitacionId/{id}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
-            var habitacion = await _habitacionRepository.GetById(id);
-            return HandleResponse(habitacion);
+            var result = await _habitacionService.GetById(id);
+            return HandleResponse(result);
         }
 
         [HttpPost("CreateHabitacion")]
         public async Task<IActionResult> CrearHabitacion(SaveHabitacionDto habitacion)
         {
-            var result = await _habitacionRepository.Save(habitacion);
+            var result = await _habitacionService.Save(habitacion);
             return HandleResponse(result);
         }
 
         [HttpPatch("UpdateHabitacion")]
         public async Task<IActionResult> ActualizarHabitacion(UpdateHabitacionDto habitacion)
         {
-           var result = await _habitacionRepository.UpdateById(habitacion);
-           return HandleResponse(result);
+            var result = await _habitacionService.UpdateById(habitacion);
+            return HandleResponse(result);
         }
-       
+
         [HttpDelete("DeleteHabitacion")]
-        public async Task<IActionResult> EliminarHabitacion(DeleteHabitacionDto id)
+        public async Task<IActionResult> EliminarHabitacion(DeleteHabitacionDto habitacion)
         {
-            var result = await _habitacionRepository.DeleteById(id);
+            var result = await _habitacionService.DeleteById(habitacion);
             return HandleResponse(result);
         }
     }

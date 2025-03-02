@@ -1,4 +1,5 @@
-﻿namespace SGHT.Application.Dtos.Categoria
+﻿
+namespace SGHT.Application.Dtos.Categoria
 {
     public class SaveCategoriaDto : CategoriaDto
     {

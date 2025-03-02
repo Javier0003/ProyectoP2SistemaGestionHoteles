@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+
+using System.Runtime.InteropServices;
+using Microsoft.AspNetCore.Mvc;
 using SGHT.API.Utils;
 using SGHT.Application.Dtos.Categoria;
 using SGHT.Application.Interfaces;
@@ -10,49 +12,46 @@ namespace SGHT.API.Controllers
     [ApiController]
     public class CategoriaController : BaseController
     {
-        private readonly ICategoriaService _categoriaRepository;
+        private readonly ICategoriaService _categoriaService;
 
-        public CategoriaController(ICategoriaService categoriaRepository, ILogger<CategoriaController> logger)
+        public CategoriaController(ICategoriaService categoriaService, ILogger<CategoriaController> logger)
+
         {
-            _categoriaRepository = categoriaRepository;
+            _categoriaService = categoriaService;
         }
 
         [HttpGet("GetCategoria")]
         public async Task<IActionResult> Get()
         {
-            var Usuarios = await _categoriaRepository.GetAll();
-            return HandleResponse(Usuarios);
+            var result = await _categoriaService.GetAll();
+            return HandleResponse(result);
         }
 
         [HttpGet("GetCategoriaId")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
-            var categorias = await _categoriaRepository.GetById(id);
-
-            if (categorias is null)
-                return NotFound("Categoria no encontrada");
-            
-            return HandleResponse(categorias);
+           var result = await _categoriaService.GetById(id);
+            return HandleResponse(result);
         }
 
         [HttpPost("CreateCategoria")]
         public async Task<IActionResult> CrearCategoria(SaveCategoriaDto categoria)
         {
-            var result = await _categoriaRepository.Save(categoria);
+            var result = await _categoriaService.Save(categoria);
             return HandleResponse(result);
         }
 
         [HttpPatch("UpdateCategoria")]
         public async Task<IActionResult> ActualizarCategoria(UpdateCategoriaDto categoria)
          {
-            var result = await _categoriaRepository.UpdateById(categoria);
+            var result = await _categoriaService.UpdateById(categoria);
             return HandleResponse(result);
         }
 
         [HttpDelete("DeleteCategaria")]
         public async Task<IActionResult> EliminarCategoria(DeleteCategoriaDto id)
         {
-            var result = await _categoriaRepository.DeleteById(id);
+            var result = await _categoriaService.DeleteById(id);
             return HandleResponse(result);
         }
     }

@@ -1,4 +1,5 @@
-using Microsoft.Extensions.Configuration;
+
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SGHT.Application.Dtos.Categoria;
 using SGHT.Application.Interfaces;
@@ -49,7 +50,7 @@ namespace SGHT.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError($"CategoriaService.GetALl: {ex.ToString()}");
-                return OperationResult.GetErrorResult("idk there's a error here", code: 500);
+                return OperationResult.GetErrorResult("idk hay un error", code: 500);
             }
         }
 
@@ -124,5 +125,6 @@ namespace SGHT.Application.Services
                 return OperationResult.GetErrorResult("Ha ocurrido un rrror eliminando categoria", code: 500);
             }
         }
+
     }
 }

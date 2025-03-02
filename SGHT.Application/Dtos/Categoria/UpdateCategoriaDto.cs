@@ -1,3 +1,4 @@
+﻿
 ﻿namespace SGHT.Application.Dtos.Categoria
 {
     public class UpdateCategoriaDto : CategoriaDto
