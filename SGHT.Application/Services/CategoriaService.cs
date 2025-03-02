@@ -1,13 +1,10 @@
-﻿using System.Data;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using SGHT.Application.Base;
 using SGHT.Application.Dtos.Categoria;
 using SGHT.Application.Interfaces;
 using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Interfaces;
-using SGHT.Persistance.Repositories;
 
 namespace SGHT.Application.Services
 {
@@ -60,9 +57,10 @@ namespace SGHT.Application.Services
         {
             Categoria categoria = new()
             {
+                IdServicio = dto.IdServicio,
                 Descripcion = dto.Descripcion,
                 Estado = dto.Estado,
-                FechaCreacion = DateTime.Now
+                FechaCreacion = dto.FechaCreacion
             };
 
             try
@@ -83,10 +81,11 @@ namespace SGHT.Application.Services
         {
             Categoria categoria = new()
             {
-                IdCategoria = dto.IdCategoria,
+                IdServicio = dto.IdServicio,
                 Descripcion = dto.Descripcion,
                 Estado = dto.Estado,
-                FechaCreacion = DateTime.Now
+                FechaCreacion = dto.FechaCreacion,
+                IdCategoria = dto.IdCategoria
             };
 
             try

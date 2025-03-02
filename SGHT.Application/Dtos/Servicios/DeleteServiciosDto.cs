@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace SGHT.Application.Dtos.Servicio
 {
-    public class SaveServicioDto
+    public class DeleteServiciosDto 
     {
+        public int IdServicio { get; set; }
     }
 }

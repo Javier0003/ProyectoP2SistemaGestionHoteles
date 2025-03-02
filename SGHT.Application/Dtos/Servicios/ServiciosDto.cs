@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace SGHT.Application.Dtos.Servicio
 {
-    public class UpdateServicioDto
+    public class ServiciosDto
     {
+        public required string? Nombre { get; set; }
+        public required string? Descripcion { get; set; }
     }
 }
