@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 
 ﻿using Microsoft.Extensions.Configuration;
+=======
+using Microsoft.Extensions.Configuration;
+>>>>>>> main
 using Microsoft.Extensions.Logging;
 using SGHT.Application.Dtos.Categoria;
 using SGHT.Application.Interfaces;
@@ -61,7 +65,7 @@ namespace SGHT.Application.Services
                 IdServicio = dto.IdServicio,
                 Descripcion = dto.Descripcion,
                 Estado = dto.Estado,
-                FechaCreacion = dto.FechaCreacion
+                FechaCreacion = DateTime.Now
             };
 
             try
@@ -85,8 +89,8 @@ namespace SGHT.Application.Services
                 IdServicio = dto.IdServicio,
                 Descripcion = dto.Descripcion,
                 Estado = dto.Estado,
-                FechaCreacion = dto.FechaCreacion,
-                IdCategoria = dto.IdCategoria
+                IdCategoria = dto.IdCategoria,
+                FechaCreacion = DateTime.Now
             };
 
             try
