@@ -11,7 +11,7 @@ namespace SGHT.IOC.Dependancies
         public static void AddCategoriaDependancy(this IServiceCollection service)
         {
             service.AddScoped<ICategoriaRepository, CategoriaRepository>();
-            service.AddTransient<ICategoriaRepository, CategoriaRepository>();
+            service.AddTransient<ICategoriaService, CategoriaService>();
         }
     }
 }

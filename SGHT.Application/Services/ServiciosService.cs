@@ -5,7 +5,6 @@ using SGHT.Application.Interfaces;
 using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Interfaces;
-using SGHT.Persistance.Repositories;
 
 namespace SGHT.Application.Services
 {

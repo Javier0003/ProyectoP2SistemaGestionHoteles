@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SGHT.Domain.Entities;
-using SGHT.Persistance.Interfaces;
-using SGHT.Persistance.Repositories;
+using SGHT.API.Utils;
+using SGHT.Application.Dtos.Habitacion;
+using SGHT.Application.Interfaces;
 
 namespace SGHT.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class HabitacionController : ControllerBase
+    public class HabitacionController : BaseController
     {
-        private readonly IHabitacionRepository _habitacionRepository;
+        private readonly IHabitacionService _habitacionRepository;
 
-        public HabitacionController(IHabitacionRepository habitacionRepository, ILogger<HabitacionController> logger)
+        public HabitacionController(IHabitacionService habitacionRepository, ILogger<HabitacionController> logger)
         {
             _habitacionRepository = habitacionRepository;
         }
@@ -19,62 +19,36 @@ namespace SGHT.API.Controllers
         [HttpGet("GetHabitaciones")]
         public async Task<IActionResult> Get()
         {
-            var Usuarios = await _habitacionRepository.GetAllAsync();
-            return Ok(Usuarios);
+            var Usuarios = await _habitacionRepository.GetAll();
+            return HandleResponse(Usuarios);
         }
 
         [HttpGet("GetHabitacionId/{id}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
-            var habitacion = await _habitacionRepository.GetEntityByIdAsync(id);
-
-            if (habitacion is null)
-                return NotFound("Habitacion no encontrada");
-
-            return Ok(habitacion);
+            var habitacion = await _habitacionRepository.GetById(id);
+            return HandleResponse(habitacion);
         }
 
         [HttpPost("CreateHabitacion")]
-        public async Task<IActionResult> CrearHabitacion(Habitacion habitacion)
+        public async Task<IActionResult> CrearHabitacion(SaveHabitacionDto habitacion)
         {
-            if (habitacion is null)
-                return BadRequest("Esto no puede ser null");
-
-            var result = await _habitacionRepository.SaveEntityAsync(habitacion);
-
-            if (!result.Success)
-                return Problem("Hubo un error al guardar la habitacion");
-
-            return Ok("Habitacion creada exitosamente");
+            var result = await _habitacionRepository.Save(habitacion);
+            return HandleResponse(result);
         }
 
         [HttpPatch("UpdateHabitacion")]
-        public async Task<IActionResult> ActualizarHabitacion(Habitacion habitacion)
+        public async Task<IActionResult> ActualizarHabitacion(UpdateHabitacionDto habitacion)
         {
-            if (habitacion == null)
-                return BadRequest("Habitacion no puede ser nulo");
-
-            var result = await _habitacionRepository.UpdateEntityAsync(habitacion);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-           return Ok(result);
+           var result = await _habitacionRepository.UpdateById(habitacion);
+           return HandleResponse(result);
         }
        
         [HttpDelete("DeleteHabitacion")]
-        public async Task<IActionResult> EliminarHabitacion(int id)
+        public async Task<IActionResult> EliminarHabitacion(DeleteHabitacionDto id)
         {
-            var habitacion = await _habitacionRepository.GetEntityByIdAsync(id);
-
-            if (habitacion is null)
-                return NotFound("Habitacion no encontrada");
-
-            var result = await _habitacionRepository.DeleteEntityAsync(habitacion);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok("Habitacion eliminada");
+            var result = await _habitacionRepository.DeleteById(id);
+            return HandleResponse(result);
         }
     }
 }
