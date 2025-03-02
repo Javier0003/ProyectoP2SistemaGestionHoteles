@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SGHT.Application.Dtos.Habitacion
+namespace SGHT.Application.Interfaces
 {
-    public class SaveHabitacionDto : HabitacionDto
+    internal class IHabitacionService
     {
     }
 }

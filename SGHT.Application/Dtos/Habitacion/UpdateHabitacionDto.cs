@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace SGHT.Application.Dtos.Habitacion
 {
-    public class UpdateHabitacionDto
+    public class UpdateHabitacionDto : HabitacionDto
     {
+        public int IdHabitacion { get; set; }
     }
 }

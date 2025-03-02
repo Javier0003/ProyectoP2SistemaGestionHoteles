@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace SGHT.Application.Dtos.Habitacion
 {
-    internal class DeleteHabitacionDto
+    public class DeleteHabitacionDto
     {
+        public int IdHabitacion { get; set; }
     }
 }
