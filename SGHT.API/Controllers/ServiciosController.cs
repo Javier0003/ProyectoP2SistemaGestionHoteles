@@ -1,18 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using SGHT.Domain.Entities;
-using SGHT.Persistance.Interfaces;
-using SGHT.Persistance.Repositories;
+﻿using Microsoft.AspNetCore.Mvc;
+using SGHT.API.Utils;
+using SGHT.Application.Dtos.Servicio;
+using SGHT.Application.Interfaces;
 
 namespace SGHT.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ServiciosController : ControllerBase
+    public class ServiciosController : BaseController
     {
-        private readonly IServiciosRepository _serviciosRepository;
+        private readonly IServiciosService _serviciosRepository;
 
-        public ServiciosController(IServiciosRepository serviciosRepository, ILogger<ServiciosController> logger)
+        public ServiciosController(IServiciosService serviciosRepository, ILogger<ServiciosController> logger)
         {
             _serviciosRepository = serviciosRepository;
         }
@@ -20,65 +19,36 @@ namespace SGHT.API.Controllers
         [HttpGet("GetServicios")]
         public async Task<IActionResult> Get()
         {
-            var Usuarios = await _serviciosRepository.GetAllAsync();
-            return Ok(Usuarios);
+            var Usuarios = await _serviciosRepository.GetAll();
+            return HandleResponse(Usuarios);
         }
 
         [HttpGet("GetServicioId/{id}")]
-        public async Task<IActionResult> BuscarPorId(string id)
+        public async Task<IActionResult> BuscarPorId(int id)
         {
-            bool isParsed = int.TryParse(id, out int result);
-
-            var categorias = await _serviciosRepository.GetEntityByIdAsync(result);
-
-            if (categorias is null)
-                return NotFound("Servicio no encontrado");
-
-            return Ok(categorias);
+            var categorias = await _serviciosRepository.GetById(id);
+            return HandleResponse(categorias);
         }
 
         [HttpPost("CreateServicio")]
-        public async Task<IActionResult> CrearServicio(Servicios servicio)
+        public async Task<IActionResult> CrearServicio(SaveServiciosDto servicio)
         {
-            if (servicio is null)
-                return BadRequest("Esto no puede ser null");
-
-            var result = await _serviciosRepository.SaveEntityAsync(servicio);
-
-            if (!result.Success)
-                return Problem("Hubo un error al guardar el servicio");
-
-            return Ok();
+            var result = await _serviciosRepository.Save(servicio);
+            return HandleResponse(result);
         }
 
         [HttpPatch("UpdateServicios")]
-        public async Task<IActionResult> ActualizarServicio(Servicios servicio)
+        public async Task<IActionResult> ActualizarServicio(UpdateServiciosDto servicio)
         {
-            if (servicio is null)
-                return BadRequest("El servicio no puede ser nulo");
-
-            var result = await _serviciosRepository.UpdateEntityAsync(servicio);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result);
+            var result = await _serviciosRepository.UpdateById(servicio);
+            return HandleResponse(result);
         }
 
         [HttpDelete("DeleteServicios")]
-        public async Task<IActionResult> EliminarCategoria(int id)
+        public async Task<IActionResult> EliminarCategoria(DeleteServiciosDto id)
         {
-            var servicio = await _serviciosRepository.GetEntityByIdAsync(id);
-
-            if (servicio is null)
-                return NotFound("Servicio no encontrada");
-
-            var result = await _serviciosRepository.DeleteEntityAsync(servicio);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok("Servicio eliminada");
+            var result = await _serviciosRepository.DeleteById(id);
+            return HandleResponse(result);
         }
     }
 }

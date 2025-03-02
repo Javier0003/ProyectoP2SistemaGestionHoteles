@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using SGHT.Application.Dtos.RecepcionDto;
 using SGHT.Application.Interfaces;
 using SGHT.Domain.Base;
-using SGHT.Domain.Entities.Configuration;
 using SGHT.Domain.Entities.Reservation;
 using SGHT.Persistance.Interfaces;
 

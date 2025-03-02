@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SGHT.API.Utils;
+using SGHT.Application.Dtos.Categoria;
+using SGHT.Application.Interfaces;
 using SGHT.Domain.Entities;
-using SGHT.Persistance.Interfaces;
-using SGHT.Persistance.Repositories;
 
 namespace SGHT.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriaController : ControllerBase
+    public class CategoriaController : BaseController
     {
-        private readonly ICategoriaRepository _categoriaRepository;
+        private readonly ICategoriaService _categoriaRepository;
 
-        public CategoriaController(ICategoriaRepository categoriaRepository, ILogger<CategoriaController> logger)
+        public CategoriaController(ICategoriaService categoriaRepository, ILogger<CategoriaController> logger)
         {
             _categoriaRepository = categoriaRepository;
         }
@@ -19,63 +20,40 @@ namespace SGHT.API.Controllers
         [HttpGet("GetCategoria")]
         public async Task<IActionResult> Get()
         {
-            var Usuarios = await _categoriaRepository.GetAllAsync();
-            return Ok(Usuarios);
+            var Usuarios = await _categoriaRepository.GetAll();
+            return HandleResponse(Usuarios);
         }
 
         [HttpGet("GetCategoriaId")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
-            var categorias = await _categoriaRepository.GetEntityByIdAsync(id);
+            var categorias = await _categoriaRepository.GetById(id);
 
             if (categorias is null)
                 return NotFound("Categoria no encontrada");
             
-            return Ok(categorias);
+            return HandleResponse(categorias);
         }
 
         [HttpPost("CreateCategoria")]
-        public async Task<IActionResult> CrearCategoria(Categoria categoria)
+        public async Task<IActionResult> CrearCategoria(SaveCategoriaDto categoria)
         {
-            if (categoria is null) 
-                return BadRequest("Esto no puede ser null");
-            
-            var result = await _categoriaRepository.SaveEntityAsync(categoria);
-            
-            if (!result.Success) 
-                return Problem("Hubo un error al guardar la categoría");
-
-            return Ok("Creada exitosamente");
+            var result = await _categoriaRepository.Save(categoria);
+            return HandleResponse(result);
         }
 
         [HttpPatch("UpdateCategoria")]
-        public async Task<IActionResult> ActualizarCategoria(Categoria categoria)
+        public async Task<IActionResult> ActualizarCategoria(UpdateCategoriaDto categoria)
          {
-            if (categoria is null)
-                return BadRequest("Categoria no puede ser nula");
-
-            var result = await _categoriaRepository.UpdateEntityAsync(categoria);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok(result);
+            var result = await _categoriaRepository.UpdateById(categoria);
+            return HandleResponse(result);
         }
 
         [HttpDelete("DeleteCategaria")]
-        public async Task<IActionResult> EliminarCategoria(int id)
+        public async Task<IActionResult> EliminarCategoria(DeleteCategoriaDto id)
         {
-            var categoria = await _categoriaRepository.GetEntityByIdAsync(id);
-
-            if (categoria is null)
-                return NotFound("Categoria no encontrada");
-
-            var result = await _categoriaRepository.DeleteEntityAsync(categoria);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            return Ok("Categoria eliminada");
+            var result = await _categoriaRepository.DeleteById(id);
+            return HandleResponse(result);
         }
     }
 }
