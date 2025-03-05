@@ -4,7 +4,9 @@ using SGHT.Application.Dtos.Usuarios;
 using SGHT.Application.Interfaces;
 using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
+using SGHT.Persistance.Entities.Users;
 using SGHT.Persistance.Interfaces;
+using SGHT.Application.Utils;
 
 namespace SGHT.Application.Services
 {
@@ -13,12 +15,14 @@ namespace SGHT.Application.Services
         private readonly IUsuariosRepository _usuariosRepository;
         private readonly ILogger<UsuarioService> _logger;
         private readonly IConfiguration _configuration;
+        private readonly TokenProvider _tokenProvider;
 
-        public UsuarioService(IUsuariosRepository usuariosRepository, ILogger<UsuarioService> logger, IConfiguration configuration)
+        public UsuarioService(IUsuariosRepository usuariosRepository, ILogger<UsuarioService> logger, IConfiguration configuration, TokenProvider tokenProvider)
         {
             _usuariosRepository = usuariosRepository;
             _logger = logger;
             _configuration = configuration;
+            _tokenProvider = tokenProvider;
         }
         public async Task<OperationResult> GetAll()
         {
@@ -53,7 +57,7 @@ namespace SGHT.Application.Services
                 var usuario = new Usuarios
                 {
                     NombreCompleto = dto.NombreCompleto,
-                    Clave = dto.Clave,
+                    Clave = Passwords.HashPassword(dto.Clave),
                     Correo = dto.Correo,
                     Estado = dto.Estado,
                     IdRolUsuario = dto.IdRolUsuario,
@@ -110,5 +114,32 @@ namespace SGHT.Application.Services
                 return OperationResult.GetErrorResult("Error removing user", code: 500);
             }
         }
+
+        public async Task<OperationResult> LogIn(UserLogIn usuario)
+        {
+            try
+            {
+                var result = await _usuariosRepository.LogIn(usuario);
+                if (!Passwords.VerifyPassword(usuario.Password, result.Data.Clave))
+                {
+                    return OperationResult.GetErrorResult("Usuario o contraseña incorrectos", code: 403);
+                }
+
+                var token = _tokenProvider.Create(result.Data);
+
+                return OperationResult.GetSuccesResult(token, code: 200);
+            }
+            catch (Exception ex) 
+            {
+                _logger.LogError($"UsuarioService.LogIn: {ex}");
+                return OperationResult.GetErrorResult($"{ex}", code: 500);
+            }
+
+        }
     }
 }
+
+//{
+//    "email": "javier@gmail.com",
+//  "password": "javier"
+//}

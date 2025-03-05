@@ -263,3 +263,5 @@ ALTER TABLE [dbo].[Tarifas]  WITH CHECK ADD  CONSTRAINT [CK__Tarifas__estado__74
 GO
 ALTER TABLE [dbo].[Tarifas] CHECK CONSTRAINT [CK__Tarifas__estado__74AE54BC]
 GO
+ALTER TABLE [dbo].[Usuario] ALTER COLUMN Clave NVARCHAR(200);
+GO
