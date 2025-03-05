@@ -24,6 +24,9 @@ namespace SGHT.Persistance.Repositories
 
         public async Task<OperationResult> LogIn(UserLogIn usuario)
         {
+            if (string.IsNullOrWhiteSpace(usuario.Email)) return OperationResult.GetErrorResult("Email is null", code: 400);
+            if (string.IsNullOrWhiteSpace(usuario.Password)) return OperationResult.GetErrorResult("Password is null", code: 400);
+
             try
             {
                 var query = await (from Usuarios in _context.Usuarios
@@ -43,8 +46,19 @@ namespace SGHT.Persistance.Repositories
             {
                 _logger.LogError($"Error in LogIn: {ex}");
                 return OperationResult.GetErrorResult("No se pudo iniciar sesion", code: 500);
-
             }
+        }
+
+        public override Task<OperationResult> SaveEntityAsync(Usuarios usuarios)
+        {
+            if (usuarios == null) return OperationResult.GetErrorResultAsync("Body is null", code: 400);
+            if (usuarios.Estado == null) return OperationResult.GetErrorResultAsync("Estado can't be null", code: 400);
+            if (string.IsNullOrWhiteSpace(usuarios.Correo)) return OperationResult.GetErrorResultAsync("Correo can't be null or whitespace", code: 400);
+            if (string.IsNullOrWhiteSpace(usuarios.Clave)) return OperationResult.GetErrorResultAsync("Clave can't be null or whitespace", code: 400);
+            if (string.IsNullOrWhiteSpace(usuarios.NombreCompleto)) return OperationResult.GetErrorResultAsync("Nombre can't be null or whitespace", code: 400);
+
+            if (_context.Usuarios.Any(cd => cd.Correo == usuarios.Correo)) return OperationResult.GetErrorResultAsync("Este correo ya esta registrado en la base de datos", code: 400);
+            return base.SaveEntityAsync(usuarios);
         }
     }
 }
