@@ -34,5 +34,15 @@ namespace SGHT.Domain.Base
                 Code = code
             };
         }
+
+        public static async Task<OperationResult> GetErrorResultAsync(string message, dynamic? data = null, int? code = null)
+        {
+            return GetErrorResult(message: message, data: data, code: code);
+        }
+
+        public static async Task<OperationResult> GetSuccesResultAsync(string message, dynamic? data = null, int? code = null)
+        {
+            return GetSuccesResult(message: message, data: data, code: code);
+        }
     }
 }
