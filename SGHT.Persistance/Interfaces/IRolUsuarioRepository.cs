@@ -4,7 +4,9 @@ using SGHT.Domain.Repository;
 
 namespace SGHT.Persistance.Interfaces
 {
-    public interface IRolUsuarioRepository : IBaseRepository<RolUsuario>
-    {
+    public interface IRolUsuarioRepository : IBaseRepository<RolUsuario> { 
+
+
+    
     }
 }
