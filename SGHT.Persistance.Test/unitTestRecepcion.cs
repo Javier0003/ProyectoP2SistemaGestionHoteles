@@ -45,7 +45,7 @@ namespace SGHT.Persistance.Test
                 TotalPagado = 50,
                 CostoPenalidad = 0,
                 Observacion = "Test",
-                IdRecepcion = 1,
+                IdCliente = 1,
                 IdHabitacion = 1,
                 Estado = true,
             };
@@ -72,6 +72,7 @@ namespace SGHT.Persistance.Test
                 CostoPenalidad = 0,
                 Observacion = "Test",
                 IdRecepcion = 1,
+                IdCliente = 1,
                 IdHabitacion = 1,
                 Estado = true,
             };

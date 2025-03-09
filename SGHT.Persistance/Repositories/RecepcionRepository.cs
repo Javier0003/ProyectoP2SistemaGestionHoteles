@@ -50,56 +50,57 @@ namespace SGHT.Persistance.Repositories
 
         }
 
-        public override Task<OperationResult> SaveEntityAsync(Recepcion recepcion)
+        public override async Task<OperationResult> SaveEntityAsync(Recepcion recepcion)
         {
             if(recepcion == null) 
-                return OperationResult.GetErrorResultAsync("La recepcion es nula", code: 400);
+                return OperationResult.GetErrorResult("La recepcion es nula", code: 400);
             
             if(recepcion.Estado == null) 
-                return OperationResult.GetErrorResultAsync("El estado de la recepcion no puede ser nulo", code: 400);
+                return OperationResult.GetErrorResult("El estado de la recepcion no puede ser nulo", code: 400);
             
             if(string.IsNullOrEmpty(recepcion.FechaEntrada.ToString())) 
-                return OperationResult.GetErrorResultAsync("La fecha de entrada no puede ser nula", code: 400);
+                return OperationResult.GetErrorResult("La fecha de entrada no puede ser nula", code: 400);
             
             if(string.IsNullOrEmpty(recepcion.FechaSalida.ToString())) 
-                return OperationResult.GetErrorResultAsync("La fecha de salida no puede ser nula", code: 400);
+                return OperationResult.GetErrorResult("La fecha de salida no puede ser nula", code: 400);
             
             if(recepcion.FechaEntrada < DateTime.Today) 
-                return OperationResult.GetErrorResultAsync("La fecha de entrada no puede ser anterior a la fecha actual", code: 400);
+                return OperationResult.GetErrorResult("La fecha de entrada no puede ser anterior a la fecha actual", code: 400);
             
             if(recepcion.FechaSalida < DateTime.Today) 
-                return OperationResult.GetErrorResultAsync("La fecha de salida no puede ser anterior a la fecha actual", code: 400);
+                return OperationResult.GetErrorResult("La fecha de salida no puede ser anterior a la fecha actual", code: 400);
             
             if(recepcion.FechaSalida < recepcion.FechaEntrada) 
-                return OperationResult.GetErrorResultAsync("La fecha de salida no puede ser anterior a la fecha de entrada", code: 400);        
+                return OperationResult.GetErrorResult("La fecha de salida no puede ser anterior a la fecha de entrada", code: 400);        
             
-            if(_context.Recepcion.Any(rc => rc.IdRecepcion == recepcion.IdRecepcion)) return OperationResult.GetErrorResultAsync("Esta recepcion ya esta registrada en la base de datos", code: 400);
+            if(_context.Recepcion.Any(rc => rc.IdRecepcion == recepcion.IdRecepcion)) 
+                return OperationResult.GetErrorResult("Esta recepcion ya esta registrada en la base de datos", code: 400);
             
-            return base.SaveEntityAsync(recepcion);
+            return await base.SaveEntityAsync(recepcion);
         }
 
-       public override Task<OperationResult> UpdateEntityAsync(Recepcion recepcion)
+       public override async Task<OperationResult> UpdateEntityAsync(Recepcion recepcion)
        {
 
             if (recepcion.FechaEntrada < DateTime.Today)
-                return OperationResult.GetErrorResultAsync("La fecha de entrada no puede ser anterior a la fecha actual", code: 400);
+                return OperationResult.GetErrorResult("La fecha de entrada no puede ser anterior a la fecha actual", code: 400);
 
             if (recepcion.FechaSalida < DateTime.Today)
-                return OperationResult.GetErrorResultAsync("La fecha de salida no puede ser anterior a la fecha actual", code: 400);
+                return OperationResult.GetErrorResult("La fecha de salida no puede ser anterior a la fecha actual", code: 400);
 
             if (recepcion.FechaSalida < recepcion.FechaEntrada)
-                return OperationResult.GetErrorResultAsync("La fecha de salida no puede ser anterior a la fecha de entrada", code: 400);
+                return OperationResult.GetErrorResult("La fecha de salida no puede ser anterior a la fecha de entrada", code: 400);
 
-            return base.UpdateEntityAsync(recepcion);
+            return await base.UpdateEntityAsync(recepcion);
        } 
 
-        public override Task<OperationResult> DeleteEntityAsync(Recepcion recepcion)
+        public override async Task<OperationResult> DeleteEntityAsync(Recepcion recepcion)
         {
             
             if(recepcion.IdRecepcion == null) 
-                return OperationResult.GetErrorResultAsync("El id de la recepcion no puede ser nulo", code: 400);
+                return OperationResult.GetErrorResult("El id de la recepcion no puede ser nulo", code: 400);
 
-            return base.DeleteEntityAsync(recepcion);
+            return await base.DeleteEntityAsync(recepcion);
         }
 
     }
