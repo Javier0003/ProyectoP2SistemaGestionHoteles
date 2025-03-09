@@ -36,13 +36,13 @@ namespace SGHT.Persistance.Repositories
             }
         }
 
-        public  async Task<OperationResult> SaveEstadoAsync(EstadoHabitacion estadoHabitacion)
+        public async Task<OperationResult> SaveEstadoAsync(EstadoHabitacion estadoHabitacion)
         {
-            if (estadoHabitacion == null) return await OperationResult.GetErrorResultAsync("El estado de la habitación es nulo", code: 400);
-            if (string.IsNullOrWhiteSpace(estadoHabitacion.Descripcion)) return await OperationResult.GetErrorResultAsync("La descripción no puede estar vacía", code: 400);
+            if (estadoHabitacion == null) return OperationResult.GetErrorResult("El estado de la habitación es nulo", code: 400);
+            if (string.IsNullOrWhiteSpace(estadoHabitacion.Descripcion)) return OperationResult.GetErrorResult("La descripción no puede estar vacía", code: 400);
 
             if (_context.EstadoHabitaciones.Any(e => e.Descripcion == estadoHabitacion.Descripcion))
-                return await OperationResult.GetErrorResultAsync("Este estado ya está registrado", code: 400);
+                return OperationResult.GetErrorResult("Este estado ya está registrado", code: 400);
 
             return await base.SaveEntityAsync(estadoHabitacion);
         }
