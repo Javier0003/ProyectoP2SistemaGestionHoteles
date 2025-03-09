@@ -23,7 +23,6 @@ namespace SGH.API
             builder.Services.AddHabitacionDependancy();
             builder.Services.AddPisoDependancy();
             builder.Services.AddRecepcionDependancy();
-            builder.Services.AddRolUsuarioDependancy();
             builder.Services.AddServiciosDependancy();
             builder.Services.AddTarifasDependancy();
             builder.Services.AddUsuariosDependancy();
