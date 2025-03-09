@@ -5,7 +5,7 @@ using SGHT.Domain.Base;
 namespace SGHT.Domain.Entities.Reservation
 {
     [Table("Recepcion", Schema = "dbo")]
-    public class Recepcion
+    public class Recepcion : Auditoria
     {
         [Column("IdRecepcion")]
         [Key]
@@ -19,7 +19,6 @@ namespace SGHT.Domain.Entities.Reservation
         public decimal? TotalPagado { get; set; }
         public decimal? CostoPenalidad { get; set; }
         public string? Observacion { get; set; }
-        public bool? Estado { get; set; }
         public int IdCliente { get; set; }
         public int IdHabitacion { get; set; }
     }

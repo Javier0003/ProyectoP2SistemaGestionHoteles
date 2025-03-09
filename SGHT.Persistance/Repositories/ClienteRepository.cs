@@ -6,6 +6,9 @@ using SGHT.Domain.Entities.Configuration;
 using SGHT.Persistance.Base;
 using SGHT.Persistance.Context;
 using SGHT.Persistance.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Azure.Core;
+
 
 namespace SGHT.Persistance.Repositories
 {
@@ -22,9 +25,43 @@ namespace SGHT.Persistance.Repositories
             _configuration = configuration;
         }
 
-        /*Task<dynamic> IClienteRepository.SaveEntityAsync(Cliente cliente)
+        public async Task<OperationResult> GetClienteByDocumento()
         {
             throw new NotImplementedException();
-        }*/
+        }
+
+        public async Task<OperationResult> GetClienteByID(int idCliente)
+        {
+            OperationResult result = new OperationResult();
+
+            try
+            {
+                var querys = await (from cliente in _context.Clientes
+                                    where cliente.IdCliente == idCliente
+                                    select new Cliente()
+                                    {
+                                        IdCliente = cliente.IdCliente,
+                                        TipoDocumento = cliente.TipoDocumento,
+                                        Documento = cliente.Documento,
+                                        NombreCompleto = cliente.NombreCompleto,
+                                        Correo = cliente.Correo,
+                                        Estado = cliente.Estado,
+                                    }).ToListAsync();
+                result.Data = querys;
+            }
+            catch (Exception ex)
+            {
+                result.Message = this._configuration["ErroClienteRepository:GetClienteByID"];
+                result.Success = false;
+                this._logger.LogError(result.Message, ex.ToString());
+            }
+
+            if (result.Data == null) 
+                return OperationResult.GetErrorResult("No se encontro el cliente", code: 404);
+               
+       
+            return result;
+        }
+
     }
 }
