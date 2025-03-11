@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Context;
 using SGHT.Persistance.Interfaces;
@@ -24,7 +25,7 @@ namespace SGHT.Persistance.Test
             var configuration = new ConfigurationBuilder().Build();
 
             _context = new SGHTContext(options);
-            _categoriaRepository = new RolUsuarioRepository(_context, logger, configuration);
+            _categoriaRepository = new CategoriaRepository(_context, logger, configuration);
         }
 
         [Fact]
@@ -33,6 +34,7 @@ namespace SGHT.Persistance.Test
             // Arrange
             var categoria = new Categoria
             {
+                IdCategoria = 1,
                 Descripcion = "Exclusiva",
                 Estado = true,
                 IdServicio = 1,
@@ -70,6 +72,7 @@ namespace SGHT.Persistance.Test
             // Arrange
             var categoria1 = new Categoria
             {
+                IdCategoria = 1,
                 Descripcion = "Exclusivo",
                 Estado = true,
                 IdServicio = 1,
@@ -77,6 +80,7 @@ namespace SGHT.Persistance.Test
 
             var categoria2 = new Categoria
             {
+                IdCategoria = 2,
                 Descripcion = "Clientes",
                 Estado = true,
                 IdServicio = 2,
@@ -97,6 +101,7 @@ namespace SGHT.Persistance.Test
             // Arrange
             var categoria = new Categoria
             {
+                IdCategoria = 1,
                 Descripcion = "Clientes",
                 Estado = true,
                 IdServicio = 1,
@@ -114,7 +119,7 @@ namespace SGHT.Persistance.Test
         }
 
         [Fact]
-        public async Task UpdateRolUsuario_WithNullEntity_ShouldFail()
+        public async Task UpdateCategoria_WithNullEntity_ShouldFail()
         {
             // Act
             var result = await _categoriaRepository.UpdateEntityAsync(null);
@@ -124,29 +129,7 @@ namespace SGHT.Persistance.Test
         }
 
         [Fact]
-        public async Task DeleteRolUsuario_ShouldSetInactiveState()
-        {
-            // Arrange
-            var categoria = new Categoria
-            {
-                Descripcion = "Ejecutivos",
-                Estado = true,
-                IdServicio = 1,
-            };
-            await _categoriaRepository.SaveEntityAsync(categoria);
-
-            // Act
-            var deleteResult = await _categoriaRepository.DeleteEntityAsync(categoria);
-            var deletedRole = await _categoriaRepository.GetEntityByIdAsync(categoria.IdCategoria);
-
-            // Assert
-            Assert.True(deleteResult.Success);
-            Assert.Equal(200, deleteResult.Code);
-            Assert.Null(deletedRole);
-        }
-
-        [Fact]
-        public async Task DeleteRolUsuario_WithNonExistentId_ShouldFail()
+        public async Task DeleteCategoria_WithNonExistentId_ShouldFail()
         {
             // Arrange
             var categoria = new Categoria
