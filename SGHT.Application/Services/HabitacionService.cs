@@ -99,7 +99,6 @@ namespace SGHT.Application.Services
                 _logger.LogError($"HabitacionService.Save: {ex.ToString()}");
                 return OperationResult.GetErrorResult("Ha ocurriod al actualizar la habitacion", code: 500);
             }
-
         }
 
         public async Task<OperationResult> DeleteById(DeleteHabitacionDto dto)
