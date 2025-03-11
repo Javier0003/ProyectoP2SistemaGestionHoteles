@@ -2,11 +2,14 @@
 using SGHT.Application.Interfaces;
 using SGHT.Application.Dtos.Usuarios;
 using SGHT.API.Utils;
+using SGHT.Persistance.Entities.Users;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SGHT.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UsuarioController : BaseController
     {
         private readonly IUsuarioService _usuarioService;
@@ -49,6 +52,14 @@ namespace SGHT.API.Controllers
         {
             var result = await _usuarioService.DeleteById(dto);
 
+            return HandleResponse(result);
+        }
+
+        [HttpPost("logIn")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LogIn(UserLogIn usuario)
+        {
+            var result = await _usuarioService.LogIn(usuario);
             return HandleResponse(result);
         }
     }

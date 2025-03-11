@@ -70,6 +70,8 @@ namespace SGHT.Application.Services
             }
         }
 
+        
+
         public async Task<OperationResult> Save(SaveRecepcionDto dto)
         {
             Recepcion recepcion = new Recepcion()

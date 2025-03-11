@@ -18,6 +18,7 @@ namespace SGHT.Persistance.Base
             Entity = _context.Set<TEntity>();
         }
 
+        [Obsolete("Este metodo no es el correcto, crea uno que actualize el valor 'Estado' a falso.", false)]
         public virtual async Task<OperationResult> DeleteEntityAsync(TEntity entity)
         {
             OperationResult result = new OperationResult();
@@ -49,22 +50,16 @@ namespace SGHT.Persistance.Base
 
         public virtual async Task<OperationResult> GetAllAsync(Expression<Func<TEntity, bool>> filter)
         {
-            OperationResult result = new OperationResult();
-
             try
             {
                 var datos = await Entity.Where(filter).ToListAsync();
 
-                result.Data = datos;
+                return OperationResult.GetSuccesResult(datos, "Lista de usuarios", code: 200);
             }
             catch (Exception ex)
             {
-
-                result.Success = false;
-                result.Message = "Ocurrio un error obteniendo los datos.";
+                return OperationResult.GetErrorResult("Ocurrio un error obteniendo los datos.", code: 500);
             }
-
-            return result;
         }
 
         public virtual async Task<TEntity> GetEntityByIdAsync(int id)
@@ -74,24 +69,22 @@ namespace SGHT.Persistance.Base
 
         public virtual async Task<OperationResult> SaveEntityAsync(TEntity entity)
         {
-            OperationResult result = new OperationResult();
 
             try
             {
                 Entity.Add(entity);
-                await _context.SaveChangesAsync();
+                var result = await _context.SaveChangesAsync();
+                return OperationResult.GetSuccesResult(result, "usuario guardado correctamente", code: 200);
             }
             catch (Exception ex)
             {
-                result.Success = false;
-                result.Message = "Ocurrio un error guardando los datos.";
+                return OperationResult.GetErrorResult("error guardando usuario", code: 500);
             }
-            return result;
         }
 
         public virtual async Task<OperationResult> UpdateEntityAsync(TEntity entity)
         {
-            var result = new OperationResult();
+            if (entity == null) return OperationResult.GetErrorResult("body is null", code: 400);
             try
             {
                 _context.Attach(entity);
@@ -99,16 +92,12 @@ namespace SGHT.Persistance.Base
 
                 var saveResult = await _context.SaveChangesAsync();
 
-                result.Success = true;
-                result.Message = result.Success ? "Actualización exitosa" : "No se realizaron cambios";
+                return OperationResult.GetSuccesResult(saveResult, "Actualizacion exitosa", code: 200);
             }
             catch (Exception ex)
             {
-                result.Success = false;
-                result.Message = $"Error al actualizar: {ex.Message}";
+                return OperationResult.GetErrorResult("No se pudo actualizar", code: 500);
             }
-
-            return result;
         }
     }
 }

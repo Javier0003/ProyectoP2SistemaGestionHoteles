@@ -1,4 +1,5 @@
 ﻿using SGHT.Domain.Base;
+using SGHT.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace SGHT.Domain.Repository
@@ -12,5 +13,6 @@ namespace SGHT.Domain.Repository
         Task<List<TEntity>> GetAllAsync();
         Task<OperationResult> GetAllAsync(Expression<Func<TEntity, bool>> filter);
         Task<bool> ExistAsync(Expression<Func<TEntity, bool>> filter);
+       
     }
 }
