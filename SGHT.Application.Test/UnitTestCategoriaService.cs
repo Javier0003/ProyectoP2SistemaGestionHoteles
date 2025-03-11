@@ -43,8 +43,17 @@ namespace SGHT.Application.Test
             // Arrange
             var categorias = new List<Categoria>
             {
-                new() { IdCategoria = 1, IdServicio = 1, Descripcion = "Admin", Estado = true },
-                new() { IdCategoria = 2, IdServicio = 2, Descripcion = "User", Estado = true }
+                new() { 
+                    IdCategoria = 1, 
+                    Descripcion = "Regular", 
+                    Estado = true, 
+                    IdServicio = 1 
+                },
+                new() { 
+                    IdCategoria = 2, 
+                    Descripcion = "Premiun", 
+                    Estado = true,  
+                    IdServicio = 1 }
             };
 
             _mockRepository.Setup(repo => repo.GetAllAsync())
@@ -89,9 +98,9 @@ namespace SGHT.Application.Test
             var categoria = new Categoria
             {
                 IdCategoria = 1,
-                IdServicio = 1,
                 Descripcion = "Admin",
-                Estado = true
+                Estado = true,
+                IdServicio = 1,
             };
 
             _mockRepository.Setup(repo => repo.GetEntityByIdAsync(1))
@@ -177,9 +186,9 @@ namespace SGHT.Application.Test
             var dto = new UpdateCategoriaDto
             {
                 IdCategoria = 1,
-                IdServicio = 1,
                 Descripcion = "Updated Category",
                 Estado = true,
+                IdServicio = 1,
                 FechaCreacion = DateTime.Now
             };
 
@@ -194,8 +203,8 @@ namespace SGHT.Application.Test
             Assert.Equal(200, result.Code);
             _mockRepository.Verify(repo => repo.UpdateEntityAsync(It.Is<Categoria>(r =>
                 r.IdCategoria == dto.IdCategoria &&
-                r.IdServicio == dto.IdServicio &&
                 r.Descripcion == dto.Descripcion &&
+                r.IdServicio == dto.IdServicio &&
                 r.Estado == dto.Estado)),
                 Times.Once);
         }
@@ -207,9 +216,9 @@ namespace SGHT.Application.Test
             var dto = new UpdateCategoriaDto
             {
                 IdCategoria = 1,
-                IdServicio = 1,
                 Descripcion = "Updated Category",
                 Estado = true,
+                IdServicio = 1,
                 FechaCreacion = DateTime.Now
             };
 
