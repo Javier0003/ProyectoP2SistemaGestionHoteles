@@ -14,12 +14,40 @@ namespace SGHT.Application.Services
         private readonly ICategoriaRepository _categoriaRepository;
         private readonly ILogger<CategoriaService> _logger;
         private readonly IConfiguration _configuration;
+        private global::Castle.Core.Configuration.IConfiguration @object;
+        private ICategoriaRepository object1;
+        private global::Castle.Core.Configuration.IConfiguration object1;
+
+        public ICategoriaRepository Object1 { get; }
+        public ILogger<CategoriaService> Object2 { get; }
+        public global::Castle.Core.Configuration.IConfiguration Object3 { get; }
 
         public CategoriaService(ICategoriaRepository categoriaRepository, ILogger<CategoriaService> logger, IConfiguration configuration)
         {
             _categoriaRepository = categoriaRepository;
             _logger = logger;
             _configuration = configuration;
+        }
+
+        public CategoriaService(ICategoriaRepository object1, ILogger<CategoriaService> object2, global::Castle.Core.Configuration.IConfiguration object3)
+        {
+            Object1 = object1;
+            Object2 = object2;
+            Object3 = object3;
+        }
+
+        public CategoriaService(ICategoriaRepository object1, ILogger<CategoriaService> object2, global::Castle.Core.Configuration.IConfiguration @object)
+        {
+            Object1 = object1;
+            Object2 = object2;
+            this.@object = @object;
+        }
+
+        public CategoriaService(ICategoriaRepository object1, ILogger<CategoriaService> object2, global::Castle.Core.Configuration.IConfiguration object1)
+        {
+            Object1 = object1;
+            Object2 = object2;
+            Object1 = object1;
         }
 
         public async Task<OperationResult> GetAll()
