@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SGHT.Application.Dtos.RolUsuario;
 using SGHT.Application.Interfaces;
@@ -13,10 +14,12 @@ namespace SGHT.Application.Services
         private readonly IRolUsuarioRepository _rolUsuarioRepository;
         private readonly ILogger<RolUsuarioService> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public RolUsuarioService(IRolUsuarioRepository rolUsuarioRepository, ILogger<RolUsuarioService> logger, IConfiguration configuration)
+        public RolUsuarioService(IRolUsuarioRepository rolUsuarioRepository, ILogger<RolUsuarioService> logger, IConfiguration configuration, IMapper mapper)
         {
             _rolUsuarioRepository = rolUsuarioRepository;
+            _mapper = mapper;
             _logger = logger;
             _configuration = configuration;
         }
@@ -26,7 +29,8 @@ namespace SGHT.Application.Services
             try
             {
                 var roles = await _rolUsuarioRepository.GetAllAsync();
-                return OperationResult.GetSuccesResult(roles, code: 200);
+                var rolUsuario = _mapper.Map<IEnumerable<UpdateRolUsuarioDto>>(roles);
+                return OperationResult.GetSuccesResult(rolUsuario, code: 200);
             }
             catch (Exception ex) 
             {
@@ -53,15 +57,11 @@ namespace SGHT.Application.Services
 
         public async Task<OperationResult> Save(SaveRolUsuarioDto dto)
         {
-            RolUsuario rolUsuario = new()
-            {
-                Descripcion = dto.Descripcion,
-                Estado = dto.Estado,
-                FechaCreacion = DateTime.Now
-            };
-
             try
             {
+                var rolUsuario = _mapper.Map<RolUsuario>(dto);
+                rolUsuario.FechaCreacion = DateTime.Now;
+                rolUsuario.Estado = true;
                 var rol = await _rolUsuarioRepository.SaveEntityAsync(rolUsuario);
                 if (!rol.Success) throw new Exception();
 
@@ -76,16 +76,9 @@ namespace SGHT.Application.Services
 
         public async Task<OperationResult> UpdateById(UpdateRolUsuarioDto dto)
         {
-            RolUsuario rolUsuario = new()
-            {
-                Descripcion = dto.Descripcion,
-                Estado = dto.Estado,
-                FechaCreacion = dto.FechaCreacion,
-                IdRolUsuario = dto.IdRolUsuario
-            };
-
             try
             {
+                var rolUsuario = _mapper.Map<RolUsuario>(dto);
                 var queryResult = await _rolUsuarioRepository.UpdateEntityAsync(rolUsuario);
                 if (!queryResult.Success) throw new Exception();
 

@@ -113,6 +113,7 @@ namespace SGHT.Persistance.Repositories
             }
             catch (Exception ex)
             {
+                _logger.LogError($"UsuariosRepository.UpdateEntityAsync: {ex}");
                 return OperationResult.GetErrorResult($"Error al actualizar: {ex.Message}");
             }
         }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SGHT.Domain.Entities.Tarifas>
+﻿@model IEnumerable<SGHT.Application.Dtos.Tarifa.UpdateTarifaDto>
 
 @{
     ViewData["Title"] = "Index";
@@ -67,9 +67,8 @@
                 @Html.DisplayFor(modelItem => item.Estado)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Edit", "Edit", new { id=item.IdTarifa }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.IdTarifa })
             </td>
         </tr>
 }
