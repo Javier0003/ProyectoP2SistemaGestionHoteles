@@ -14,11 +14,20 @@ namespace SGHT.Persistance.Repositories
         private readonly SGHTContext _context;
         private readonly ILogger<RolUsuarioRepository> _logger;
         private readonly IConfiguration _configuration;
+        private ILogger<CategoriaRepository> logger;
+        private IConfigurationRoot configuration;
+
         public RolUsuarioRepository(SGHTContext context, ILogger<RolUsuarioRepository> logger, IConfiguration configuration) : base(context)
         {
             _context = context;
             _logger = logger;
             _configuration = configuration;
+        }
+
+        public RolUsuarioRepository(SGHTContext context, ILogger<CategoriaRepository> logger, IConfigurationRoot configuration) : base(context)
+        {
+            this.logger = logger;
+            this.configuration = configuration;
         }
 
         public override async Task<RolUsuario> GetEntityByIdAsync(int id)

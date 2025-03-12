@@ -25,6 +25,8 @@ namespace SGHT.Application.Test
 
         public unitTestClienteService()
         {
+
+
             _mockRepository = new Mock<IClienteRepository>(MockBehavior.Strict);
             _mockLogger = new Mock<ILogger<ClienteService>>();
             _mockConfiguration = new Mock<IConfiguration>();

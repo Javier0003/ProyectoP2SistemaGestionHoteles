@@ -7,9 +7,7 @@ using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Entities.Users;
 using SGHT.Persistance.Interfaces;
-using Xunit;
 using SGHT.Application.Utils;
-using System;
 
 namespace SGHT.Application.Test
 {
