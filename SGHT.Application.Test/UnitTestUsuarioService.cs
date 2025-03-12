@@ -8,6 +8,7 @@ using SGHT.Domain.Entities;
 using SGHT.Persistance.Entities.Users;
 using SGHT.Persistance.Interfaces;
 using SGHT.Application.Utils;
+using AutoMapper;
 
 namespace SGHT.Application.Test
 {
@@ -17,6 +18,7 @@ namespace SGHT.Application.Test
         private Mock<ILogger<UsuarioService>> _mockLogger;
         private Mock<IConfiguration> _mockConfiguration;
         private UsuarioService _usuarioService;
+        private readonly IMapper _mapper;
 
         public UnitTestUsuarioService()
         {
