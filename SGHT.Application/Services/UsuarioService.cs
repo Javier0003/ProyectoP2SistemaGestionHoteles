@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SGHT.Application.Dtos.Usuarios;
 using SGHT.Application.Interfaces;
@@ -15,24 +16,34 @@ namespace SGHT.Application.Services
         private readonly IUsuariosRepository _usuariosRepository;
         private readonly ILogger<UsuarioService> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
         private readonly TokenProvider _tokenProvider;
 
-        public UsuarioService(IUsuariosRepository usuariosRepository, ILogger<UsuarioService> logger, IConfiguration configuration, TokenProvider tokenProvider)
+        public UsuarioService(
+            IUsuariosRepository usuariosRepository, 
+            ILogger<UsuarioService> logger, 
+            IConfiguration configuration,
+            IMapper mapper,
+            TokenProvider tokenProvider)
         {
             _usuariosRepository = usuariosRepository;
             _logger = logger;
             _configuration = configuration;
+            _mapper = mapper;
             _tokenProvider = tokenProvider;
         }
+
         public async Task<OperationResult> GetAll()
         {
             try
             {
-                var data = await _usuariosRepository.GetAllAsync();
-                return OperationResult.GetSuccesResult(data, code: 200);
+                var usuarios = await _usuariosRepository.GetAllAsync();
+                var usuariosDto = _mapper.Map<IEnumerable<UsuarioDto>>(usuarios);
+                return OperationResult.GetSuccesResult(usuariosDto, code: 200);
             }
-            catch (Exception) {
-                return OperationResult.GetErrorResult("idk how did u even get an error here", code: 500);
+            catch (Exception ex) {
+                _logger.LogError($"UsuarioService.GetAll: {ex}");
+                return OperationResult.GetErrorResult("Error getting users", code: 500);
             }
         }
 
@@ -42,10 +53,12 @@ namespace SGHT.Application.Services
             {
                 var usuario = await _usuariosRepository.GetEntityByIdAsync(id);
                 if (usuario == null) return OperationResult.GetErrorResult("User not found", code: 404);
-                return OperationResult.GetSuccesResult(usuario, code: 200);
+                
+                var usuarioDto = _mapper.Map<UsuarioDto>(usuario);
+                return OperationResult.GetSuccesResult(usuarioDto, code: 200);
             }
             catch (Exception ex) {
-                _logger.LogError ($"UsuarioService.GetById: {ex}");
+                _logger.LogError($"UsuarioService.GetById: {ex}");
                 return OperationResult.GetErrorResult("Error finding user", 500);
             }
         }
@@ -54,15 +67,9 @@ namespace SGHT.Application.Services
         {
             try
             {
-                var usuario = new Usuarios
-                {
-                    NombreCompleto = dto.NombreCompleto,
-                    Clave = Passwords.HashPassword(dto.Clave),
-                    Correo = dto.Correo,
-                    Estado = dto.Estado,
-                    IdRolUsuario = dto.IdRolUsuario,
-                    FechaCreacion = DateTime.Now
-                };
+                var usuario = _mapper.Map<Usuarios>(dto);
+                usuario.Clave = Passwords.HashPassword(dto.Clave);
+                usuario.FechaCreacion = DateTime.Now;
 
                 var result = await _usuariosRepository.SaveEntityAsync(usuario);
                 return OperationResult.GetSuccesResult(result, "User created successfully", 200);
@@ -78,20 +85,10 @@ namespace SGHT.Application.Services
         {
             try
             {
-                var usuario = new Usuarios
-                {
-                    IdUsuario = dto.IdUsuario,
-                    NombreCompleto = dto.NombreCompleto,
-                    Clave = dto.Clave,
-                    Correo = dto.Correo,
-                    Estado = dto.Estado,
-                    IdRolUsuario = dto.IdRolUsuario,
-                    FechaCreacion = dto.FechaCreacion,
-                };
-
+                var usuario = _mapper.Map<Usuarios>(dto);
                 var queryResult = await _usuariosRepository.UpdateEntityAsync(usuario);
 
-                return OperationResult.GetSuccesResult(queryResult , "Usuario Actualizado Correctamente", 200);
+                return OperationResult.GetSuccesResult(queryResult, "Usuario Actualizado Correctamente", 200);
             }
             catch (Exception ex)
             {
@@ -99,13 +96,15 @@ namespace SGHT.Application.Services
                 return OperationResult.GetErrorResult("Error updating user", code: 500);
             }
         }
+
         public async Task<OperationResult> DeleteById(DeleteUsuarioDto dto)
         {
             try
             {
                 var entityToRemove = await _usuariosRepository.GetEntityByIdAsync(dto.IdUsuario);
-                var result = await _usuariosRepository.DeleteEntityAsync(entityToRemove);
+                if (entityToRemove == null) return OperationResult.GetErrorResult("User not found", code: 404);
 
+                var result = await _usuariosRepository.DeleteEntityAsync(entityToRemove);
                 return OperationResult.GetSuccesResult(result, "Usuario eliminado", 200);
             }
             catch (Exception ex)
@@ -126,7 +125,6 @@ namespace SGHT.Application.Services
                 }
 
                 var token = _tokenProvider.Create(result.Data);
-
                 return OperationResult.GetSuccesResult(token, code: 200);
             }
             catch (Exception ex) 
@@ -134,7 +132,6 @@ namespace SGHT.Application.Services
                 _logger.LogError($"UsuarioService.LogIn: {ex}");
                 return OperationResult.GetErrorResult($"{ex}", code: 500);
             }
-
         }
     }
 }

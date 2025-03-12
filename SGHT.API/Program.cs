@@ -27,6 +27,7 @@ namespace SGH.API
             builder.Services.AddTarifasDependancy();
             builder.Services.AddUsuariosDependancy();
             builder.Services.AddJwtAuthenticationDependancy();
+            builder.Services.AddAutomapperDependancy();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();

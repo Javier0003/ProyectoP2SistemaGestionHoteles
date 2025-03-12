@@ -20,6 +20,7 @@ builder.Services.AddServiciosDependancy();
 builder.Services.AddTarifasDependancy();
 builder.Services.AddUsuariosDependancy();
 builder.Services.AddJwtAuthenticationDependancy();
+builder.Services.AddAutomapperDependancy();
 
 var app = builder.Build();
 
