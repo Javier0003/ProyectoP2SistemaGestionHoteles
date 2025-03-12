@@ -21,21 +21,16 @@ namespace SGHT.Persistance.Base
         [Obsolete("Este metodo no es el correcto, crea uno que actualize el valor 'Estado' a falso.", false)]
         public virtual async Task<OperationResult> DeleteEntityAsync(TEntity entity)
         {
-            OperationResult result = new OperationResult();
             try
             {
                _context.Remove(entity);
                await _context.SaveChangesAsync();
-               result.Success = true;
-               result.Message = "Entity deleted successfully.";
+               return OperationResult.GetSuccesResult("", "Entity deleted successfully.", code: 200);
             }
             catch (Exception ex)
             {
-                result.Success = false;
-                result.Message = $"An error occurred: {ex.Message}";
+               return OperationResult.GetErrorResult("Entity deleted successfully.", code: 200);
             }
-
-            return result;
         }
 
         public virtual async Task<bool> ExistAsync(Expression<Func<TEntity, bool>> filter)
