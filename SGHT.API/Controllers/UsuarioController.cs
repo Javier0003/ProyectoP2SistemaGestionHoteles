@@ -34,6 +34,7 @@ namespace SGHT.API.Controllers
         }
 
         [HttpPost("crear")]
+        [AllowAnonymous]
         public async Task<IActionResult> Save(SaveUsuarioDto dto)
         {
             var result = await _usuarioService.Save(dto);
