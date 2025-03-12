@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using SGH.Web.Models;
+using SGHT.Application.Interfaces;
+using SGHT.Application.Services;
 
 namespace SGH.Web.Controllers
 {
