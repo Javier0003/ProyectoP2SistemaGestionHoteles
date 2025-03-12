@@ -1,11 +1,8 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using SGH.Web.Models;
 using SGHT.Application.Dtos.Usuarios;
 using SGHT.Application.Interfaces;
-using SGHT.Application.Utils;
-using SGHT.Domain.Entities;
 
 namespace SGHT.Web.Controllers
 {
@@ -13,16 +10,13 @@ namespace SGHT.Web.Controllers
     {
         private readonly ILogger<UsuarioController> _logger;
         private readonly IUsuarioService _usuarioService;
-        private readonly IRolUsuarioService _rolUsuarioService;
 
         public UsuarioController(
             IUsuarioService usuarioService, 
-            IRolUsuarioService rolUsuarioService,
             ILogger<UsuarioController> logger)
         {
             _logger = logger;
             _usuarioService = usuarioService;
-            _rolUsuarioService = rolUsuarioService;
         }
 
         public async Task<IActionResult> Index()
@@ -36,72 +30,69 @@ namespace SGHT.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var result = await _usuarioService.GetById(id);
-            if (!result.Success) return NotFound();
-
-            // Get roles for dropdown
-            var rolesResult = await _rolUsuarioService.GetAll();
-            if (rolesResult.Success)
-            {
-                var roles = (List<RolUsuario>)rolesResult.Data;
-                ViewBag.Roles = new SelectList(roles, "IdRolUsuario", "Descripcion");
-            }
+            if (!result.Success) return View();
 
             return View(result.Data);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Usuarios usuario)
+        public async Task<IActionResult> Edit(int id, UpdateUsuarioDto usuario)
         {
-            if (id != usuario.IdUsuario)
-            {
-                return NotFound();
-            }
-            if(usuario.Clave == null)
-            {
-                ModelState.AddModelError("Clave", "La contraseña es requerida");
-                return View(usuario);
-            }
+            usuario.IdUsuario = id;
 
-            if (ModelState.IsValid)
-            {
-                // Ensure Estado is not null
-                usuario.Estado = usuario.Estado ?? false;
+            if (usuario.Clave == null) return View();
 
-                var updateDto = new UpdateUsuarioDto
-                {
-                    IdUsuario = usuario.IdUsuario,
-                    NombreCompleto = usuario.NombreCompleto,
-                    Correo = usuario.Correo,
-                    Clave = Passwords.HashPassword(usuario.Clave),
-                    IdRolUsuario = usuario.IdRolUsuario,
-                    Estado = usuario.Estado.Value,
-                    FechaCreacion = usuario.FechaCreacion ?? DateTime.Now
-                };
-                var result = await _usuarioService.UpdateById(updateDto);
-                if (result.Success)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
-                
-                ModelState.AddModelError("", "Error updating user. Please try again.");
-            }
+            var result = await _usuarioService.UpdateById(usuario);
+            if (!result.Success) return View();
 
-            // If we got this far, something failed, redisplay form
-            var rolesResult = await _rolUsuarioService.GetAll();
-            if (rolesResult.Success)
-            {
-                var roles = (List<RolUsuario>)rolesResult.Data;
-                ViewBag.Roles = new SelectList(roles, "IdRolUsuario", "Descripcion");
-            }
-
-            return View(usuario);
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Create()
         {
             return View();
-        } 
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(SaveUsuarioDto usuario)
+        {
+            var result = await _usuarioService.Save(usuario);
+
+            if (!result.Success) return View();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Delete(int id)
+        {
+            var model = new DeleteUsuarioDto
+            {
+                IdUsuario = id
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(DeleteUsuarioDto dto)
+        {
+            if (dto.IdUsuario == 0)
+            {
+                ModelState.AddModelError("", "Invalid user ID.");
+                return View(dto);
+            }
+
+            var result = await _usuarioService.DeleteById(dto);
+            if (result.Success)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            ModelState.AddModelError("", "Error deleting user.");
+            return View(dto);
+        }
 
         public IActionResult Privacy()
         {

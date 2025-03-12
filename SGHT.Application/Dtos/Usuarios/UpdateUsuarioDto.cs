@@ -2,6 +2,5 @@
 {
     public class UpdateUsuarioDto : UsuarioDto
     {
-        public int IdUsuario { get; set; }
     }
 }

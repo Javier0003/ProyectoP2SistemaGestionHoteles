@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SGHT.Application.Dtos.Tarifa;
 using SGHT.Application.Interfaces;
 using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Interfaces;
-using SGHT.Persistance.Repositories;
 
 namespace SGHT.Application.Services
 {
@@ -14,12 +14,14 @@ namespace SGHT.Application.Services
         private readonly ITarifasRepository _tarifasRepository;
         private readonly ILogger<TarifaService> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public TarifaService(ITarifasRepository tarifasRepository, ILogger<TarifaService> logger, IConfiguration configuration)
+        public TarifaService(ITarifasRepository tarifasRepository, ILogger<TarifaService> logger, IConfiguration configuration, IMapper mapper)
         {
             _tarifasRepository = tarifasRepository;
             _logger = logger;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         public async Task<OperationResult> GetAll()
@@ -53,19 +55,11 @@ namespace SGHT.Application.Services
 
         public async Task<OperationResult> Save(SaveTarifaDto dto)
         {
-            if (IsEstadoRight(dto.Estado)) return OperationResult.GetErrorResult("estado tiene que ser 'activo' o 'inactivo'", code: 400);
+            var tarifas = _mapper.Map<Tarifas>(dto);
+            tarifas.Estado = "activo";
             try
             {
-                Tarifas tarifas = new()
-                {
-                    Estado = dto.Estado,
-                    Descripcion = dto.Descripcion,
-                    Descuento = dto.Descuento,
-                    FechaFin = dto.FechaFin,
-                    FechaInicio = dto.FechaInicio,
-                    IdHabitacion = dto.IdHabitacion,
-                    PrecioPorNoche = dto.PrecioPorNoche,
-                };
+                if (!IsDateProper(dto.FechaInicio, dto.FechaFin)) return OperationResult.GetErrorResult("la fecha de inicio tiene que ser anterior a la fecha de fin", code: 400);
 
                 var result = await _tarifasRepository.SaveEntityAsync(tarifas);
 
@@ -82,17 +76,8 @@ namespace SGHT.Application.Services
             if (IsEstadoRight(dto.Estado)) return OperationResult.GetErrorResult("estado tiene que ser 'activo' o 'inactivo'", code: 400);
             try
             {
-                Tarifas tarifas = new()
-                {
-                    Estado = dto.Estado,
-                    Descripcion = dto.Descripcion,
-                    Descuento = dto.Descuento,
-                    FechaFin = dto.FechaFin,
-                    FechaInicio = dto.FechaInicio,
-                    IdHabitacion = dto.IdHabitacion,
-                    PrecioPorNoche = dto.PrecioPorNoche,
-                    IdTarifa = dto.IdTarifa
-                };
+                if (!IsDateProper(dto.FechaInicio, dto.FechaFin)) return OperationResult.GetErrorResult("la fecha de inicio tiene que ser anterior a la fecha de fin", code: 400);
+                var tarifas = _mapper.Map<Tarifas>(dto);
 
                 var result = await _tarifasRepository.UpdateEntityAsync(tarifas);
 
@@ -123,6 +108,11 @@ namespace SGHT.Application.Services
         public static bool IsEstadoRight(string estado)
         {
             return estado != "inactivo" && estado != "activo";
+        }
+
+        public static bool IsDateProper(DateTime fechaInicio, DateTime fechaFin)
+        {
+            return fechaInicio < fechaFin;
         }
     }
 }

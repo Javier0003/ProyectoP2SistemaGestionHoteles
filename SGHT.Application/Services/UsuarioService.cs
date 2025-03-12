@@ -85,6 +85,10 @@ namespace SGHT.Application.Services
         {
             try
             {
+                if (!dto.Clave.Contains('/')) dto.Clave = Passwords.HashPassword(dto.Clave);
+
+                dto.FechaCreacion = DateTime.Now;
+
                 var usuario = _mapper.Map<Usuarios>(dto);
                 var queryResult = await _usuariosRepository.UpdateEntityAsync(usuario);
 
