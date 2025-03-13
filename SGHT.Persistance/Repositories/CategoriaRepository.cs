@@ -22,14 +22,7 @@ namespace SGHT.Persistance.Repositories
             _configuration = configuration;
         }
 
-        public override Task<OperationResult> SaveEntityAsync(Categoria entity)
-        {
-            return base.SaveEntityAsync(entity);
-        }
-        public override Task<OperationResult> UpdateEntityAsync(Categoria entity)
-        {
-            return base.UpdateEntityAsync(entity);
-        }
+
     }
 }
     
