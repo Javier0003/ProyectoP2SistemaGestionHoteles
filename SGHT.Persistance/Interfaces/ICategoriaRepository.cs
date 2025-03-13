@@ -7,6 +7,6 @@ namespace SGHT.Persistance.Interfaces
 {
     public interface ICategoriaRepository : IBaseRepository<Categoria>
     {
-        Task<RolUsuario> GetEntityByIdAsync(int id);
+        
     }
 }
