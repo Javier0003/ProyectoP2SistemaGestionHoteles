@@ -30,6 +30,7 @@ namespace SGHT.Application.Test
             _mockRepository = new Mock<IUsuariosRepository>(MockBehavior.Strict);
             _mockLogger = new Mock<ILogger<UsuarioService>>();
             _mockConfiguration = new Mock<IConfiguration>();
+            _mockMapper = new Mock<IMapper>();
             
             _mockConfiguration.Setup(c => c["Jwt:Secret"])
                 .Returns("YourSuperSecretKeyWithAtLeast32Characters!!");

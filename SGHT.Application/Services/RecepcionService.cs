@@ -82,7 +82,6 @@ namespace SGHT.Application.Services
             try
             {
                 var recepcion = _mapper.Map<Recepcion>(dto);
-                recepcion.FechaCreacion = DateTime.Now;
                 recepcion.Estado = true;
                 var recDto = await _recepcionRepository.SaveEntityAsync(recepcion);
                 if (!recDto.Success) throw new Exception();
@@ -102,7 +101,6 @@ namespace SGHT.Application.Services
             try
             {
                 var recepcion = _mapper.Map<Recepcion>(dto);
-                recepcion.FechaCreacion = DateTime.Now;
                 recepcion.Estado = true;
                 var recDto = await _recepcionRepository.SaveEntityAsync(recepcion);
                 if (!recDto.Success) throw new Exception();
