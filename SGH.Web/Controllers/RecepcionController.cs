@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using SGH.Web.Models;
 using SGHT.Application.Dtos.RecepcionDto;
 using SGHT.Application.Interfaces;
+using SGHT.Application.Services;
+using SGHT.Domain.Entities.Reservation;
 using System.Diagnostics;
 
 
@@ -26,7 +28,8 @@ namespace SGHT.Web.Controllers
         {
             var result = await _recepcionService.GetAll();
       
-            if (!result.Success) return View();
+            if (!result.Success) 
+                return View();
 
             return View(result.Data);
         }

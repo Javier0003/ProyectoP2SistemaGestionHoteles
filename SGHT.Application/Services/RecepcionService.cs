@@ -1,10 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SGHT.Application.Dtos.RecepcionDto;
 using SGHT.Application.Interfaces;
 using SGHT.Domain.Base;
+using SGHT.Domain.Entities;
 using SGHT.Domain.Entities.Reservation;
 using SGHT.Persistance.Interfaces;
+using SGHT.Persistance.Repositories;
 
 namespace SGHT.Application.Services
 {
@@ -13,12 +16,14 @@ namespace SGHT.Application.Services
         private readonly IRecepcionRepository _recepcionRepository;
         private readonly ILogger<RecepcionService> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public RecepcionService(IRecepcionRepository recepcionRepository, ILogger<RecepcionService> logger, IConfiguration configuration)
+        public RecepcionService(IRecepcionRepository recepcionRepository, ILogger<RecepcionService> logger, IConfiguration configuration, IMapper mapper)
         {
             _recepcionRepository = recepcionRepository;
             _logger = logger;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         public async Task<OperationResult> DeleteById(DeleteRecepcionDto dto)
@@ -74,29 +79,15 @@ namespace SGHT.Application.Services
 
         public async Task<OperationResult> Save(SaveRecepcionDto dto)
         {
-            Recepcion recepcion = new Recepcion()
-            {
-                    FechaEntrada = dto.FechaEntrada,
-                    FechaSalida = dto.FechaSalida,
-                    FechaSalidaConfirmacion = dto.FechaSalidaConfirmacion,
-                    PrecioInicial = dto.PrecioInicial,
-                    Adelanto = dto.Adelanto,
-                    PrecioRestante = dto.PrecioRestante,
-                    TotalPagado = dto.TotalPagado,
-                    CostoPenalidad = dto.CostoPenalidad,
-                    Observacion = dto.Observacion,
-                    Estado = dto.Estado,
-                    IdCliente = dto.IdCliente,
-                    IdHabitacion = dto.IdHabitacion
-            };
-
             try
             {
+                var recepcion = _mapper.Map<Recepcion>(dto);
+                recepcion.FechaCreacion = DateTime.Now;
+                recepcion.Estado = true;
+                var recDto = await _recepcionRepository.SaveEntityAsync(recepcion);
+                if (!recDto.Success) throw new Exception();
 
-                var queryResult = await _recepcionRepository.SaveEntityAsync(recepcion);
-                if (!queryResult.Success) throw new Exception();
-
-                return OperationResult.GetSuccesResult(queryResult, code: 200);
+                return OperationResult.GetSuccesResult(recDto, code: 200);
             }
             catch (Exception ex)
             {
@@ -107,29 +98,16 @@ namespace SGHT.Application.Services
 
         public async Task<OperationResult> UpdateById(UpdateRecepcionDto dto)
         {
-            Recepcion recepcion = new()
-            {
-                IdRecepcion = dto.IdRecepcion,
-                FechaEntrada = dto.FechaEntrada,
-                FechaSalida = dto.FechaSalida,
-                FechaSalidaConfirmacion = dto.FechaSalidaConfirmacion,
-                PrecioInicial = dto.PrecioInicial,
-                Adelanto = dto.Adelanto,
-                PrecioRestante = dto.PrecioRestante,
-                TotalPagado = dto.TotalPagado,
-                CostoPenalidad = dto.CostoPenalidad,
-                Observacion = dto.Observacion,
-                Estado = dto.Estado,
-                IdCliente = dto.IdCliente,
-                IdHabitacion = dto.IdHabitacion
-            };
-
+           
             try
             {
-                var queryResult = await _recepcionRepository.UpdateEntityAsync(recepcion);
-                if (!queryResult.Success) throw new Exception();
+                var recepcion = _mapper.Map<Recepcion>(dto);
+                recepcion.FechaCreacion = DateTime.Now;
+                recepcion.Estado = true;
+                var recDto = await _recepcionRepository.SaveEntityAsync(recepcion);
+                if (!recDto.Success) throw new Exception();
 
-                return OperationResult.GetSuccesResult(queryResult, code: 200);
+                return OperationResult.GetSuccesResult(recDto, code: 200);
             }
             catch (Exception ex)
             {
