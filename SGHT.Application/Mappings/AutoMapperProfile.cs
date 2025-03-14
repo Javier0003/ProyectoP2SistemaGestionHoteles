@@ -2,7 +2,9 @@ using AutoMapper;
 using SGHT.Application.Dtos.RolUsuario;
 using SGHT.Application.Dtos.Tarifa;
 using SGHT.Application.Dtos.Usuarios;
+using SGHT.Application.Dtos.RecepcionDto;
 using SGHT.Domain.Entities;
+using SGHT.Domain.Entities.Reservation;
 
 namespace SGHT.Application.Mappings
 {
@@ -27,6 +29,12 @@ namespace SGHT.Application.Mappings
             CreateMap<Tarifas, UpdateTarifaDto>().ReverseMap();
             CreateMap<Tarifas, SaveTarifaDto>().ReverseMap();
             CreateMap<Tarifas, DeleteTarifaDto>().ReverseMap();
+
+            //Mapping for Recepcion
+            CreateMap<Recepcion, RecepcionDto>().ReverseMap();
+            CreateMap<Recepcion, UpdateRecepcionDto>().ReverseMap();
+            CreateMap<Recepcion, SaveRecepcionDto>().ReverseMap();
+            CreateMap<Recepcion, DeleteRecepcionDto>().ReverseMap();
         }
     }
 } 
