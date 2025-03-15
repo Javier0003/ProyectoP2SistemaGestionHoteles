@@ -30,13 +30,12 @@ namespace SGHT.Application.Services
         {
             try
             {
-                var entity = await _recepcionRepository.GetEntityByIdAsync(dto.IdRecepcion);
-                if (entity == null) return OperationResult.GetErrorResult("Recepcion con ese ID no existe", code: 404);
+                var entityToRemove = await _recepcionRepository.GetEntityByIdAsync(dto.IdRecepcion);
+                if (entityToRemove == null) return OperationResult.GetErrorResult("Recepcion con ese ID no existe", code: 404);
 
-                var queryResult = await _recepcionRepository.DeleteEntityAsync(entity);
-                if (!queryResult.Success) return OperationResult.GetErrorResult("error eliminando esta recepcion", code: 500);
+                var result = await _recepcionRepository.DeleteEntityAsync(entityToRemove);
 
-                return OperationResult.GetSuccesResult(queryResult, "Recepcion eliminada correctamente", code: 200);
+                return OperationResult.GetSuccesResult(result, "Recepcion Eliminada", 200);
             }
             catch (Exception ex)
             {
