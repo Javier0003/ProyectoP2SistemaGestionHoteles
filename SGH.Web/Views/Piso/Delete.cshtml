@@ -1,0 +1,28 @@
+﻿@model SGHT.Application.Dtos.Piso.DeletePisoDto
+
+@{
+    ViewData["Title"] = "Eliminar Piso";
+}
+
+<h1>Eliminar</h1>
+
+<h3>¿Estás seguro de que deseas eliminar este piso?</h3>
+<div>
+    <h4>Piso</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdPiso)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdPiso)
+        </dd>
+      
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="IdPiso" />
+        <input type="submit" value="Eliminar" class="btn btn-danger" /> |
+        <a asp-action="Index">Volver a la lista</a>
+    </form>
+</div>

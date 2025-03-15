@@ -1,0 +1,27 @@
+﻿@model SGHT.Application.Dtos.EstadoHabitacion.DeleteEstadoHabitacionDto
+
+@{
+    ViewData["Title"] = "Eliminar Estado de Habitación";
+}
+
+<h1>Eliminar</h1>
+
+<h3>¿Estás seguro de que deseas eliminar este estado de habitación?</h3>
+<div>
+    <h4>EstadoHabitacion</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdEstadoHabitacion)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdEstadoHabitacion)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="IdEstadoHabitacion" />
+        <input type="submit" value="Eliminar" class="btn btn-danger" /> |
+        <a asp-action="Index">Volver a la lista</a>
+    </form>
+</div>

@@ -1,10 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SGHT.Application.Dtos.Piso;
 using SGHT.Application.Interfaces;
 using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SGHT.Application.Services
 {
@@ -13,25 +17,32 @@ namespace SGHT.Application.Services
         private readonly IPisoRepository _pisoRepository;
         private readonly ILogger<PisoService> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public PisoService(IPisoRepository pisoRepository, ILogger<PisoService> logger, IConfiguration configuration)
+        public PisoService(
+            IPisoRepository pisoRepository,
+            ILogger<PisoService> logger,
+            IConfiguration configuration,
+            IMapper mapper)
         {
             _pisoRepository = pisoRepository;
             _logger = logger;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         public async Task<OperationResult> GetAll()
         {
             try
             {
-                var piso = await _pisoRepository.GetAllAsync();
-                return OperationResult.GetSuccesResult(piso, code: 200);
+                var pisos = await _pisoRepository.GetAllAsync();
+                var pisosDto = _mapper.Map<IEnumerable<PisoDto>>(pisos);
+                return OperationResult.GetSuccesResult(pisosDto, code: 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"PisoService.GetALl: {ex.ToString()}");
-                return OperationResult.GetErrorResult("idk how u got an error here", code: 500);
+                _logger.LogError($"PisoService.GetAll: {ex}");
+                return OperationResult.GetErrorResult("Error obteniendo los pisos", code: 500);
             }
         }
 
@@ -40,80 +51,67 @@ namespace SGHT.Application.Services
             try
             {
                 var piso = await _pisoRepository.GetEntityByIdAsync(id);
-                if (piso == null) return OperationResult.GetErrorResult("piso no encontrado", code: 404);
+                if (piso == null) return OperationResult.GetErrorResult("Piso no encontrado", code: 404);
 
-                return OperationResult.GetSuccesResult(piso);
+                var pisoDto = _mapper.Map<PisoDto>(piso);
+                return OperationResult.GetSuccesResult(pisoDto, code: 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"PisoService.GetById: {ex.ToString()}");
-                return OperationResult.GetErrorResult("error consultando piso", code: 500);
+                _logger.LogError($"PisoService.GetById: {ex}");
+                return OperationResult.GetErrorResult("Error buscando el piso", code: 500);
             }
         }
 
         public async Task<OperationResult> Save(SavePisoDto dto)
         {
-            Piso piso = new()
-            {
-                Descripcion = dto.Descripcion,
-               
-                FechaCreacion = dto.FechaCreacion
-            };
-
             try
             {
-                var pisoo = await _pisoRepository.SaveEntityAsync(piso);
-                if (!pisoo.Success) throw new Exception();
+                var piso = _mapper.Map<Piso>(dto);
+                piso.FechaCreacion = DateTime.Now;
 
-                return OperationResult.GetSuccesResult(piso, code: 200);
+                var result = await _pisoRepository.SaveEntityAsync(piso);
+                return OperationResult.GetSuccesResult(result, "Piso creado con éxito", 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"PisoService.Save: {ex.ToString()}");
-                return OperationResult.GetErrorResult("Error creando piso", code: 500);
+                _logger.LogError($"PisoService.Save: {ex}");
+                return OperationResult.GetErrorResult("No se pudo guardar el piso", code: 500);
             }
         }
 
         public async Task<OperationResult> UpdateById(UpdatePisoDto dto)
         {
-            Piso piso = new()
-            {
-                Descripcion = dto.Descripcion,
-            
-                FechaCreacion = dto.FechaCreacion,
-                IdPiso = dto.IdPiso
-            };
-
             try
             {
-                var queryResult = await _pisoRepository.UpdateEntityAsync(piso);
-                if (!queryResult.Success) throw new Exception();
+                dto.FechaCreacion = DateTime.Now;
 
-                return OperationResult.GetSuccesResult(queryResult, code: 200);
+                var piso = _mapper.Map<Piso>(dto);
+                var queryResult = await _pisoRepository.UpdateEntityAsync(piso);
+
+                return OperationResult.GetSuccesResult(queryResult, "Piso actualizado correctamente", 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"PisoService.UpdateById: {ex.ToString()}");
-                return OperationResult.GetErrorResult("Error actualziando piso", code: 500);
+                _logger.LogError($"PisoService.UpdateById: {ex}");
+                return OperationResult.GetErrorResult("Error actualizando el piso", code: 500);
             }
         }
-        
+
         public async Task<OperationResult> DeleteById(DeletePisoDto dto)
         {
             try
             {
-                var entity = await _pisoRepository.GetEntityByIdAsync(dto.IdPiso);
-                if (entity == null) return OperationResult.GetErrorResult("piso con esa id no existe", code: 404);
+                var entityToRemove = await _pisoRepository.GetEntityByIdAsync(dto.IdPiso);
+                if (entityToRemove == null) return OperationResult.GetErrorResult("Piso no encontrado", code: 404);
 
-                var queryResult = await _pisoRepository.DeleteEntityAsync(entity);
-                if (!queryResult.Success) return OperationResult.GetErrorResult("error eliminando este piso", code: 500);
-
-                return OperationResult.GetSuccesResult(queryResult, "Piso eliminado correctamente", code: 200);
+                var result = await _pisoRepository.DeleteEntityAsync(entityToRemove);
+                return OperationResult.GetSuccesResult(result, "Piso eliminado", 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"PisoService.DeletebyId: {ex.ToString()}");
-                return OperationResult.GetErrorResult("Error eliminando piso", code: 500);
+                _logger.LogError($"PisoService.DeleteById: {ex}");
+                return OperationResult.GetErrorResult("Error eliminando el piso", code: 500);
             }
         }
     }
