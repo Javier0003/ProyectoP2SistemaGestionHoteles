@@ -82,10 +82,11 @@ namespace SGHT.Application.Services
             {
                 var recepcion = _mapper.Map<Recepcion>(dto);
                 recepcion.Estado = true;
-                var recDto = await _recepcionRepository.SaveEntityAsync(recepcion);
-                if (!recDto.Success) throw new Exception();
+                recepcion.FechaEntrada = DateTime.Now;
 
-                return OperationResult.GetSuccesResult(recDto, code: 200);
+                var result = await _recepcionRepository.SaveEntityAsync(recepcion);
+
+                return OperationResult.GetSuccesResult(result, "Recepcion Creada", 200);
             }
             catch (Exception ex)
             {
