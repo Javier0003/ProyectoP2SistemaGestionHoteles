@@ -1,10 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SGHT.Application.Dtos.EstadoHabitacion;
 using SGHT.Application.Interfaces;
 using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SGHT.Application.Services
 {
@@ -13,25 +17,32 @@ namespace SGHT.Application.Services
         private readonly IEstadoHabitacionRepository _estadoHabitacionRepository;
         private readonly ILogger<EstadoHabitacionService> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public EstadoHabitacionService(IEstadoHabitacionRepository estadoHabitacionRepository, ILogger<EstadoHabitacionService> logger, IConfiguration configuration)
+        public EstadoHabitacionService(
+            IEstadoHabitacionRepository estadoHabitacionRepository,
+            ILogger<EstadoHabitacionService> logger,
+            IConfiguration configuration,
+            IMapper mapper)
         {
             _estadoHabitacionRepository = estadoHabitacionRepository;
             _logger = logger;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         public async Task<OperationResult> GetAll()
         {
             try
             {
-                var estado = await _estadoHabitacionRepository.GetAllAsync();
-                return OperationResult.GetSuccesResult(estado, code: 200);
+                var estados = await _estadoHabitacionRepository.GetAllAsync();
+                var estadosDto = _mapper.Map<IEnumerable<EstadoHabitacionDto>>(estados);
+                return OperationResult.GetSuccesResult(estadosDto, code: 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"EstadoHabitacionService.GetALl: {ex.ToString()}");
-                return OperationResult.GetErrorResult("idk how u got an error here", code: 500);
+                _logger.LogError($"EstadoHabitacionService.GetAll: {ex}");
+                return OperationResult.GetErrorResult("Error obteniendo los estados de habitación", code: 500);
             }
         }
 
@@ -39,62 +50,51 @@ namespace SGHT.Application.Services
         {
             try
             {
-                var estadoHabitacion = await _estadoHabitacionRepository.GetEntityByIdAsync(id);
-                if (estadoHabitacion == null) return OperationResult.GetErrorResult("estado no encontrado", code: 404);
+                var estado = await _estadoHabitacionRepository.GetEntityByIdAsync(id);
+                if (estado == null) return OperationResult.GetErrorResult("Estado de habitación no encontrado", code: 404);
 
-                return OperationResult.GetSuccesResult(estadoHabitacion);
+                var estadoDto = _mapper.Map<EstadoHabitacionDto>(estado);
+                return OperationResult.GetSuccesResult(estadoDto, code: 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"EstadoHabitacionService.GetById: {ex.ToString()}");
-                return OperationResult.GetErrorResult("error consultando estado", code: 500);
+                _logger.LogError($"EstadoHabitacionService.GetById: {ex}");
+                return OperationResult.GetErrorResult("Error buscando estado de habitación", code: 500);
             }
         }
 
         public async Task<OperationResult> Save(SaveEstadoHabitacionDto dto)
         {
-            EstadoHabitacion estadoHabitacion = new()
-            {
-                Descripcion = dto.Descripcion,
-                Estado = dto.Estado,
-                FechaCreacion = dto.FechaCreacion
-            };
-
             try
             {
-                var estado = await _estadoHabitacionRepository.SaveEntityAsync(estadoHabitacion);
-                if (!estado.Success) throw new Exception();
+                var estado = _mapper.Map<EstadoHabitacion>(dto);
+                estado.FechaCreacion = DateTime.Now;
 
-                return OperationResult.GetSuccesResult(estado, code: 200);
+                var result = await _estadoHabitacionRepository.SaveEntityAsync(estado);
+                return OperationResult.GetSuccesResult(result, "Estado de habitación creado con éxito", 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"EstadoHabitacionService.Save: {ex.ToString()}");
-                return OperationResult.GetErrorResult("Error creando estadoHabitacion", code: 500);
+                _logger.LogError($"EstadoHabitacionService.Save: {ex}");
+                return OperationResult.GetErrorResult("No se pudo guardar el estado de habitación", code: 500);
             }
         }
 
         public async Task<OperationResult> UpdateById(UpdateEstadoHabitacionDto dto)
         {
-            EstadoHabitacion estadoHabitacion = new()
-            {
-                Descripcion = dto.Descripcion,
-                Estado = dto.Estado,
-                FechaCreacion = dto.FechaCreacion,
-                IdEstadoHabitacion = dto.IdEstadoHabitacion
-            };
-           
             try
             {
-                var queryResult = await _estadoHabitacionRepository.UpdateEntityAsync(estadoHabitacion);
-                if (!queryResult.Success) throw new Exception();
+                dto.FechaCreacion = DateTime.Now;
 
-                return OperationResult.GetSuccesResult(queryResult, code: 200);
+                var estado = _mapper.Map<EstadoHabitacion>(dto);
+                var queryResult = await _estadoHabitacionRepository.UpdateEntityAsync(estado);
+
+                return OperationResult.GetSuccesResult(queryResult, "Estado de habitación actualizado correctamente", 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"EstadoHabitacionService.UpdateById: {ex.ToString()}");
-                return OperationResult.GetErrorResult("Error actualziando estadoHabitacion", code: 500);
+                _logger.LogError($"EstadoHabitacionService.UpdateById: {ex}");
+                return OperationResult.GetErrorResult("Error actualizando estado de habitación", code: 500);
             }
         }
 
@@ -102,18 +102,16 @@ namespace SGHT.Application.Services
         {
             try
             {
-                var entity = await _estadoHabitacionRepository.GetEntityByIdAsync(dto.IdEstadoHabitacion);
-                if (entity == null) return OperationResult.GetErrorResult("estado con esa id no existe", code: 404);
+                var entityToRemove = await _estadoHabitacionRepository.GetEntityByIdAsync(dto.IdEstadoHabitacion);
+                if (entityToRemove == null) return OperationResult.GetErrorResult("Estado de habitación no encontrado", code: 404);
 
-                var queryResult = await _estadoHabitacionRepository.DeleteEntityAsync(entity);
-                if (!queryResult.Success) return OperationResult.GetErrorResult("error eliminando este estado", code: 500);
-
-                return OperationResult.GetSuccesResult(queryResult, "Estado eliminado correctamente", code: 200);
+                var result = await _estadoHabitacionRepository.DeleteEntityAsync(entityToRemove);
+                return OperationResult.GetSuccesResult(result, "Estado de habitación eliminado", 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"EstadoHabitacionService.DeletebyId: {ex.ToString()}");
-                return OperationResult.GetErrorResult("Error eliminando estadoHabitacion", code: 500);
+                _logger.LogError($"EstadoHabitacionService.DeleteById: {ex}");
+                return OperationResult.GetErrorResult("Error eliminando estado de habitación", code: 500);
             }
         }
     }
