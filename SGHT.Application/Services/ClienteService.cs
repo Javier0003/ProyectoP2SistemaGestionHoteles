@@ -1,10 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SGHT.Application.Dtos.ClienteDto;
 using SGHT.Application.Interfaces;
 using SGHT.Domain.Base;
 using SGHT.Domain.Entities.Configuration;
+using SGHT.Domain.Entities.Reservation;
 using SGHT.Persistance.Interfaces;
+using SGHT.Persistance.Repositories;
 
 namespace SGHT.Application.Services
 {
@@ -13,12 +16,14 @@ namespace SGHT.Application.Services
         private readonly IClienteRepository _clienteRepository;
         private readonly ILogger<ClienteService> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _IMapper;
 
-        public ClienteService(IClienteRepository clienteRepository, ILogger<ClienteService> logger, IConfiguration configuration)
+        public ClienteService(IClienteRepository clienteRepository, ILogger<ClienteService> logger, IConfiguration configuration, IMapper mapper)
         {
             _clienteRepository = clienteRepository;
             _logger = logger;
             _configuration = configuration;
+            _IMapper = mapper;
         }
 
         public async Task<OperationResult> GetAll()
@@ -53,22 +58,14 @@ namespace SGHT.Application.Services
 
         public async Task<OperationResult> Save(SaveClienteDto clienteDto)
         {
-            Cliente cliente = new Cliente()
-            {
-                TipoDocumento = clienteDto.TipoDocumento,
-                Documento = clienteDto.Documento,
-                NombreCompleto = clienteDto.NombreCompleto,
-                Correo = clienteDto.Correo,
-                FechaCreacion = DateTime.Now
-            };
-
             try
             {
+                var cliente = _IMapper.Map<Cliente>(clienteDto);
+                cliente.Estado = true;
+                var clieDto = await _clienteRepository.SaveEntityAsync(cliente);
+                if (!clieDto.Success) throw new Exception();
 
-                var queryResult = await _clienteRepository.SaveEntityAsync(cliente);
-                if (!queryResult.Success) throw new Exception();
-
-                return OperationResult.GetSuccesResult(queryResult, code: 200);
+                return OperationResult.GetSuccesResult(clieDto, code: 200);
             }
             catch (Exception ex)
             {
@@ -79,22 +76,15 @@ namespace SGHT.Application.Services
 
         public async Task<OperationResult> UpdateById(UpdateClienteDto dto)
         {
-            Cliente cliente = new()
-            {
-                IdCliente = dto.IdCliente,
-                TipoDocumento = dto.TipoDocumento,
-                Documento = dto.Documento,
-                NombreCompleto = dto.NombreCompleto,
-                Correo = dto.Correo,
-                FechaCreacion = DateTime.Now
-            };
 
             try
             {
-                var queryResult = await _clienteRepository.UpdateEntityAsync(cliente);
-                if (!queryResult.Success) throw new Exception();
+                var cliente = _IMapper.Map<Cliente>(dto);
+                cliente.Estado = true;
+                var clieDto = await _clienteRepository.UpdateEntityAsync(cliente);
+                if (!clieDto.Success) throw new Exception();
 
-                return OperationResult.GetSuccesResult(queryResult, code: 200);
+                return OperationResult.GetSuccesResult(clieDto, code: 200);
             }
             catch (Exception ex)
             {
@@ -110,10 +100,9 @@ namespace SGHT.Application.Services
                 var entity = await _clienteRepository.GetEntityByIdAsync(dto.IdCliente);
                 if (entity == null) return OperationResult.GetErrorResult("Cliente con esa id no existe", code: 404);
 
-                var queryResult = await _clienteRepository.DeleteEntityAsync(entity);
-                if (!queryResult.Success) return OperationResult.GetErrorResult("error eliminando este Cliente", code: 500);
-
-                return OperationResult.GetSuccesResult(queryResult, "Cliente eliminado correctamente", code: 200);
+                var result = await _clienteRepository.DeleteEntityAsync(entity);
+                
+                return OperationResult.GetSuccesResult(result, "Cliente eliminado correctamente", code: 200);
             }
             catch (Exception ex)
             {

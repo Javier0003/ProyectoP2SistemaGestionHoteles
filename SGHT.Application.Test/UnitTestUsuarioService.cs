@@ -8,6 +8,7 @@ using SGHT.Domain.Entities;
 using SGHT.Persistance.Entities.Users;
 using SGHT.Persistance.Interfaces;
 using SGHT.Application.Utils;
+using AutoMapper;
 
 namespace SGHT.Application.Test
 {
@@ -17,6 +18,7 @@ namespace SGHT.Application.Test
         private Mock<ILogger<UsuarioService>> _mockLogger;
         private Mock<IConfiguration> _mockConfiguration;
         private UsuarioService _usuarioService;
+        private readonly IMapper _mapper;
 
         public UnitTestUsuarioService()
         {
@@ -28,6 +30,7 @@ namespace SGHT.Application.Test
             _mockRepository = new Mock<IUsuariosRepository>(MockBehavior.Strict);
             _mockLogger = new Mock<ILogger<UsuarioService>>();
             _mockConfiguration = new Mock<IConfiguration>();
+            _mockMapper = new Mock<IMapper>();
             
             _mockConfiguration.Setup(c => c["Jwt:Secret"])
                 .Returns("YourSuperSecretKeyWithAtLeast32Characters!!");

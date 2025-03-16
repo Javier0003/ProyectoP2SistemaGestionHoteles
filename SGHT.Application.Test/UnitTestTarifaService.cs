@@ -26,7 +26,7 @@ namespace SGHT.Application.Test
             _tarifaService = new TarifaService(
                 _mockRepository.Object,
                 _mockLogger.Object,
-                _mockConfiguration.Object
+                _mockConfiguration.Object,
             );
         }
 
