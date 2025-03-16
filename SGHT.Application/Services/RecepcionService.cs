@@ -101,7 +101,7 @@ namespace SGHT.Application.Services
             {
                 var recepcion = _mapper.Map<Recepcion>(dto);
                 recepcion.Estado = true;
-                var recDto = await _recepcionRepository.SaveEntityAsync(recepcion);
+                var recDto = await _recepcionRepository.UpdateEntityAsync(recepcion);
                 if (!recDto.Success) throw new Exception();
 
                 return OperationResult.GetSuccesResult(recDto, code: 200);
