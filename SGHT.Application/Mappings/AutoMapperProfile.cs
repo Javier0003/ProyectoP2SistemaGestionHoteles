@@ -4,7 +4,9 @@ using SGHT.Application.Dtos.Tarifa;
 using SGHT.Application.Dtos.Usuarios;
 using SGHT.Application.Dtos.EstadoHabitacion;
 using SGHT.Application.Dtos.Piso;
+using SGHT.Application.Dtos.RecepcionDto;
 using SGHT.Domain.Entities;
+using SGHT.Domain.Entities.Reservation;
 
 namespace SGHT.Application.Mappings
 {
