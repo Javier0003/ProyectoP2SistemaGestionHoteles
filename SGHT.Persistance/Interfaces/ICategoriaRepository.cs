@@ -7,6 +7,5 @@ namespace SGHT.Persistance.Interfaces
 {
     public interface ICategoriaRepository : IBaseRepository<Categoria>
     {
-
     }
 }
