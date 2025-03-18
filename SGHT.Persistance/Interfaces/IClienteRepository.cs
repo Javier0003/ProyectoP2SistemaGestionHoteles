@@ -7,7 +7,6 @@ namespace SGHT.Persistance.Interfaces
 {
     public interface IClienteRepository : IBaseRepository<Cliente>
     {
-        Task<OperationResult> GetClienteByDocumento();
-        Task<OperationResult> GetClienteByID(int idCliente);
+       // Task<OperationResult> GetClienteByID(int idCliente);
     }
 }
