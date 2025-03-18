@@ -82,8 +82,11 @@ namespace SGHT.Persistance.Repositories
        public override async Task<OperationResult> UpdateEntityAsync(Recepcion recepcion)
        {
 
+            if (recepcion is null) return OperationResult.GetErrorResult("La recepcion no puede ser nula");
+
             if (recepcion.IdRecepcion != recepcion.IdRecepcion)
                 return OperationResult.GetErrorResult("Este ID no existe", code: 500);
+            
             if (recepcion.IdRecepcion == null)
                 return OperationResult.GetErrorResult("El ID no puede ser nulo", code: 400);
 
@@ -92,11 +95,25 @@ namespace SGHT.Persistance.Repositories
 
         public override async Task<OperationResult> DeleteEntityAsync(Recepcion recepcion)
         {
-            
-            if(recepcion.IdRecepcion == null) 
-                return OperationResult.GetErrorResult("El id de la recepcion no puede ser nulo", code: 400);
+            if (recepcion is null) return OperationResult.GetErrorResult("La recepcion no puede ser nula");
+            try
+            {
+                var result = await GetEntityByIdAsync(recepcion.IdRecepcion);
+                if (result == null) return OperationResult.GetErrorResult("No se encontro la recepcion", code: 404);
 
-            return await base.DeleteEntityAsync(recepcion);
+                result.Estado = false;
+
+                var resultDelete = await UpdateEntityAsync(result);
+                if (!resultDelete.Success) return OperationResult.GetErrorResult("No se elimino correctamente", code: 500);
+
+                return OperationResult.GetSuccesResult(resultDelete, "La recepcion se elimino correctamente", code: 200);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"RecepcionRepository.DeleteEntityAsync: {ex}");
+                return OperationResult.GetErrorResult("Error eliminando la recepcion", code: 500);
+
+            }
         }
 
     }
