@@ -8,6 +8,7 @@ using SGHT.Persistance.Context;
 using SGHT.Persistance.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Azure.Core;
+using SGHT.Domain.Entities.Reservation;
 
 
 namespace SGHT.Persistance.Repositories
@@ -82,10 +83,25 @@ namespace SGHT.Persistance.Repositories
 
         public override async Task<OperationResult> DeleteEntityAsync(Cliente cliente)
         {
-            if (cliente.IdCliente == null)
-                return OperationResult.GetErrorResult("El estado del cliente no puede ser nulo", code: 500);
+            if (cliente is null) return OperationResult.GetErrorResult("El cliente no puede ser nulo");
+            try
+            {
+                var result = await GetEntityByIdAsync(cliente.IdCliente);
+                if (result == null) return OperationResult.GetErrorResult("No se encontro el cliente", code: 404);
 
-            return await base.DeleteEntityAsync(cliente);
+                result.Estado = false;
+
+                var resultDelete = await UpdateEntityAsync(result);
+                if (!resultDelete.Success) return OperationResult.GetErrorResult("No se elimino correctamente", code: 500);
+
+                return OperationResult.GetSuccesResult(resultDelete, "El cliente se elimino correctamente", code: 200);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ClienteRespository.DeleteEntityAsync: {ex}");
+                return OperationResult.GetErrorResult("Error eliminando el cliente", code: 500);
+
+            }
         }
 
     }

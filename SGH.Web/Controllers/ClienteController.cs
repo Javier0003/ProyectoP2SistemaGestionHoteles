@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using SGH.Web.Models;
 using SGHT.Application.Dtos.ClienteDto;
 using SGHT.Application.Dtos.RecepcionDto;
 using SGHT.Application.Interfaces;
+using SGHT.Application.Services;
+using SGHT.Domain.Entities.Reservation;
 using System.Diagnostics;
 
 namespace SGHT.Web.Controllers
@@ -85,14 +88,15 @@ namespace SGHT.Web.Controllers
         {
             if (clienteDto.IdCliente == 0)
             {
-                ModelState.AddModelError("ID_Cliente", "El ID del cliente no puede ser 0");
+                ModelState.AddModelError("IdCliente", "El id del cliente no puede ser 0");
+                return View(clienteDto);
             }
 
             var result = await _clienteService.DeleteById(clienteDto);
 
             if (!result.Success)
             {
-                ModelState.AddModelError("", "Error deleting cliente.");
+                ModelState.AddModelError("", "Error eliminando cliente.");
                 return View(clienteDto);
             }
 
