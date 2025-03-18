@@ -48,12 +48,12 @@ namespace SGHT.Application.Services
         {
             try
             {
-                var clientes = await _recepcionRepository.GetAllAsync();
-                return OperationResult.GetSuccesResult(clientes, code: 200);
+                var recepcions = await _recepcionRepository.GetAllAsync();
+                return OperationResult.GetSuccesResult(recepcions, code: 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"RecepcionService.GetALl: {ex.ToString()}");
+                _logger.LogError($"RecepcionService.GetAll: {ex.ToString()}");
                 return OperationResult.GetErrorResult("idk how u got an error here", code: 500);
             }
         }
@@ -62,10 +62,10 @@ namespace SGHT.Application.Services
         {
             try
             {
-                var cliente = await _recepcionRepository.GetEntityByIdAsync(id);
-                if (cliente == null) return OperationResult.GetErrorResult("Recepcion con esa id no encontrada", code: 404);
+                var recepcion = await _recepcionRepository.GetEntityByIdAsync(id);
+                if (recepcion == null) return OperationResult.GetErrorResult("Recepcion no encontrada", code: 404);
 
-                return OperationResult.GetSuccesResult(cliente, code: 200);
+                return OperationResult.GetSuccesResult(recepcion, code: 200);
             }
             catch (Exception ex)
             {
@@ -78,12 +78,11 @@ namespace SGHT.Application.Services
 
         public async Task<OperationResult> Save(SaveRecepcionDto dto)
         {
+            var recepcion = _mapper.Map<Recepcion>(dto);
+            recepcion.Estado = true;
+            recepcion.FechaEntrada = DateTime.Now;
             try
             {
-                var recepcion = _mapper.Map<Recepcion>(dto);
-                recepcion.Estado = true;
-                recepcion.FechaEntrada = DateTime.Now;
-
                 var result = await _recepcionRepository.SaveEntityAsync(recepcion);
 
                 return OperationResult.GetSuccesResult(result, "Recepcion Creada", 200);
@@ -101,11 +100,12 @@ namespace SGHT.Application.Services
             try
             {
                 var recepcion = _mapper.Map<Recepcion>(dto);
-                recepcion.Estado = true;
-                var recDto = await _recepcionRepository.UpdateEntityAsync(recepcion);
-                if (!recDto.Success) throw new Exception();
+         
+                var result = await _recepcionRepository.UpdateEntityAsync(recepcion);
+                
+                if (!result.Success) throw new Exception();
 
-                return OperationResult.GetSuccesResult(recDto, code: 200);
+                return OperationResult.GetSuccesResult(result, code: 200);
             }
             catch (Exception ex)
             {

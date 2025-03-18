@@ -85,7 +85,7 @@ namespace SGHT.Persistance.Repositories
             if (recepcion.IdRecepcion != recepcion.IdRecepcion)
                 return OperationResult.GetErrorResult("Este ID no existe", code: 500);
             if (recepcion.IdRecepcion == null)
-                return OperationResult.GetErrorResult("El ID no puede ser nulo", code: 500);
+                return OperationResult.GetErrorResult("El ID no puede ser nulo", code: 400);
 
             return await base.UpdateEntityAsync(recepcion);
        } 

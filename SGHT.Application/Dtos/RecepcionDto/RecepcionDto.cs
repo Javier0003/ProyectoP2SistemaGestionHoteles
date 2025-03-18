@@ -24,19 +24,5 @@ namespace SGHT.Application.Dtos.RecepcionDto
         public string Observacion { get; set; }
         public bool Estado { get; set; }
 
-      //        ,[IdCliente]
-      //,[IdHabitacion]
-      //,[FechaEntrada]
-      //,[FechaSalida]
-      //,[FechaSalidaConfirmacion]
-      //,[PrecioInicial]
-      //,[Adelanto]
-      //,[PrecioRestante]
-      //,[TotalPagado]
-      //,[CostoPenalidad]
-      //,[Observacion]
-      //,[Estado]
-
-
     }
 }
