@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SGH.Web.Models;
 using SGHT.Application.Dtos.ClienteDto;
+using SGHT.Application.Dtos.RecepcionDto;
 using SGHT.Application.Interfaces;
 using System.Diagnostics;
 
@@ -62,17 +63,20 @@ namespace SGHT.Web.Controllers
         public async Task<IActionResult> Save(SaveClienteDto cliente)
         {
             var result = await _clienteService.Save(cliente);
+
             if (!result.Success) return View();
 
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Delete(DeleteClienteDto dto)
-        {
-            var result = await _clienteService.DeleteById(dto);
-            if (!result.Success) return View();
 
-            return RedirectToAction(nameof(Index));
+        public IActionResult Delete(int id)
+        {
+            var model = new DeleteClienteDto
+            {
+                IdCliente = id
+            };
+            return View(model);
         }
 
         [HttpPost]
