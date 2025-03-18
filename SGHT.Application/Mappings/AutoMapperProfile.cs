@@ -8,6 +8,9 @@ using SGHT.Application.Dtos.RecepcionDto;
 using SGHT.Application.Dtos.ClienteDto;
 using SGHT.Domain.Entities;
 using SGHT.Domain.Entities.Reservation;
+using SGHT.Application.Dtos.Categoria;
+using SGHT.Application.Dtos.Habitacion;
+using SGHT.Application.Dtos.Servicio;
 using SGHT.Domain.Entities.Configuration;
 
 namespace SGHT.Application.Mappings
@@ -16,6 +19,24 @@ namespace SGHT.Application.Mappings
     {
         public AutoMapperProfile()
         {
+            //Mappings for Categorias
+            CreateMap<Categoria, CategoriaDto>().ReverseMap();
+            CreateMap<Categoria, UpdateCategoriaDto>().ReverseMap();
+            CreateMap<Categoria, DeleteCategoriaDto>().ReverseMap();
+            CreateMap<Categoria, SaveCategoriaDto>().ReverseMap();
+
+            //Mappings for Habitacion
+            CreateMap<Habitacion, HabitacionDto>().ReverseMap();
+            CreateMap<Habitacion, UpdateHabitacionDto>().ReverseMap();
+            CreateMap<Habitacion, DeleteHabitacionDto>().ReverseMap();
+            CreateMap<Habitacion, SaveHabitacionDto>().ReverseMap();
+
+            //Mappings for Servicios 
+            CreateMap<Servicios, ServiciosDto>().ReverseMap();
+            CreateMap<Servicios, UpdateServiciosDto>().ReverseMap();
+            CreateMap<Servicios, DeleteServiciosDto>().ReverseMap();
+            CreateMap<Servicios, SaveServiciosDto>().ReverseMap();
+
             // Mappings for Usuarios
             CreateMap<Usuarios, UsuarioDto>().ReverseMap();
             CreateMap<Usuarios, UpdateUsuarioDto>().ReverseMap();
@@ -51,7 +72,6 @@ namespace SGHT.Application.Mappings
             CreateMap<EstadoHabitacion, UpdateEstadoHabitacionDto>().ReverseMap();
             CreateMap<EstadoHabitacion, SaveEstadoHabitacionDto>().ReverseMap();
             CreateMap<EstadoHabitacion, DeleteEstadoHabitacionDto>().ReverseMap();
-
 
             CreateMap<Piso, PisoDto>().ReverseMap();
             CreateMap<Piso, UpdatePisoDto>().ReverseMap();
