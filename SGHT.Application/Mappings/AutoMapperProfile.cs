@@ -2,7 +2,14 @@ using AutoMapper;
 using SGHT.Application.Dtos.RolUsuario;
 using SGHT.Application.Dtos.Tarifa;
 using SGHT.Application.Dtos.Usuarios;
+using SGHT.Application.Dtos.EstadoHabitacion;
+using SGHT.Application.Dtos.Piso;
+using SGHT.Application.Dtos.RecepcionDto;
 using SGHT.Domain.Entities;
+using SGHT.Domain.Entities.Reservation;
+using SGHT.Application.Dtos.Categoria;
+using SGHT.Application.Dtos.Habitacion;
+using SGHT.Application.Dtos.Servicio;
 
 namespace SGHT.Application.Mappings
 {
@@ -10,6 +17,24 @@ namespace SGHT.Application.Mappings
     {
         public AutoMapperProfile()
         {
+            //Mappings for Categorias
+            CreateMap<Categoria, CategoriaDto>().ReverseMap();
+            CreateMap<Categoria, UpdateCategoriaDto>().ReverseMap();
+            CreateMap<Categoria, DeleteCategoriaDto>().ReverseMap();
+            CreateMap<Categoria, SaveCategoriaDto>().ReverseMap();
+
+            //Mappings for Habitacion
+            CreateMap<Habitacion, HabitacionDto>().ReverseMap();
+            CreateMap<Habitacion, UpdateHabitacionDto>().ReverseMap();
+            CreateMap<Habitacion, DeleteHabitacionDto>().ReverseMap();
+            CreateMap<Habitacion, SaveHabitacionDto>().ReverseMap();
+
+            //Mappings for Servicios 
+            CreateMap<Servicios, ServiciosDto>().ReverseMap();
+            CreateMap<Servicios, UpdateServiciosDto>().ReverseMap();
+            CreateMap<Servicios, DeleteServiciosDto>().ReverseMap();
+            CreateMap<Servicios, SaveServiciosDto>().ReverseMap();
+
             // Mappings for Usuarios
             CreateMap<Usuarios, UsuarioDto>().ReverseMap();
             CreateMap<Usuarios, UpdateUsuarioDto>().ReverseMap();
@@ -27,6 +52,18 @@ namespace SGHT.Application.Mappings
             CreateMap<Tarifas, UpdateTarifaDto>().ReverseMap();
             CreateMap<Tarifas, SaveTarifaDto>().ReverseMap();
             CreateMap<Tarifas, DeleteTarifaDto>().ReverseMap();
+
+            CreateMap<EstadoHabitacion, EstadoHabitacionDto>().ReverseMap();
+            CreateMap<EstadoHabitacion, UpdateEstadoHabitacionDto>().ReverseMap();
+            CreateMap<EstadoHabitacion, SaveEstadoHabitacionDto>().ReverseMap();
+            CreateMap<EstadoHabitacion, DeleteEstadoHabitacionDto>().ReverseMap();
+
+            CreateMap<Piso, PisoDto>().ReverseMap();
+            CreateMap<Piso, UpdatePisoDto>().ReverseMap();
+            CreateMap<Piso, SavePisoDto>().ReverseMap();
+            CreateMap<Piso, DeletePisoDto>().ReverseMap();
+
+
         }
     }
 } 

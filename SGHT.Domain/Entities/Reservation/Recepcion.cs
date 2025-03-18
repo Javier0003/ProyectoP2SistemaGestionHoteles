@@ -5,11 +5,12 @@ using SGHT.Domain.Base;
 namespace SGHT.Domain.Entities.Reservation
 {
     [Table("Recepcion", Schema = "dbo")]
-    public class Recepcion : Auditoria
+    public class Recepcion
     {
         [Column("IdRecepcion")]
         [Key]
         public int IdRecepcion { get; set; }
+        public bool? Estado { get; set; }
         public DateTime? FechaEntrada { get; set; }
         public DateTime? FechaSalida { get; set; }
         public DateTime? FechaSalidaConfirmacion { get; set; }

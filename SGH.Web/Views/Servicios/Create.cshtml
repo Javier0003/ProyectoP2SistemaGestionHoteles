@@ -1,11 +1,11 @@
-﻿@model SGHT.Application.Dtos.Categoria.SaveCategoriaDto
+﻿@model SGHT.Application.Dtos.Servicio.SaveServiciosDto
 
 @{
     ViewData["Title"] = "Create";
 }
 <h1>Edit</h1>
 
-<h4>CreateCategoriaDto</h4>
+<h4>CreateServicioDto</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -13,28 +13,15 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
-                <label asp-for="IdServicio" class="control-label"></label>
-                <input asp-for="IdServicio" class="form-control" />
-                <span asp-validation-for="IdServicio" class="text-danger"></span>
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
          
             <div class="form-group">
                 <label asp-for="Descripcion" class="control-label"></label>
                 <input asp-for="Descripcion" class="form-control" />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
-
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Estado" /> 
-                    @Html.DisplayNameFor(model => model.Estado)
-                </label>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="FechaCreacion" class="control-label"></label>
-                <input asp-for="FechaCreacion" class="form-control" />
-                <span asp-validation-for="FechaCreacion" class="text-danger"></span>
             </div>
        
             <div class="form-group">

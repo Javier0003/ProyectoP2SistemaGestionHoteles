@@ -23,9 +23,11 @@ namespace SGHT.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var result = await _habitacionService.GetAll();
+            
+            var habitacion = _mapper.Map<List<UpdateHabitacionDto>>(result.Data);
             if (!result.Success) return View();
 
-            return View(result.Data);
+            return View(habitacion);
         }
 
         public async Task<IActionResult> Edit(int id)

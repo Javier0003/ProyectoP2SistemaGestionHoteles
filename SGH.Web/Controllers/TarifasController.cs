@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SGH.Web.Models;
 using SGHT.Application.Dtos.Tarifa;
 using SGHT.Application.Interfaces;
-using SGHT.Domain.Entities;
+
 using System.Diagnostics;
 
 namespace SGHT.Web.Controllers

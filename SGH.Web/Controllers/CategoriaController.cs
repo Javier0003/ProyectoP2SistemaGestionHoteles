@@ -23,9 +23,11 @@ namespace SGHT.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var result = await _categoriaService.GetAll();
+            
+            var categoria = _mapper.Map<List<UpdateCategoriaDto>>(result.Data);
             if (!result.Success) return View();
 
-            return View(result.Data);
+            return View(categoria);
         }
 
         public async Task<IActionResult> Edit(int id)

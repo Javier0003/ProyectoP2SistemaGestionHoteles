@@ -1,53 +1,52 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SGH.Web.Models;
-using SGHT.Application.Dtos.Servicio;
+using SGHT.Application.Dtos.EstadoHabitacion;
 using SGHT.Application.Interfaces;
+using SGHT.Domain.Entities;
 using System.Diagnostics;
 
-namespace SGHT.Web.Controllers
+namespace SGH.Web.Controllers
 {
-    public class ServiciosController : Controller
+    public class EstadoHabitacionController : Controller
     {
-        private readonly ILogger<ServiciosController> _logger;
-        private readonly IServiciosService _serviciosService;
+        private readonly ILogger<EstadoHabitacionController> _logger;
+        private readonly IEstadoHabitacionService _estadoHabitacionService;
         private readonly IMapper _mapper;
 
-        public ServiciosController(IServiciosService serviciosService, ILogger<ServiciosController> logger, IMapper mapper)
+        public EstadoHabitacionController(IEstadoHabitacionService estadoHabitacionService, ILogger<EstadoHabitacionController> logger, IMapper mapper)
         {
             _logger = logger;
-            _serviciosService = serviciosService;
+            _estadoHabitacionService = estadoHabitacionService;
             _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
-            var result = await _serviciosService.GetAll();
-
-            var servicio = _mapper.Map<List<UpdateServiciosDto>>(result.Data);
+            var result = await _estadoHabitacionService.GetAll();
+            var estados = _mapper.Map<List<UpdateEstadoHabitacionDto>>(result.Data);
             if (!result.Success) return View();
 
-            return View(servicio);
+            return View(estados);
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            var result = await _serviciosService.GetById(id);
+            var result = await _estadoHabitacionService.GetById(id);
             if (!result.Success) return View();
 
-            var mappedResult = _mapper.Map<UpdateServiciosDto>(result.Data);
+            var mappedResult = _mapper.Map<UpdateEstadoHabitacionDto>(result.Data);
 
             return View(mappedResult);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, UpdateServiciosDto servicio)
+        public async Task<IActionResult> Edit(int id, UpdateEstadoHabitacionDto estado)
         {
-            servicio.IdServicio = id;
+            estado.IdEstadoHabitacion = id;
 
-            var result = await _serviciosService.UpdateById(servicio);
+            var result = await _estadoHabitacionService.UpdateById(estado);
             if (!result.Success) return View();
 
             return RedirectToAction(nameof(Index));
@@ -60,9 +59,9 @@ namespace SGHT.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SaveServiciosDto servicio)
+        public async Task<IActionResult> Create(SaveEstadoHabitacionDto estado)
         {
-            var result = await _serviciosService.Save(servicio);
+            var result = await _estadoHabitacionService.Save(estado);
 
             if (!result.Success) return View();
 
@@ -71,30 +70,30 @@ namespace SGHT.Web.Controllers
 
         public IActionResult Delete(int id)
         {
-            var model = new DeleteServiciosDto
+            var model = new DeleteEstadoHabitacionDto
             {
-                IdServicio = id
+                IdEstadoHabitacion = id
             };
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(DeleteServiciosDto dto)
+        public async Task<IActionResult> Delete(DeleteEstadoHabitacionDto dto)
         {
-            if (dto.IdServicio == 0)
+            if (dto.IdEstadoHabitacion == 0)
             {
-                ModelState.AddModelError("", "Servicio invalidado ID.");
+                ModelState.AddModelError("", "Invalid estado ID.");
                 return View(dto);
             }
 
-            var result = await _serviciosService.DeleteById(dto);
+            var result = await _estadoHabitacionService.DeleteById(dto);
             if (result.Success)
             {
                 return RedirectToAction(nameof(Index));
             }
 
-            ModelState.AddModelError("", "Error eliminando servicio.");
+            ModelState.AddModelError("", "Error deleting estado.");
             return View(dto);
         }
 
@@ -110,3 +109,4 @@ namespace SGHT.Web.Controllers
         }
     }
 }
+
