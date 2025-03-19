@@ -24,10 +24,9 @@ namespace SGH.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var result = await _estadoHabitacionService.GetAll();
-            var estados = _mapper.Map<List<UpdateEstadoHabitacionDto>>(result.Data);
             if (!result.Success) return View();
 
-            return View(estados);
+            return View(result.Data);
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -59,9 +58,9 @@ namespace SGH.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SaveEstadoHabitacionDto estado)
+        public async Task<IActionResult> Create(SaveEstadoHabitacionDto estado1)
         {
-            var result = await _estadoHabitacionService.Save(estado);
+            var result = await _estadoHabitacionService.Save(estado1);
 
             if (!result.Success) return View();
 

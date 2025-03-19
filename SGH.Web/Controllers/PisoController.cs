@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SGH.Web.Models;
 using SGHT.Application.Dtos.Piso;
 using SGHT.Application.Interfaces;
+using SGHT.Application.Services;
 using SGHT.Domain.Entities;
 using System.Diagnostics;
 
@@ -24,10 +25,9 @@ namespace SGH.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var result = await _pisoService.GetAll();
-            var pisos = _mapper.Map<List<UpdatePisoDto>>(result.Data);
             if (!result.Success) return View();
 
-            return View(pisos);
+            return View(result.Data);
         }
 
         public async Task<IActionResult> Edit(int id)
