@@ -97,16 +97,16 @@ namespace SGHT.Application.Services
         {
             try
             {
-                var entity = await _clienteRepository.GetEntityByIdAsync(dto.IdCliente);
-                if (entity == null) return OperationResult.GetErrorResult("Cliente con esa id no existe", code: 404);
+                var entityToRemove = await _clienteRepository.GetEntityByIdAsync(dto.IdCliente);
+                if (entityToRemove == null) return OperationResult.GetErrorResult("Cliente con esa id no existe", code: 404);
 
-                var result = await _clienteRepository.DeleteEntityAsync(entity);
+                var result = await _clienteRepository.DeleteEntityAsync(entityToRemove);
                 
                 return OperationResult.GetSuccesResult(result, "Cliente eliminado correctamente", code: 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"ClienteService.Delete: {ex.ToString()}");
+                _logger.LogError($"ClienteService.DeleteById: {ex.ToString()}");
                 return OperationResult.GetErrorResult("No se pudo eliminar el cliente", code: 500);
             }
         }

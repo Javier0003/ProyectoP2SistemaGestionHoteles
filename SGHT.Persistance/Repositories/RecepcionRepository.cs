@@ -65,16 +65,16 @@ namespace SGHT.Persistance.Repositories
                 return OperationResult.GetErrorResult("La fecha de salida no puede ser nula", code: 400);
             
             if(recepcion.FechaEntrada < DateTime.Today) 
-                return OperationResult.GetErrorResult("La fecha de entrada no puede ser anterior a la fecha actual", code: 400);
+                return OperationResult.GetErrorResult("La fecha de entrada no puede ser anterior a la fecha actual", code: 500);
             
             if(recepcion.FechaSalida < DateTime.Today) 
-                return OperationResult.GetErrorResult("La fecha de salida no puede ser anterior a la fecha actual", code: 400);
+                return OperationResult.GetErrorResult("La fecha de salida no puede ser anterior a la fecha actual", code: 500);
             
             if(recepcion.FechaSalida < recepcion.FechaEntrada) 
-                return OperationResult.GetErrorResult("La fecha de salida no puede ser anterior a la fecha de entrada", code: 400);        
+                return OperationResult.GetErrorResult("La fecha de salida no puede ser anterior a la fecha de entrada", code: 500);        
             
             if(_context.Recepcion.Any(rc => rc.IdRecepcion == recepcion.IdRecepcion)) 
-                return OperationResult.GetErrorResult("Esta recepcion ya esta registrada en la base de datos", code: 400);
+                return OperationResult.GetErrorResult("Esta recepcion ya esta registrada en la base de datos", code: 500);
             
             return await base.SaveEntityAsync(recepcion);
         }
@@ -82,25 +82,38 @@ namespace SGHT.Persistance.Repositories
        public override async Task<OperationResult> UpdateEntityAsync(Recepcion recepcion)
        {
 
-            if (recepcion.FechaEntrada < DateTime.Today)
-                return OperationResult.GetErrorResult("La fecha de entrada no puede ser anterior a la fecha actual", code: 400);
+            if (recepcion is null) return OperationResult.GetErrorResult("La recepcion no puede ser nula");
 
-            if (recepcion.FechaSalida < DateTime.Today)
-                return OperationResult.GetErrorResult("La fecha de salida no puede ser anterior a la fecha actual", code: 400);
-
-            if (recepcion.FechaSalida < recepcion.FechaEntrada)
-                return OperationResult.GetErrorResult("La fecha de salida no puede ser anterior a la fecha de entrada", code: 400);
+            if (recepcion.IdRecepcion != recepcion.IdRecepcion)
+                return OperationResult.GetErrorResult("Este ID no existe", code: 500);
+            
+            if (recepcion.IdRecepcion == null)
+                return OperationResult.GetErrorResult("El ID no puede ser nulo", code: 400);
 
             return await base.UpdateEntityAsync(recepcion);
        } 
 
         public override async Task<OperationResult> DeleteEntityAsync(Recepcion recepcion)
         {
-            
-            if(recepcion.IdRecepcion == null) 
-                return OperationResult.GetErrorResult("El id de la recepcion no puede ser nulo", code: 400);
+            if (recepcion is null) return OperationResult.GetErrorResult("La recepcion no puede ser nula");
+            try
+            {
+                var result = await GetEntityByIdAsync(recepcion.IdRecepcion);
+                if (result == null) return OperationResult.GetErrorResult("No se encontro la recepcion", code: 404);
 
-            return await base.DeleteEntityAsync(recepcion);
+                result.Estado = false;
+
+                var resultDelete = await UpdateEntityAsync(result);
+                if (!resultDelete.Success) return OperationResult.GetErrorResult("No se elimino correctamente", code: 500);
+
+                return OperationResult.GetSuccesResult(resultDelete, "La recepcion se elimino correctamente", code: 200);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"RecepcionRepository.DeleteEntityAsync: {ex}");
+                return OperationResult.GetErrorResult("Error eliminando la recepcion", code: 500);
+
+            }
         }
 
     }
