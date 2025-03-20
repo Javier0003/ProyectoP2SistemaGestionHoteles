@@ -26,6 +26,8 @@ namespace SGHT.Persistance.Repositories
             if (estadoHabitacion == null) return OperationResult.GetErrorResult("Body is null", code: 400);
             if (string.IsNullOrWhiteSpace(estadoHabitacion.Descripcion)) return OperationResult.GetErrorResult("Descripcion can't be null or whitespace", code: 400);
             if (_context.EstadoHabitaciones.Any(e => e.Descripcion == estadoHabitacion.Descripcion)) return OperationResult.GetErrorResult("Este estado ya está registrado", code: 400);
+            var getNextId = await base.GetAllAsync();
+            estadoHabitacion.IdEstadoHabitacion = getNextId.Count + 1;
 
             return await base.SaveEntityAsync(estadoHabitacion);
         }

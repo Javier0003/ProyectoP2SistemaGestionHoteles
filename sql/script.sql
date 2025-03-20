@@ -47,7 +47,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[EstadoHabitacion](
-	[IdEstadoHabitacion] [int] NOT NULL,
+	[IdEstadoHabitacion] [int] IDENTITY(1,1) NOT NULL,
 	[Descripcion] [varchar](50) NULL,
 	[Estado] [bit] NULL,
 	[FechaCreacion] [datetime] NULL,
@@ -264,4 +264,6 @@ GO
 ALTER TABLE [dbo].[Tarifas] CHECK CONSTRAINT [CK__Tarifas__estado__74AE54BC]
 GO
 ALTER TABLE [dbo].[Usuario] ALTER COLUMN Clave NVARCHAR(200);
+GO
+ALTER TABLE [dbo].[EstadoHabitacion] ALTER COLUMN IdEstadoHabitacion IDENTITY;
 GO
