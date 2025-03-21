@@ -106,6 +106,12 @@ namespace SGHT.Persistance.Repositories
         {
             try
             {
+                if(entity is null) return OperationResult.GetErrorResult("body can't be null", code: 400);
+                if (string.IsNullOrWhiteSpace(entity.NombreCompleto)) return OperationResult.GetErrorResult("Name can't be null", code: 400);
+                if (string.IsNullOrWhiteSpace(entity.Clave)) return OperationResult.GetErrorResult("Password can't be null", code: 400);
+                if (string.IsNullOrWhiteSpace(entity.Correo)) return OperationResult.GetErrorResult("Email can't be null", code: 400);
+                if (!int.IsPositive(entity.IdRolUsuario)) return OperationResult.GetErrorResult("IdRolUsuario can't be null", code: 400);
+
                 var result = await base.UpdateEntityAsync(entity);
                 return result.Success
                     ? OperationResult.GetSuccesResult("Actualización exitosa", code: 200)

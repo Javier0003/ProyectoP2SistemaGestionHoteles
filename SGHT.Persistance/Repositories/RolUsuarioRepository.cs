@@ -41,7 +41,7 @@ namespace SGHT.Persistance.Repositories
 
         public override async Task<OperationResult> DeleteEntityAsync(RolUsuario entity)
         {
-            if (entity is null) return OperationResult.GetErrorResult("Input can't be null");
+            if (entity is null) return OperationResult.GetErrorResult("Input can't be null", code: 400);
             try
             {
                 var result = await GetEntityByIdAsync(entity.IdRolUsuario);
@@ -65,6 +65,9 @@ namespace SGHT.Persistance.Repositories
         {
             try
             {
+                if (entity is null) return OperationResult.GetErrorResult("body can't be null", code: 400);
+                if (string.IsNullOrWhiteSpace(entity.Descripcion)) return OperationResult.GetErrorResult("descripcion can't be null", code: 400);
+
                 var result = await base.UpdateEntityAsync(entity);
                 return result.Success
                     ? OperationResult.GetSuccesResult("Actualización exitosa", code: 200)
