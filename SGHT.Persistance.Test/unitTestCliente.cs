@@ -142,5 +142,51 @@ namespace SGHT.Persistance.Test
         
             Assert.True(result.Success);
         }
+
+
+        [Fact]
+        public async Task createClienteWithDuplicateCorreo_ShouldError()
+        {
+            var cliente1 = new Cliente
+            {
+                TipoDocumento = "DNI",
+                Documento = "12345678",
+                NombreCompleto = "Test",
+                Correo = "Test@example",
+                Estado = true
+            };
+            var cliente2 = new Cliente
+            {
+                TipoDocumento = "DNI",
+                Documento = "54565123",
+                NombreCompleto = "Test2",
+                Correo = "Test@example",
+                Estado = true
+            };
+
+            await _clienteRepository.SaveEntityAsync(cliente1);
+            var result = await _clienteRepository.SaveEntityAsync(cliente2);
+
+            Assert.False(result.Success);
+            Assert.Equal(400, result.Code);
+        }
+
+        [Fact]
+        public async Task CreateCliente_WithNullValues_ShouldError()
+        {
+            var cliente = new Cliente
+            {
+                TipoDocumento = null,
+                Documento = null,
+                NombreCompleto = null,
+                Correo = null,
+                Estado = false
+            };
+
+            var result = await _clienteRepository.SaveEntityAsync(cliente);
+
+            Assert.False(result.Success);
+            Assert.Equal(400, result.Code);
+        }
     }
 }
