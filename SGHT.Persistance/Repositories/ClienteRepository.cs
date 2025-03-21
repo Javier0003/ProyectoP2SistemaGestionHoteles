@@ -9,6 +9,7 @@ using SGHT.Persistance.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Azure.Core;
 using SGHT.Domain.Entities.Reservation;
+using SGHT.Persistance.Validaciones;
 
 
 namespace SGHT.Persistance.Repositories
@@ -61,25 +62,24 @@ namespace SGHT.Persistance.Repositories
 
         public override async Task<OperationResult> SaveEntityAsync(Cliente cliente)
         {
-            if(cliente == null) return OperationResult.GetErrorResult("El cliente es nulo", code: 400);
-            if(cliente.Estado == null) return OperationResult.GetErrorResult("El estado del cliente no puede ser nulo", code: 400);
-            if (string.IsNullOrWhiteSpace(cliente.Correo)) return OperationResult.GetErrorResult("Correo can't be null or whitespace", code: 400);
-            if (string.IsNullOrWhiteSpace(cliente.NombreCompleto)) return OperationResult.GetErrorResult("Nombre can't be null or whitespace", code: 400);
+            var validations = new ClienteValidations(_context);
+            var result = validations.Validate(cliente);
 
+            if (!result.Success) 
+                return result;
 
-            if (_context.Clientes.Any(cd => cd.Correo == cliente.Correo)) return OperationResult.GetErrorResult("Este correo ya esta registrado en la base de datos", code: 400);
             return await base.SaveEntityAsync(cliente);
 
         }
 
         public override async Task<OperationResult> UpdateEntityAsync(Cliente cliente)
         {
-            if(cliente == null) 
-                return OperationResult.GetErrorResult("El cliente es nulo", code: 400);
-            
-            if(cliente.Estado == null) 
-                return OperationResult.GetErrorResult("El estado del cliente no puede ser nulo", code: 400);
-            
+            var validations = new ClienteValidations(_context);
+            var result = validations.Validate(cliente);
+
+            if (!result.Success)
+                return result;
+
             return await base.UpdateEntityAsync(cliente);
         }
 
