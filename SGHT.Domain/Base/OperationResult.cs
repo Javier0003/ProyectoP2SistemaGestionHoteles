@@ -34,5 +34,15 @@ namespace SGHT.Domain.Base
                 Code = code
             };
         }
+
+        //public OperationResult ThenValidate(this OperationResult result, Func<OperationResult> validate)
+        //{
+        //    if (!result.Success)
+        //        return result;
+
+        //    return validate();
+        //}
+
+
     }
 }
