@@ -49,6 +49,7 @@ namespace SGHT.Application.Services
 
         public async Task<OperationResult> GetById(int id)
         {
+            if (id <= 0) return OperationResult.GetErrorResult("Invalid user ID", code: 400);
             try
             {
                 var usuario = await _usuariosRepository.GetEntityByIdAsync(id);
@@ -65,8 +66,16 @@ namespace SGHT.Application.Services
 
         public async Task<OperationResult> Save(SaveUsuarioDto dto)
         {
+            if (dto is null) return OperationResult.GetErrorResult("Body is null", code: 400);
+            if (string.IsNullOrWhiteSpace(dto.Correo)) return OperationResult.GetErrorResult("Email is required", code: 400);
+            if (string.IsNullOrWhiteSpace(dto.Clave)) return OperationResult.GetErrorResult("Password is required", code: 400);
+            if (dto.Clave.Length < 6) return OperationResult.GetErrorResult("Password must be at least 6 characters long", code: 400);
+
             try
             {
+                var existingUser = await _usuariosRepository.GetUserByEmail(dto.Correo);
+                if (existingUser.Success) return OperationResult.GetErrorResult("Email already in use", code: 400);
+
                 var usuario = _mapper.Map<Usuarios>(dto);
                 usuario.Clave = Passwords.HashPassword(dto.Clave);
                 usuario.FechaCreacion = DateTime.Now;
@@ -83,26 +92,38 @@ namespace SGHT.Application.Services
 
         public async Task<OperationResult> UpdateById(UpdateUsuarioDto dto)
         {
+            if (dto is null) return OperationResult.GetErrorResult("Body is null", code: 400);
+            if (dto.IdUsuario <= 0) return OperationResult.GetErrorResult("Invalid user ID", code: 400);
+            if (string.IsNullOrWhiteSpace(dto.Correo)) return OperationResult.GetErrorResult("Email is required", code: 400);
+            if (string.IsNullOrWhiteSpace(dto.Clave)) return OperationResult.GetErrorResult("Password is required", code: 400);
+            if (dto.Clave.Length < 6) return OperationResult.GetErrorResult("Password must be at least 6 characters long", code: 400);
+
             try
             {
+                var existingUser = await _usuariosRepository.GetEntityByIdAsync(dto.IdUsuario);
+                if (existingUser == null) return OperationResult.GetErrorResult("User not found", code: 404);
+
                 if (!dto.Clave.Contains('/')) dto.Clave = Passwords.HashPassword(dto.Clave);
 
-                dto.FechaCreacion = DateTime.Now;
+                dto.FechaCreacion = (DateTime)existingUser.FechaCreacion!;
 
-                var usuario = _mapper.Map<Usuarios>(dto);
+                var usuario = _mapper.Map(dto, existingUser);
                 var queryResult = await _usuariosRepository.UpdateEntityAsync(usuario);
 
                 return OperationResult.GetSuccesResult(queryResult, "Usuario Actualizado Correctamente", 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"UsuarioService.UpdateById: {ex}");
-                return OperationResult.GetErrorResult("Error updating user", code: 500);
+            _logger.LogError($"UsuarioService.UpdateById: {ex}");
+            return OperationResult.GetErrorResult("Error updating user", code: 500);
             }
         }
 
         public async Task<OperationResult> DeleteById(DeleteUsuarioDto dto)
         {
+            if (dto is null) return OperationResult.GetErrorResult("Body is null", code: 400);
+            if (dto.IdUsuario <= 0) return OperationResult.GetErrorResult("Invalid user ID", code: 400);
+
             try
             {
                 var entityToRemove = await _usuariosRepository.GetEntityByIdAsync(dto.IdUsuario);
@@ -120,6 +141,10 @@ namespace SGHT.Application.Services
 
         public async Task<OperationResult> LogIn(UserLogIn usuario)
         {
+            if (usuario is null) return OperationResult.GetErrorResult("Body is null", code: 400);
+
+            if (usuario.Email is null) return OperationResult.GetErrorResult("Email is null", code: 400);
+            if (usuario.Password is null) return OperationResult.GetErrorResult("Password is null", code: 400);
             try
             {
                 var result = await _usuariosRepository.LogIn(usuario);
