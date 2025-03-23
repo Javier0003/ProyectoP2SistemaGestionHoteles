@@ -55,33 +55,39 @@ namespace SGHT.Application.Services
 
         public async Task<OperationResult> Save(SaveTarifaDto dto)
         {
+            if (!IsDateProper(dto.FechaInicio, dto.FechaFin)) return OperationResult.GetErrorResult("la fecha de inicio tiene que ser anterior a la fecha de fin", code: 400);
+
             var tarifas = _mapper.Map<Tarifas>(dto);
             tarifas.Estado = "activo";
+
             try
             {
-                if (!IsDateProper(dto.FechaInicio, dto.FechaFin)) return OperationResult.GetErrorResult("la fecha de inicio tiene que ser anterior a la fecha de fin", code: 400);
-
                 var result = await _tarifasRepository.SaveEntityAsync(tarifas);
 
-                return OperationResult.GetSuccesResult(result,"Tarifa guardada correctamente", 200);
+                return OperationResult.GetSuccesResult(result, "Tarifa guardada correctamente", 200);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 _logger.LogError($"TarifaService.Save: {ex}");
                 return OperationResult.GetErrorResult("Error guardando la tarifa", code: 500);
             }
         }
+
         public async Task<OperationResult> UpdateById(UpdateTarifaDto dto)
         {
             if (IsEstadoRight(dto.Estado)) return OperationResult.GetErrorResult("estado tiene que ser 'activo' o 'inactivo'", code: 400);
+            if (!IsDateProper(dto.FechaInicio, dto.FechaFin)) return OperationResult.GetErrorResult("la fecha de inicio tiene que ser anterior a la fecha de fin", code: 400);
+
             try
             {
-                if (!IsDateProper(dto.FechaInicio, dto.FechaFin)) return OperationResult.GetErrorResult("la fecha de inicio tiene que ser anterior a la fecha de fin", code: 400);
-                var tarifas = _mapper.Map<Tarifas>(dto);
+                var existingTarifa = await _tarifasRepository.GetEntityByIdAsync(dto.IdTarifa);
+                if (existingTarifa == null) return OperationResult.GetErrorResult("Tarifa not found", code: 404);
+
+                var tarifas = _mapper.Map(dto, existingTarifa);
 
                 var result = await _tarifasRepository.UpdateEntityAsync(tarifas);
 
-                return OperationResult.GetSuccesResult(result,"Tarifa guardada correctamente", 200);
+                return OperationResult.GetSuccesResult(result, "Tarifa actualizada correctamente", 200);
             }
             catch (Exception ex)
             {
@@ -89,8 +95,10 @@ namespace SGHT.Application.Services
                 return OperationResult.GetErrorResult("Error actualizando la tarifa", code: 500);
             }
         }
+
         public async Task<OperationResult> DeleteById(DeleteTarifaDto dto)
         {
+            if (dto.IdTarifa >= 0) return OperationResult.GetErrorResult("id no es valido", code: 400);
             try
             {
                 var entityToRemove = await _tarifasRepository.GetEntityByIdAsync(dto.IdTarifa);

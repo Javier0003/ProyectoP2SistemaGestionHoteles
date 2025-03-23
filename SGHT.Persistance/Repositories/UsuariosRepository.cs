@@ -52,6 +52,25 @@ namespace SGHT.Persistance.Repositories
             }
         }
 
+        public async Task<OperationResult> GetUserByEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email)) return OperationResult.GetErrorResult("Email can't be null", code: 400);
+
+            try
+            {
+                var query = await (from Usuarios in _context.Usuarios where Usuarios.Correo == email select Usuarios).ToListAsync();
+
+                if (query.Count == 0) return OperationResult.GetErrorResult("Usuario no encontrado", code: 404);
+
+                return OperationResult.GetSuccesResult(query.First(), code: 200);
+            }
+            catch (Exception ex) 
+            {
+                _logger.LogError($"error in UsuarioRepository.GetUserByEmail");
+                return OperationResult.GetErrorResult("error consiguiendo usuario", code: 500);
+            }
+        }
+
         public override async Task<OperationResult> SaveEntityAsync(Usuarios usuarios)
         {
             if (usuarios == null) return OperationResult.GetErrorResult("Body is null", code: 400);

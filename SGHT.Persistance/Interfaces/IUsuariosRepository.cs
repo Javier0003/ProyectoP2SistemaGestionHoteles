@@ -8,5 +8,6 @@ namespace SGHT.Persistance.Interfaces
     public interface IUsuariosRepository : IBaseRepository<Usuarios>
     {
         Task<OperationResult> LogIn(UserLogIn usuario);
+        Task<OperationResult> GetUserByEmail(string email);
     }
 }
