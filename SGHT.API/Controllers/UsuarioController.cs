@@ -9,7 +9,7 @@ namespace SGHT.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class UsuarioController : BaseController
     {
         private readonly IUsuarioService _usuarioService;
