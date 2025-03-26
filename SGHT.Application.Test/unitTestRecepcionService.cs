@@ -10,6 +10,7 @@ using Xunit;
 using SGHT.Application.Utils;
 using System;
 using SGHT.Domain.Entities;
+using AutoMapper;
 
 namespace SGHT.Application.Test
 {
@@ -20,6 +21,7 @@ namespace SGHT.Application.Test
         private Mock<ILogger<RecepcionService>> _mockLogger;
         private Mock<IConfiguration> _mockConfiguration;
         private RecepcionService _recepcionService;
+        private Mock<IMapper> _mockMapper;
 
 
         public unitTestRecepcionService()
@@ -27,11 +29,14 @@ namespace SGHT.Application.Test
             _mockRepository = new Mock<IRecepcionRepository>(MockBehavior.Strict);
             _mockLogger = new Mock<ILogger<RecepcionService>>();
             _mockConfiguration = new Mock<IConfiguration>();
+            _mockMapper = new Mock<IMapper>();
+
 
             _recepcionService = new RecepcionService(
                     _mockRepository.Object,
                     _mockLogger.Object,
-                    _mockConfiguration.Object
+                    _mockConfiguration.Object,
+                    _mockMapper.Object
                 );
         }
 
@@ -40,6 +45,7 @@ namespace SGHT.Application.Test
             _mockRepository.Reset();
             _mockLogger.Reset();
             _mockConfiguration.Reset();
+            _mockMapper.Reset();
         }
 
         [Fact]

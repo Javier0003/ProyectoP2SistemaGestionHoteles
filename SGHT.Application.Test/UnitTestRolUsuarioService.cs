@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -16,17 +17,21 @@ namespace SGHT.Application.Test
         private readonly Mock<ILogger<RolUsuarioService>> _mockLogger;
         private readonly Mock<IConfiguration> _mockConfiguration;
         private readonly RolUsuarioService _rolUsuarioService;
+        private Mock<IMapper> _mockMapper;
+
 
         public UnitTestRolUsuarioService()
         {
             _mockRepository = new Mock<IRolUsuarioRepository>(MockBehavior.Strict);
             _mockLogger = new Mock<ILogger<RolUsuarioService>>();
             _mockConfiguration = new Mock<IConfiguration>();
+            _mockMapper = new Mock<IMapper>();
 
             _rolUsuarioService = new RolUsuarioService(
                 _mockRepository.Object,
                 _mockLogger.Object,
-                _mockConfiguration.Object
+                _mockConfiguration.Object,
+                _mockMapper.Object
             );
         }
 
@@ -35,6 +40,7 @@ namespace SGHT.Application.Test
             _mockRepository.Reset();
             _mockLogger.Reset();
             _mockConfiguration.Reset();
+            _mockMapper.Reset();
         }
 
         [Fact]

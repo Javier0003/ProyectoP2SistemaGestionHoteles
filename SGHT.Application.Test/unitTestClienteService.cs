@@ -13,6 +13,7 @@ using SGHT.Domain.Entities;
 using SGHT.Domain.Entities.Reservation;
 using SGHT.Application.Dtos.RecepcionDto;
 using SGHT.Application.Interfaces;
+using AutoMapper;
 
 namespace SGHT.Application.Test
 {
@@ -22,6 +23,7 @@ namespace SGHT.Application.Test
         public readonly Mock<ILogger<ClienteService>> _mockLogger;
         public readonly Mock<IConfiguration> _mockConfiguration;
         public readonly ClienteService _clienteService;
+        private readonly Mock<IMapper> _mockMapper;
 
         public unitTestClienteService()
         {
@@ -30,11 +32,13 @@ namespace SGHT.Application.Test
             _mockRepository = new Mock<IClienteRepository>(MockBehavior.Strict);
             _mockLogger = new Mock<ILogger<ClienteService>>();
             _mockConfiguration = new Mock<IConfiguration>();
+            _mockMapper = new Mock<IMapper>();
 
             _clienteService = new ClienteService(
                 _mockRepository.Object,
                 _mockLogger.Object,
-                _mockConfiguration.Object
+                _mockConfiguration.Object,
+                _mockMapper.Object
             );
         }
 
@@ -43,6 +47,7 @@ namespace SGHT.Application.Test
             _mockRepository.Reset();
             _mockLogger.Reset();
             _mockConfiguration.Reset();
+            _mockMapper.Reset();
         }
 
         [Fact]

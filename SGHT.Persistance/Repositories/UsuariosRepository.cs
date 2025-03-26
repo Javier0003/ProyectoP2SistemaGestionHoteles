@@ -30,20 +30,11 @@ namespace SGHT.Persistance.Repositories
 
             try
             {
-                var query = await (from Usuarios in _context.Usuarios
-                                   where Usuarios.Correo == usuario.Email && Usuarios.Estado != false
-                                   select new Usuarios()
-                                   {
-                                       IdUsuario = Usuarios.IdUsuario,
-                                       IdRolUsuario = Usuarios.IdRolUsuario,
-                                       Estado = Usuarios.Estado,
-                                       NombreCompleto = Usuarios.NombreCompleto,
-                                       Correo = Usuarios.Correo,
-                                       Clave = Usuarios.Clave,
-                                   }).ToListAsync();
+                var query = await GetUserByEmail(usuario.Email);
 
-                if (query.Count == 0) return OperationResult.GetErrorResult("Usuario no encontrado", code: 404);
-                return OperationResult.GetSuccesResult(query[0], code: 200);
+                if (!query.Success) return OperationResult.GetErrorResult(query.Message!, code: query.Code);
+
+                return OperationResult.GetSuccesResult(query.Data, code: 200);
             }
             catch (Exception ex)
             {
@@ -58,7 +49,18 @@ namespace SGHT.Persistance.Repositories
 
             try
             {
-                var query = await (from Usuarios in _context.Usuarios where Usuarios.Correo == email select Usuarios).ToListAsync();
+                var query = await (from Usuarios in _context.Usuarios
+                                   where Usuarios.Correo == email && Usuarios.Estado != false
+                                   select new Usuarios()
+                                   {
+                                       IdUsuario = Usuarios.IdUsuario,
+                                       IdRolUsuario = Usuarios.IdRolUsuario,
+                                       Estado = Usuarios.Estado,
+                                       NombreCompleto = Usuarios.NombreCompleto,
+                                       Correo = Usuarios.Correo,
+                                       Clave = Usuarios.Clave,
+                                   }).ToListAsync();
+
 
                 if (query.Count == 0) return OperationResult.GetErrorResult("Usuario no encontrado", code: 404);
 

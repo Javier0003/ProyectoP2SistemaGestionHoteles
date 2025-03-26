@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -16,17 +17,20 @@ namespace SGHT.Application.Test
         private readonly Mock<ILogger<TarifaService>> _mockLogger;
         private readonly Mock<IConfiguration> _mockConfiguration;
         private readonly TarifaService _tarifaService;
+        private readonly Mock<IMapper> _mockMapper;
 
         public UnitTestTarifaService()
         {
             _mockRepository = new Mock<ITarifasRepository>(MockBehavior.Strict);
             _mockLogger = new Mock<ILogger<TarifaService>>();
             _mockConfiguration = new Mock<IConfiguration>();
+            _mockMapper = new Mock<IMapper>();
 
             _tarifaService = new TarifaService(
                 _mockRepository.Object,
                 _mockLogger.Object,
                 _mockConfiguration.Object,
+                _mockMapper.Object
             );
         }
 
@@ -35,6 +39,7 @@ namespace SGHT.Application.Test
             _mockRepository.Reset();
             _mockLogger.Reset();
             _mockConfiguration.Reset();
+            _mockMapper.Reset();
         }
 
         [Fact]

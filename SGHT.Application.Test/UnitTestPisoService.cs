@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using SGHT.Application.Dtos.Piso;
@@ -16,17 +17,22 @@ namespace SGHT.Application.Test
         private readonly Mock<ILogger<PisoService>> _mockLogger;
         private readonly Mock<IConfiguration> _mockConfiguration;
         private readonly PisoService _pisoService;
+        private readonly Mock<IMapper> _mockMapper;
+
 
         public UnitTestPisoService()
         {
             _mockRepository = new Mock<IPisoRepository>(MockBehavior.Strict);
             _mockLogger = new Mock<ILogger<PisoService>>();
             _mockConfiguration = new Mock<IConfiguration>();
+            _mockMapper = new Mock<IMapper>();
+
 
             _pisoService = new PisoService(
                 _mockRepository.Object,
                 _mockLogger.Object,
-                _mockConfiguration.Object
+                _mockConfiguration.Object,
+                _mockMapper.Object
             );
         }
 
@@ -35,6 +41,7 @@ namespace SGHT.Application.Test
             _mockRepository.Reset();
             _mockLogger.Reset();
             _mockConfiguration.Reset();
+            _mockMapper.Reset();
         }
 
         [Fact]

@@ -1,4 +1,5 @@
-﻿using Azure;
+﻿using AutoMapper;
+using Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -17,17 +18,21 @@ namespace SGHT.Application.Test
         private readonly Mock<ILogger<EstadoHabitacionService>> _mockLogger;
         private readonly Mock<IConfiguration> _mockConfiguration;
         private readonly EstadoHabitacionService _estadoHabitacionService;
+        private readonly Mock<IMapper> _mockMapper;
 
         public UnitTestEstadoHabitacionService()
         {
             _mockRepository = new Mock<IEstadoHabitacionRepository>(MockBehavior.Strict);
             _mockLogger = new Mock<ILogger<EstadoHabitacionService>>();
             _mockConfiguration = new Mock<IConfiguration>();
+            _mockMapper = new Mock<IMapper>();
+
 
             _estadoHabitacionService = new EstadoHabitacionService(
                 _mockRepository.Object,
                 _mockLogger.Object,
-                _mockConfiguration.Object
+                _mockConfiguration.Object,
+                _mockMapper.Object
             );
         }
 
@@ -36,6 +41,7 @@ namespace SGHT.Application.Test
             _mockRepository.Reset();
             _mockLogger.Reset();
             _mockConfiguration.Reset();
+            _mockMapper.Reset();
         }
 
         [Fact]
