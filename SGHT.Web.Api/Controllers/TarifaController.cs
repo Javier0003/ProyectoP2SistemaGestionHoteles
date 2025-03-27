@@ -1,71 +1,64 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SGHT.Domain.Base;
-using SGHT.Model.Model.usuario;
+using SGHT.Model.Model.rolUsuario;
+using SGHT.Model.Model.tarifa;
 
 namespace SGHT.Web.Api.Controllers
 {
-    public class UsuariosController : Controller
+    public class TarifaController : Controller
     {
-        private readonly IConfiguration _configuration;
-        private readonly ILogger<UsuariosController> _logger;
-        public UsuariosController(IConfiguration configuration, ILogger<UsuariosController> logger)
-        {
-            _configuration = configuration;
-            _logger = logger;
-        }
-
-
-        // GET: UsuariosController
+        // GET: TarifaController
         public async Task<IActionResult> Index()
         {
-            List<GetUsuarioModel> usuarios = new List<GetUsuarioModel>();
-            using (var client = new HttpClient()) 
+            List<GetTarifaModel> tarifas = new List<GetTarifaModel>();
+            using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                var response = await client.GetAsync("Usuario");
+                var response = await client.GetAsync("Tarifas");
 
                 if (response.IsSuccessStatusCode)
-                    usuarios = await response.Content.ReadFromJsonAsync<List<GetUsuarioModel>>();
+                    tarifas = await response.Content.ReadFromJsonAsync<List<GetTarifaModel>>();
                 else
                 {
-                    ViewBag.Message = "Error obteniendo los usuarios.";
+                    ViewBag.Message = "Error obteniendo las tarifas.";
                     return View();
                 }
             }
 
-            return View(usuarios);
+            return View(tarifas);
         }
 
-        // GET: RolUsuarioController/Details/5
+        // GET: TarifaController/Details/5
         public async Task<IActionResult> Details(int id)
         {
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                var response = await client.GetAsync($"Usuario/{id}");
+                var response = await client.GetAsync($"Tarifas/{id}");
 
                 if (response.IsSuccessStatusCode)
-                    return View(await response.Content.ReadFromJsonAsync<GetUsuarioModel>());
+                    return View(await response.Content.ReadFromJsonAsync<GetTarifaModel>());
                 else
                 {
-                    ViewBag.Message = "Error obteniendo los usuarios.";
+                    ViewBag.Message = "Error obteniendo la tarifa.";
                     return View();
                 }
             }
         }
 
-        // GET: UsuariosController/Create
+        // GET: TarifaController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: UsuariosController/Create
+        // POST: TarifaController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(GetUsuarioModel usuario)
+        public async Task<IActionResult> Create(CreateTarifaModel tarifa)
         {
             try
             {
@@ -75,39 +68,39 @@ namespace SGHT.Web.Api.Controllers
                 {
                     client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                    var response = await client.PostAsJsonAsync<GetUsuarioModel>("Usuario/crear", usuario);
+                    var response = await client.PostAsJsonAsync<CreateTarifaModel>("Tarifas/crear", tarifa);
 
                     if (response.IsSuccessStatusCode)
                         result = await response.Content.ReadFromJsonAsync<OperationResult>();
                     else
                     {
-                        ViewBag.Message = "Error creando el usuario.";
+                        ViewBag.Message = "Error creando el rol.";
                         return View();
                     }
                 }
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return View();
             }
         }
 
-        // GET: UsuariosController/Edit/5
+        // GET: TarifaController/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            GetUsuarioModel usuario;
+            GetTarifaModel usuario;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                var response = await client.GetAsync($"Usuario/{id}");
+                var response = await client.GetAsync($"Tarifas/{id}");
 
                 if (response.IsSuccessStatusCode)
-                    usuario = await response.Content.ReadFromJsonAsync<GetUsuarioModel>();
+                    usuario = await response.Content.ReadFromJsonAsync<GetTarifaModel>();
                 else
                 {
-                    ViewBag.Message = "Error obteniendo el usuario.";
+                    ViewBag.Message = "Error obteniendo la tarifa.";
                     return View();
                 }
             }
@@ -115,10 +108,10 @@ namespace SGHT.Web.Api.Controllers
             return View(usuario);
         }
 
-        // POST: UsuariosController/Edit/5
+        // POST: TarifaController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, GetUsuarioModel usuario)
+        public async Task<IActionResult> Edit(int id, GetTarifaModel tarifa)
         {
             OperationResult result;
             try
@@ -127,13 +120,13 @@ namespace SGHT.Web.Api.Controllers
                 {
                     client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                    var response = await client.PatchAsJsonAsync<GetUsuarioModel>("Usuario/actualizar", usuario);
+                    var response = await client.PatchAsJsonAsync<GetTarifaModel>("Tarifas/actualizar", tarifa);
 
                     if (response.IsSuccessStatusCode)
-                         result = await response.Content.ReadFromJsonAsync<OperationResult>();
+                        result = await response.Content.ReadFromJsonAsync<OperationResult>();
                     else
                     {
-                        ViewBag.Message = "Error actualizando el usuario.";
+                        ViewBag.Message = "Error actualizando la tarifa.";
                         return View();
                     }
                 }
@@ -146,40 +139,40 @@ namespace SGHT.Web.Api.Controllers
             }
         }
 
-        // GET: UsuariosController/Delete/5
+        // GET: TarifaController/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            GetUsuarioModel usuario;
+            GetTarifaModel tarifa;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                var response = await client.GetAsync($"Usuario/{id}");
+                var response = await client.GetAsync($"Tarifas/{id}");
 
                 if (response.IsSuccessStatusCode)
-                    usuario = await response.Content.ReadFromJsonAsync<GetUsuarioModel>();
+                    tarifa = await response.Content.ReadFromJsonAsync<GetTarifaModel>();
                 else
                 {
-                    ViewBag.Message = "Error obteniendo el usuario.";
+                    ViewBag.Message = "Error obteniendo la tarifa.";
                     return View();
                 }
             }
 
-            return View(usuario);
+            return View(tarifa);
         }
 
-        // POST: UsuariosController/Delete/5
+        // POST: TarifaController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, EliminarUsuarioModel collection)
+        public async Task<IActionResult> Delete(int id, DeleteTarifaModel collection)
         {
             try
             {
-                using (var client = new HttpClient()) 
-                { 
+                using (var client = new HttpClient())
+                {
                     client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                    var request = new HttpRequestMessage(HttpMethod.Delete, "Usuario/eliminar")
+                    var request = new HttpRequestMessage(HttpMethod.Delete, "Tarifas/eliminar")
                     {
                         Content = JsonContent.Create(collection)
                     };
@@ -191,7 +184,7 @@ namespace SGHT.Web.Api.Controllers
                         return RedirectToAction(nameof(Index));
                     }
 
-                    ViewBag.Message = "Error eliminando el usuario.";
+                    ViewBag.Message = "Error eliminando la tarifa.";
                     return View();
                 }
             }

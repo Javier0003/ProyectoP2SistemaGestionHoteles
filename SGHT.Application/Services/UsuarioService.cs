@@ -77,6 +77,7 @@ namespace SGHT.Application.Services
                 if (existingUser.Success) return OperationResult.GetErrorResult("Email already in use", code: 400);
 
                 var usuario = _mapper.Map<Usuarios>(dto);
+                usuario.Estado = true;
                 usuario.Clave = Passwords.HashPassword(dto.Clave);
                 usuario.FechaCreacion = DateTime.Now;
 

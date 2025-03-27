@@ -98,7 +98,7 @@ namespace SGHT.Application.Services
 
         public async Task<OperationResult> DeleteById(DeleteTarifaDto dto)
         {
-            if (dto.IdTarifa >= 0) return OperationResult.GetErrorResult("id no es valido", code: 400);
+            if (dto.IdTarifa <= 0) return OperationResult.GetErrorResult("id no es valido", code: 400);
             try
             {
                 var entityToRemove = await _tarifasRepository.GetEntityByIdAsync(dto.IdTarifa);
