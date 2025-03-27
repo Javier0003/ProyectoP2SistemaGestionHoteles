@@ -1,40 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SGHT.Domain.Base;
-using SGHT.Model.Model.usuario;
+using SGHT.Model.Model.rolUsuario;
 
 namespace SGHT.Web.Api.Controllers
 {
-    public class UsuariosController : Controller
+    public class RolUsuarioController : Controller
     {
-        private readonly IConfiguration _configuration;
-        private readonly ILogger<UsuariosController> _logger;
-        public UsuariosController(IConfiguration configuration, ILogger<UsuariosController> logger)
-        {
-            _configuration = configuration;
-            _logger = logger;
-        }
-
-
-        // GET: UsuariosController
+        // GET: RolUsuarioController
         public async Task<IActionResult> Index()
         {
-            List<GetUsuarioModel> usuarios = new List<GetUsuarioModel>();
-            using (var client = new HttpClient()) 
+            List<GetRolUsuarioModel> roles = new List<GetRolUsuarioModel>();
+            using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                var response = await client.GetAsync("Usuario");
+                var response = await client.GetAsync("RolUsuario");
 
                 if (response.IsSuccessStatusCode)
-                    usuarios = await response.Content.ReadFromJsonAsync<List<GetUsuarioModel>>();
+                    roles = await response.Content.ReadFromJsonAsync<List<GetRolUsuarioModel>>();
                 else
                 {
-                    ViewBag.Message = "Error obteniendo los usuarios.";
+                    ViewBag.Message = "Error obteniendo los Roles.";
                     return View();
                 }
             }
 
-            return View(usuarios);
+            return View(roles);
         }
 
         // GET: RolUsuarioController/Details/5
@@ -44,28 +35,28 @@ namespace SGHT.Web.Api.Controllers
             {
                 client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                var response = await client.GetAsync($"Usuario/{id}");
+                var response = await client.GetAsync($"RolUsuario/{id}");
 
                 if (response.IsSuccessStatusCode)
-                    return View(await response.Content.ReadFromJsonAsync<GetUsuarioModel>());
+                    return View(await response.Content.ReadFromJsonAsync<GetRolUsuarioModel>());
                 else
                 {
-                    ViewBag.Message = "Error obteniendo los usuarios.";
+                    ViewBag.Message = "Error obteniendo el rol.";
                     return View();
                 }
             }
         }
 
-        // GET: UsuariosController/Create
+        // GET: RolUsuarioController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: UsuariosController/Create
+        // POST: RolUsuarioController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(GetUsuarioModel usuario)
+        public async Task<IActionResult> Create(CreateRolUsuarioModel rol)
         {
             try
             {
@@ -75,50 +66,50 @@ namespace SGHT.Web.Api.Controllers
                 {
                     client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                    var response = await client.PostAsJsonAsync<GetUsuarioModel>("Usuario/crear", usuario);
+                    var response = await client.PostAsJsonAsync<CreateRolUsuarioModel>("RolUsuario/crear", rol);
 
                     if (response.IsSuccessStatusCode)
                         result = await response.Content.ReadFromJsonAsync<OperationResult>();
                     else
                     {
-                        ViewBag.Message = "Error creando el usuario.";
+                        ViewBag.Message = "Error creando el rol.";
                         return View();
                     }
                 }
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return View();
             }
         }
 
-        // GET: UsuariosController/Edit/5
+        // GET: RolUsuarioController/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            GetUsuarioModel usuario;
+            GetRolUsuarioModel rol;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                var response = await client.GetAsync($"Usuario/{id}");
+                var response = await client.GetAsync($"RolUsuario/{id}");
 
                 if (response.IsSuccessStatusCode)
-                    usuario = await response.Content.ReadFromJsonAsync<GetUsuarioModel>();
+                    rol = await response.Content.ReadFromJsonAsync<GetRolUsuarioModel>();
                 else
                 {
-                    ViewBag.Message = "Error obteniendo el usuario.";
+                    ViewBag.Message = "Error obteniendo el rol.";
                     return View();
                 }
             }
 
-            return View(usuario);
+            return View(rol);
         }
 
-        // POST: UsuariosController/Edit/5
+        // POST: RolUsuarioController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, GetUsuarioModel usuario)
+        public async Task<IActionResult> Edit(int id, GetRolUsuarioModel rol)
         {
             OperationResult result;
             try
@@ -127,13 +118,13 @@ namespace SGHT.Web.Api.Controllers
                 {
                     client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                    var response = await client.PatchAsJsonAsync<GetUsuarioModel>("Usuario/actualizar", usuario);
+                    var response = await client.PatchAsJsonAsync<GetRolUsuarioModel>("RolUsuario/actualizar", rol);
 
                     if (response.IsSuccessStatusCode)
-                         result = await response.Content.ReadFromJsonAsync<OperationResult>();
+                        result = await response.Content.ReadFromJsonAsync<OperationResult>();
                     else
                     {
-                        ViewBag.Message = "Error actualizando el usuario.";
+                        ViewBag.Message = "Error actualizando el rol.";
                         return View();
                     }
                 }
@@ -146,40 +137,40 @@ namespace SGHT.Web.Api.Controllers
             }
         }
 
-        // GET: UsuariosController/Delete/5
+        // GET: RolUsuarioController/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            GetUsuarioModel usuario;
+            GetRolUsuarioModel rol;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                var response = await client.GetAsync($"Usuario/{id}");
+                var response = await client.GetAsync($"RolUsuario/{id}");
 
                 if (response.IsSuccessStatusCode)
-                    usuario = await response.Content.ReadFromJsonAsync<GetUsuarioModel>();
+                    rol = await response.Content.ReadFromJsonAsync<GetRolUsuarioModel>();
                 else
                 {
-                    ViewBag.Message = "Error obteniendo el usuario.";
+                    ViewBag.Message = "Error obteniendo el rol.";
                     return View();
                 }
             }
 
-            return View(usuario);
+            return View(rol);
         }
 
-        // POST: UsuariosController/Delete/5
+        // POST: RolUsuarioController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, EliminarUsuarioModel collection)
+        public async Task<IActionResult> Delete(int id, DeleteRolUsuarioModel collection)
         {
             try
             {
-                using (var client = new HttpClient()) 
-                { 
+                using (var client = new HttpClient())
+                {
                     client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                    var request = new HttpRequestMessage(HttpMethod.Delete, "Usuario/eliminar")
+                    var request = new HttpRequestMessage(HttpMethod.Delete, "RolUsuario/eliminar")
                     {
                         Content = JsonContent.Create(collection)
                     };
@@ -191,7 +182,7 @@ namespace SGHT.Web.Api.Controllers
                         return RedirectToAction(nameof(Index));
                     }
 
-                    ViewBag.Message = "Error eliminando el usuario.";
+                    ViewBag.Message = "Error eliminando el rol.";
                     return View();
                 }
             }

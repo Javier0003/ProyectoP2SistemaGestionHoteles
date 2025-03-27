@@ -23,6 +23,11 @@ namespace SGHT.API.Utils
                 _ => StatusCode(result.Code, result.Message) // Fallback
             };
         }
+
+        protected bool IsIdValid(int id)
+        {
+            return id > 0;
+        }
     }
 
 }
