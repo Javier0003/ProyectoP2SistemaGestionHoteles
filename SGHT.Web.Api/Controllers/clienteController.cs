@@ -1,114 +1,116 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SGHT.Domain.Base;
+using SGHT.Model.Model.Cliente;
 using SGHT.Model.Model.Recepcion;
 
 namespace SGHT.Web.Api.Controllers
 {
-    public class RecepcionController : Controller
+    public class clienteController : Controller
     {
-        // GET: RecepcionController
-        public async  Task<IActionResult> Index()
+        // GET: clienteController
+        public async Task<IActionResult> Index()
         {
-            List<GetRecepcionModel> recepciones = new List<GetRecepcionModel>();
+            List<GetClienteModel> clientes = new List<GetClienteModel>();
+            
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                var response = await client.GetAsync("Recepcion");
+                var response = await client.GetAsync("Cliente");
 
                 if (response.IsSuccessStatusCode)
-                    recepciones = await response.Content.ReadFromJsonAsync<List<GetRecepcionModel>>();
+                    clientes = await response.Content.ReadFromJsonAsync<List<GetClienteModel>>();
                 else
                 {
-                    ViewBag.Message = "Error obteniendo las recepciones.";
+                    ViewBag.Message = "Error obteniendo los clientes.";
                     return View();
                 }
             }
 
-            return View(recepciones);
-        } 
-        
-        // GET: RecepcionController/Details/5
+            return View(clientes);
+        }
+
+        // GET: clienteController/Details/5
         public async Task<IActionResult> Details(int id)
         {
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                var response = await client.GetAsync($"Recepcion/{id}");
+                var response = await client.GetAsync($"Cliente/{id}");
 
                 if (response.IsSuccessStatusCode)
-                    return View(await response.Content.ReadFromJsonAsync<GetRecepcionModel>());
+                    return View(await response.Content.ReadFromJsonAsync<GetClienteModel>());
                 else
                 {
-                    ViewBag.Message = "Error obteniendo la recepcion.";
+                    ViewBag.Message = "Error obteniendo el cliente.";
                     return View();
                 }
             }
         }
 
-        // GET: RecepcionController/Create
+        // GET: clienteController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: RecepcionController/Create
+        // POST: clienteController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CrearRecepcionModel recepcion)
+        public async Task<IActionResult> Create(AgregarClienteModel cliente)
         {
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                var response = await client.PostAsJsonAsync("Recepcion", recepcion);
+                var response = await client.PostAsJsonAsync("Cliente", cliente);
 
                 if (response.IsSuccessStatusCode)
                     return RedirectToAction("Index");
                 else
                 {
-                    ViewBag.Message = "Error creando la recepcion.";
+                    ViewBag.Message = "Error creando el cliente.";
                     return View();
                 }
             }
         }
 
-        // GET: RecepcionController/Edit/5
+        // GET: clienteController/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                var response = await client.GetAsync($"Recepcion/{id}");
+                var response = await client.GetAsync($"Cliente/{id}");
 
                 if (response.IsSuccessStatusCode)
-                    return View(await response.Content.ReadFromJsonAsync<GetRecepcionModel>());
+                    return View(await response.Content.ReadFromJsonAsync<GetClienteModel>());
                 else
                 {
-                    ViewBag.Message = "Error obteniendo la recepcion.";
+                    ViewBag.Message = "Error obteniendo el cliente.";
                     return View();
                 }
             }
         }
 
-        // PUT: RecepcionController/Edit/5
+        // PUT: clienteController/Edit/5
         [HttpPut]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ActualizarRecepcionModel recepcion)
+        public async Task<IActionResult> Edit(int id, ActualizarCliente cliente)
         {
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                var response = await client.PutAsJsonAsync($"Recepcion/{id}", recepcion);
+                var response = await client.PutAsJsonAsync($"Cliente/{id}", cliente);
 
                 if (response.IsSuccessStatusCode)
                     return RedirectToAction("Index");
                 else
                 {
-                    ViewBag.Message = "Error actualizando la recepcion.";
+                    ViewBag.Message = "Error actualizando el cliente.";
                     return View();
                 }
             }
@@ -121,13 +123,13 @@ namespace SGHT.Web.Api.Controllers
             {
                 client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                var response = await client.GetAsync($"Recepcion/{id}");
+                var response = await client.GetAsync($"Cliente/{id}");
 
                 if (response.IsSuccessStatusCode)
-                    return View(await response.Content.ReadFromJsonAsync<GetRecepcionModel>());
+                    return View(await response.Content.ReadFromJsonAsync<GetClienteModel>());
                 else
                 {
-                    ViewBag.Message = "Error obteniendo la recepcion.";
+                    ViewBag.Message = "Error obteniendo el cliente.";
                     return View();
                 }
             }
@@ -136,7 +138,7 @@ namespace SGHT.Web.Api.Controllers
         // POST: RecepcionController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, DeleteRecepcionModel recepcionModel)
+        public async Task<IActionResult> Delete(int id, ActualizarCliente cliente)
         {
             try
             {
@@ -144,9 +146,9 @@ namespace SGHT.Web.Api.Controllers
                 {
                     client.BaseAddress = new Uri("http://localhost:5118/api/");
 
-                    var request = new HttpRequestMessage(HttpMethod.Delete, "Recepcion/eliminar")
+                    var request = new HttpRequestMessage(HttpMethod.Delete, "Cliente/eliminar")
                     {
-                        Content = JsonContent.Create(recepcionModel)
+                        Content = JsonContent.Create(cliente)
                     };
 
                     var response = await client.SendAsync(request);
@@ -156,7 +158,7 @@ namespace SGHT.Web.Api.Controllers
                         return RedirectToAction(nameof(Index));
                     }
 
-                    ViewBag.Message = "Error eliminando la recepcion.";
+                    ViewBag.Message = "Error eliminando el cliente.";
                     return View();
                 }
 
