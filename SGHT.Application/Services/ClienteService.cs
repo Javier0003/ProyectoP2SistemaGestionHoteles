@@ -31,7 +31,8 @@ namespace SGHT.Application.Services
             try
             {
                 var clientes = await _clienteRepository.GetAllAsync();
-                return OperationResult.GetSuccesResult(clientes, code: 200);
+                var clientesServices = _IMapper.Map<IEnumerable<Cliente>>(clientes);
+                return OperationResult.GetSuccesResult(clientesServices, code: 200);
             }
             catch (Exception ex)
             {
