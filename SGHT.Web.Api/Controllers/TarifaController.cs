@@ -14,7 +14,7 @@ namespace SGHT.Web.Api.Controllers
             List<GetTarifaModel> tarifas = new List<GetTarifaModel>();
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
+                client.BaseAddress = new Uri("http://localhost:5223/api/");
 
                 var response = await client.GetAsync("Tarifas");
 
@@ -35,7 +35,7 @@ namespace SGHT.Web.Api.Controllers
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
+                client.BaseAddress = new Uri("http://localhost:5223/api/");
 
                 var response = await client.GetAsync($"Tarifas/{id}");
 
@@ -66,7 +66,7 @@ namespace SGHT.Web.Api.Controllers
 
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
+                    client.BaseAddress = new Uri("http://localhost:5223/api/");
 
                     var response = await client.PostAsJsonAsync<CreateTarifaModel>("Tarifas/crear", tarifa);
 
@@ -92,7 +92,7 @@ namespace SGHT.Web.Api.Controllers
             GetTarifaModel usuario;
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
+                client.BaseAddress = new Uri("http://localhost:5223/api/");
 
                 var response = await client.GetAsync($"Tarifas/{id}");
 
@@ -118,7 +118,7 @@ namespace SGHT.Web.Api.Controllers
             {
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
+                    client.BaseAddress = new Uri("http://localhost:5223/api/");
 
                     var response = await client.PatchAsJsonAsync<GetTarifaModel>("Tarifas/actualizar", tarifa);
 
@@ -145,7 +145,7 @@ namespace SGHT.Web.Api.Controllers
             GetTarifaModel tarifa;
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
+                client.BaseAddress = new Uri("http://localhost:5223/api/");
 
                 var response = await client.GetAsync($"Tarifas/{id}");
 
@@ -170,7 +170,7 @@ namespace SGHT.Web.Api.Controllers
             {
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
+                    client.BaseAddress = new Uri("http://localhost:5223/api/");
 
                     var request = new HttpRequestMessage(HttpMethod.Delete, "Tarifas/eliminar")
                     {

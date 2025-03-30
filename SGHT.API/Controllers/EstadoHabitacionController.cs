@@ -2,11 +2,13 @@
 using SGHT.API.Utils;
 using SGHT.Application.Dtos.EstadoHabitacion;
 using SGHT.Application.Interfaces;
+using SGHT.Domain.Base;
+using SGHT.Domain.Entities;
 
 namespace SGHT.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class EstadoHabitacionController : BaseController
     {
         private readonly IEstadoHabitacionService _estadoHabitacionService;
@@ -17,43 +19,76 @@ namespace SGHT.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetEstadosHabitacion()
         {
-            var estadoHabitacionList = await _estadoHabitacionService.GetAll();
-            return HandleResponse(estadoHabitacionList);
+            try
+            {
+                var estados = await _estadoHabitacionService.GetAll();
+                return HandleResponse(estados);
+            }
+            catch (Exception ex)
+            {
+                return HandleResponse(OperationResult.GetErrorResult("Internal Server Error", code: 500));
+            }
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetEstadoHabitacionById(int id)
         {
-            var estadoHabitacion = await _estadoHabitacionService.GetById(id);
-            if (!estadoHabitacion.Success) return NotFound("estate not found");
-
-            return HandleResponse(estadoHabitacion);
+            if (!IsIdValid(id)) return BadRequest("Invalid id");
+            try
+            {
+                var estado = await _estadoHabitacionService.GetById(id);
+                return HandleResponse(estado);
+            }
+            catch (Exception ex)
+            {
+                return HandleResponse(OperationResult.GetErrorResult("Internal Server Error", code: 500));
+            }
         }
 
         [HttpPost("crear")]
-        public async Task<IActionResult> Post(SaveEstadoHabitacionDto estadoHabitacion)
+        public async Task<IActionResult> CreateEstadoHabitacion(SaveEstadoHabitacionDto estadoHabitacion)
         {
-            var result = await _estadoHabitacionService.Save(estadoHabitacion);
-
-            return HandleResponse(result);
+            try
+            {
+                var result = await _estadoHabitacionService.Save(estadoHabitacion);
+                return HandleResponse(result);
+            }
+            catch (Exception ex)
+            {
+                return HandleResponse(OperationResult.GetErrorResult("Internal Server Error", code: 500));
+            }
         }
 
-
         [HttpDelete("eliminar")]
-        public async Task<IActionResult> Delete(DeleteEstadoHabitacionDto id)
+        public async Task<IActionResult> EliminarEstadoHabitacion(DeleteEstadoHabitacionDto dto)
         {
-            var result = await _estadoHabitacionService.DeleteById(id);
-
-            return HandleResponse(result);
+            if (!IsIdValid(dto.IdEstadoHabitacion)) return BadRequest("Invalid id");
+            try
+            {
+                var result = await _estadoHabitacionService.DeleteById(dto);
+                return HandleResponse(result);
+            }
+            catch (Exception ex)
+            {
+                return HandleResponse(OperationResult.GetErrorResult("Internal Server Error", code: 500));
+            }
         }
 
         [HttpPatch("actualizar")]
-        public async Task<IActionResult> Put(UpdateEstadoHabitacionDto estadoHabitacion)
+        public async Task<IActionResult> ActualizarEstadoHabitacion(UpdateEstadoHabitacionDto estadoHabitacion)
         {
-            var result = await _estadoHabitacionService.UpdateById(estadoHabitacion);
-            return HandleResponse(result);
+            if (!IsIdValid(estadoHabitacion.IdEstadoHabitacion)) return BadRequest("Invalid id");
+            try
+            {
+                var result = await _estadoHabitacionService.UpdateById(estadoHabitacion);
+                return HandleResponse(result);
+            }
+            catch (Exception ex)
+            {
+                return HandleResponse(OperationResult.GetErrorResult("Internal Server Error", code: 500));
+            }
         }
     }
 }
