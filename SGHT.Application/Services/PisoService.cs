@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SGHT.Application.Dtos.Piso;
@@ -59,7 +60,7 @@ namespace SGHT.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError($"PisoService.GetById: {ex}");
-                return OperationResult.GetErrorResult("Error buscando el piso", code: 500);
+                return OperationResult.GetErrorResult("Error buscando piso", code: 500);
             }
         }
 
@@ -84,17 +85,18 @@ namespace SGHT.Application.Services
         {
             try
             {
-                dto.FechaCreacion = DateTime.Now;
+                var existingPiso = await _pisoRepository.GetEntityByIdAsync(dto.IdPiso);
+                if (existingPiso == null) return OperationResult.GetErrorResult("Piso no encontrado", code: 404);
 
-                var piso = _mapper.Map<Piso>(dto);
-                var queryResult = await _pisoRepository.UpdateEntityAsync(piso);
+                var piso = _mapper.Map(dto, existingPiso);
+                var result = await _pisoRepository.UpdateEntityAsync(piso);
 
-                return OperationResult.GetSuccesResult(queryResult, "Piso actualizado correctamente", 200);
+                return OperationResult.GetSuccesResult(result, "Piso actualizado correctamente", 200);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"PisoService.UpdateById: {ex}");
-                return OperationResult.GetErrorResult("Error actualizando el piso", code: 500);
+                return OperationResult.GetErrorResult("Error actualizando piso", code: 500);
             }
         }
 
@@ -111,7 +113,7 @@ namespace SGHT.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError($"PisoService.DeleteById: {ex}");
-                return OperationResult.GetErrorResult("Error eliminando el piso", code: 500);
+                return OperationResult.GetErrorResult("Error eliminando piso", code: 500);
             }
         }
     }

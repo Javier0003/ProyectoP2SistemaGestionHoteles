@@ -2,12 +2,13 @@
 using SGHT.API.Utils;
 using SGHT.Application.Dtos.Piso;
 using SGHT.Application.Interfaces;
-
+using SGHT.Domain.Base;
+using SGHT.Domain.Entities;
 
 namespace SGHT.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class PisoController : BaseController
     {
         private readonly IPisoService _pisoService;
@@ -18,43 +19,76 @@ namespace SGHT.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetPisos()
         {
-            var pisoList = await _pisoService.GetAll();
-            return HandleResponse(pisoList);
+            try
+            {
+                var pisos = await _pisoService.GetAll();
+                return HandleResponse(pisos);
+            }
+            catch (Exception ex)
+            {
+                return HandleResponse(OperationResult.GetErrorResult("Internal Server Error", code: 500));
+            }
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetPisoById(int id)
         {
-            var piso = await _pisoService.GetById(id);
-            if (!piso.Success) return NotFound("floor not found");
-
-            return HandleResponse(piso);
+            if (!IsIdValid(id)) return BadRequest("Invalid id");
+            try
+            {
+                var piso = await _pisoService.GetById(id);
+                return HandleResponse(piso);
+            }
+            catch (Exception ex)
+            {
+                return HandleResponse(OperationResult.GetErrorResult("Internal Server Error", code: 500));
+            }
         }
 
         [HttpPost("crear")]
-        public async Task<IActionResult> Post(SavePisoDto piso)
+        public async Task<IActionResult> CreatePiso(SavePisoDto pisoDto)
         {
-            var result = await _pisoService.Save(piso);
-
-            return HandleResponse(result);
+            try
+            {
+                var result = await _pisoService.Save(pisoDto);
+                return HandleResponse(result);
+            }
+            catch (Exception ex)
+            {
+                return HandleResponse(OperationResult.GetErrorResult("Internal Server Error", code: 500));
+            }
         }
 
-
         [HttpDelete("eliminar")]
-        public async Task<IActionResult> Delete(DeletePisoDto id)
+        public async Task<IActionResult> EliminarPiso(DeletePisoDto dto)
         {
-            var result = await _pisoService.DeleteById(id);
-
-            return HandleResponse(result);
+            if (!IsIdValid(dto.IdPiso)) return BadRequest("Invalid id");
+            try
+            {
+                var result = await _pisoService.DeleteById(dto);
+                return HandleResponse(result);
+            }
+            catch (Exception ex)
+            {
+                return HandleResponse(OperationResult.GetErrorResult("Internal Server Error", code: 500));
+            }
         }
 
         [HttpPatch("actualizar")]
-        public async Task<IActionResult> Put(UpdatePisoDto piso)
+        public async Task<IActionResult> ActualizarPiso(UpdatePisoDto pisoDto)
         {
-            var result = await _pisoService.UpdateById(piso);
-            return HandleResponse(result);
+            if (!IsIdValid(pisoDto.IdPiso)) return BadRequest("Invalid id");
+            try
+            {
+                var result = await _pisoService.UpdateById(pisoDto);
+                return HandleResponse(result);
+            }
+            catch (Exception ex)
+            {
+                return HandleResponse(OperationResult.GetErrorResult("Internal Server Error", code: 500));
+            }
         }
     }
 }
