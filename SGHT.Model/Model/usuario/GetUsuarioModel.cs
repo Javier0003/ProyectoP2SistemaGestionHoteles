@@ -6,7 +6,7 @@
 
         public string Correo { get; set; }
 
-        public int IdRolUsuario { get; set; }
+        public int IdRolUsuario { get; set; } 
 
         public string Clave { get; set; }
 
