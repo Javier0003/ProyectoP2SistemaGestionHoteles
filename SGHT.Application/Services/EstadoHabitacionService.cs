@@ -6,9 +6,6 @@ using SGHT.Application.Interfaces;
 using SGHT.Domain.Base;
 using SGHT.Domain.Entities;
 using SGHT.Persistance.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SGHT.Application.Services
 {
@@ -19,11 +16,7 @@ namespace SGHT.Application.Services
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
 
-        public EstadoHabitacionService(
-            IEstadoHabitacionRepository estadoHabitacionRepository,
-            ILogger<EstadoHabitacionService> logger,
-            IConfiguration configuration,
-            IMapper mapper)
+        public EstadoHabitacionService(IEstadoHabitacionRepository estadoHabitacionRepository, ILogger<EstadoHabitacionService> logger, IConfiguration configuration, IMapper mapper)
         {
             _estadoHabitacionRepository = estadoHabitacionRepository;
             _logger = logger;
@@ -36,12 +29,10 @@ namespace SGHT.Application.Services
             try
             {
                 var estados = await _estadoHabitacionRepository.GetAllAsync();
-                var estadosDto = _mapper.Map<IEnumerable<EstadoHabitacionDto>>(estados);
-                return OperationResult.GetSuccesResult(estadosDto, code: 200);
+                return OperationResult.GetSuccesResult(estados, code: 200);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogError($"EstadoHabitacionService.GetAll: {ex}");
                 return OperationResult.GetErrorResult("Error obteniendo los estados de habitación", code: 500);
             }
         }
@@ -50,56 +41,60 @@ namespace SGHT.Application.Services
         {
             try
             {
-                var estado = await _estadoHabitacionRepository.GetEntityByIdAsync(id);
-                if (estado == null) return OperationResult.GetErrorResult("Estado de habitación no encontrado", code: 404);
+                var result = await _estadoHabitacionRepository.GetEntityByIdAsync(id);
+                if (result == null) return OperationResult.GetErrorResult("Estado de habitación no encontrado", code: 404);
 
-                var estadoDto = _mapper.Map<EstadoHabitacionDto>(estado);
-                return OperationResult.GetSuccesResult(estadoDto, code: 200);
+                return OperationResult.GetSuccesResult(result, code: 200);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"EstadoHabitacionService.GetById: {ex}");
-                return OperationResult.GetErrorResult("Error buscando estado de habitación", code: 500);
+                return OperationResult.GetErrorResult("Error obteniendo estado de habitación", code: 500);
             }
         }
 
         public async Task<OperationResult> Save(SaveEstadoHabitacionDto dto)
         {
+            if (!IsEstadoValid(dto.Descripcion)) return OperationResult.GetErrorResult("El estado no es válido", code: 400);
+
+            var estado = _mapper.Map<EstadoHabitacion>(dto);
+
             try
             {
-                var estado = _mapper.Map<EstadoHabitacion>(dto);
-                estado.FechaCreacion = DateTime.Now;
-
                 var result = await _estadoHabitacionRepository.SaveEntityAsync(estado);
-                return OperationResult.GetSuccesResult(result, "Estado de habitación creado con éxito", 200);
+                return OperationResult.GetSuccesResult(result, "Estado de habitación guardado correctamente", 200);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"EstadoHabitacionService.Save: {ex}");
-                return OperationResult.GetErrorResult("No se pudo guardar el estado de habitación", code: 500);
+                return OperationResult.GetErrorResult("Error guardando el estado de habitación", code: 500);
             }
         }
 
         public async Task<OperationResult> UpdateById(UpdateEstadoHabitacionDto dto)
         {
+            if (!IsEstadoValid(dto.Descripcion)) return OperationResult.GetErrorResult("El estado no es válido", code: 400);
+
             try
             {
-                dto.FechaCreacion = DateTime.Now;
+                var existingEstado = await _estadoHabitacionRepository.GetEntityByIdAsync(dto.IdEstadoHabitacion);
+                if (existingEstado == null) return OperationResult.GetErrorResult("Estado de habitación no encontrado", code: 404);
 
-                var estado = _mapper.Map<EstadoHabitacion>(dto);
-                var queryResult = await _estadoHabitacionRepository.UpdateEntityAsync(estado);
+                var estado = _mapper.Map(dto, existingEstado);
 
-                return OperationResult.GetSuccesResult(queryResult, "Estado de habitación actualizado correctamente", 200);
+                var result = await _estadoHabitacionRepository.UpdateEntityAsync(estado);
+                return OperationResult.GetSuccesResult(result, "Estado de habitación actualizado correctamente", 200);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"EstadoHabitacionService.UpdateById: {ex}");
-                return OperationResult.GetErrorResult("Error actualizando estado de habitación", code: 500);
+                _logger.LogError($"EstadoHabitacionService.Update: {ex}");
+                return OperationResult.GetErrorResult("Error actualizando el estado de habitación", code: 500);
             }
         }
 
         public async Task<OperationResult> DeleteById(DeleteEstadoHabitacionDto dto)
         {
+            if (dto.IdEstadoHabitacion <= 0) return OperationResult.GetErrorResult("ID no es válido", code: 400);
             try
             {
                 var entityToRemove = await _estadoHabitacionRepository.GetEntityByIdAsync(dto.IdEstadoHabitacion);
@@ -111,8 +106,14 @@ namespace SGHT.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError($"EstadoHabitacionService.DeleteById: {ex}");
-                return OperationResult.GetErrorResult("Error eliminando estado de habitación", code: 500);
+                return OperationResult.GetErrorResult("Error eliminando el estado de habitación", code: 500);
             }
+        }
+
+        public static bool IsEstadoValid(string estado)
+        {
+            var estadosValidos = new List<string> { "Disponible", "Ocupado", "Mantenimiento", "Reservado" };
+            return estadosValidos.Contains(estado);
         }
     }
 }
