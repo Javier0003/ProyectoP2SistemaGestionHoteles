@@ -58,6 +58,8 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
+                if (rol == null) throw new ArgumentNullException();
+
                 var res = await _repository.SendPostRequestAsync("RolUsuario/crear", rol);
                 return RedirectToAction(nameof(Index));
             }
@@ -90,6 +92,8 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
+                if (rol == null) throw new ArgumentNullException();
+
                 var res = await _repository.SendPatchRequestAsync("RolUsuario/actualizar", rol);
                 return RedirectToAction(nameof(Index));
             }
@@ -118,12 +122,14 @@ namespace SGHT.Web.Api.Controllers
         // POST: RolUsuarioController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, DeleteRolUsuarioModel collection)
+        public async Task<IActionResult> Delete(int id, DeleteRolUsuarioModel rol)
         {
             try
             {
-                collection.IdRolUsuario = id;
-                var res = await _repository.SendDeleteRequestAsync("RolUsuario/eliminar", collection);
+                if (rol == null) throw new ArgumentNullException();
+
+                rol.IdRolUsuario = id;
+                var res = await _repository.SendDeleteRequestAsync("RolUsuario/eliminar", rol);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

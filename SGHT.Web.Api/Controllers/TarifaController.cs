@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SGHT.Domain.Entities;
 using SGHT.Http.Repositories.Interfaces;
 using SGHT.Model.Model.tarifa;
 using SGHT.Web.Api.Base;
@@ -58,6 +59,8 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
+                if (tarifa == null) throw new ArgumentNullException();
+
                 var res = await _tarifaHttpRepository.SendPostRequestAsync("Tarifas/crear", tarifa);
                 return RedirectToAction(nameof(Index));
             }
@@ -90,6 +93,8 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
+                if (tarifa == null) throw new ArgumentNullException();
+
                 var res = await _tarifaHttpRepository.SendPatchRequestAsync("Tarifas/actualizar", tarifa);
                 return RedirectToAction(nameof(Index));
             }
@@ -118,11 +123,13 @@ namespace SGHT.Web.Api.Controllers
         // POST: TarifaController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, DeleteTarifaModel collection)
+        public async Task<IActionResult> Delete(int id, DeleteTarifaModel tarifa)
         {
             try
             {
-                var res = await _tarifaHttpRepository.SendDeleteRequestAsync("Tarifas/eliminar", collection);
+                if (tarifa == null) throw new ArgumentNullException();
+
+                var res = await _tarifaHttpRepository.SendDeleteRequestAsync("Tarifas/eliminar", tarifa);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

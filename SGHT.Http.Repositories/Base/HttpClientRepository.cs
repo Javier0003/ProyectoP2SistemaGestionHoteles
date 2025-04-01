@@ -26,6 +26,11 @@ namespace SGHT.Web.Api.Controllers.Base
             return await _httpClient.PatchAsJsonAsync(url, body);
         }
 
+        /**
+        * <summary>
+        * HttpClient no permite enviar body con el metodo Delete
+        * </summary> 
+        */
         public async Task<HttpResponseMessage> DeleteAsync<T>(string url, T id) where T : class
         {
             var request = new HttpRequestMessage(HttpMethod.Delete, url)
