@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SGHT.Domain.Base;
-using SGHT.Domain.Entities;
 using SGHT.Domain.Repository;
 using SGHT.Persistance.Context;
 using System.Data;

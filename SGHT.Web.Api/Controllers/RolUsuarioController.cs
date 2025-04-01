@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SGHT.Http.Repositories.Interfaces;
 using SGHT.Model.Model.rolUsuario;
-using SGHT.Model.Model.tarifa;
-using SGHT.Web.Api.Controllers.Base;
+using SGHT.Web.Api.Base;
 
 namespace SGHT.Web.Api.Controllers
 {
     public class RolUsuarioController : BaseController
     {
         private readonly ILogger<RolUsuarioController> _logger;
-        public RolUsuarioController(IConfiguration configuration, ILogger<RolUsuarioController> logger, IHttpClientService httpClientService, IErrorHandler errorHandler) : base(configuration, logger, httpClientService, errorHandler)
+        private readonly IRolUsuarioHttpRepository _repository;
+        public RolUsuarioController(ILogger<RolUsuarioController> logger, IRolUsuarioHttpRepository rolUsuarioHttpRepository)
         {
             _logger = logger;
+            _repository = rolUsuarioHttpRepository;
         }
 
         // GET: RolUsuarioController
@@ -18,7 +20,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendGetRequestAsync("RolUsuario");
+                var res = await _repository.SendGetRequestAsync("RolUsuario");
                 return View(await res.Content.ReadFromJsonAsync<List<GetRolUsuarioModel>>());
             }
             catch (Exception ex)
@@ -33,7 +35,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendGetRequestAsync($"RolUsuario/{id}");
+                var res = await _repository.SendGetRequestAsync($"RolUsuario/{id}");
                 return View(await res.Content.ReadFromJsonAsync<GetRolUsuarioModel>());
             }
             catch (Exception ex)
@@ -56,7 +58,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendPostRequestAsync("RolUsuario/crear", rol);
+                var res = await _repository.SendPostRequestAsync("RolUsuario/crear", rol);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -71,7 +73,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendGetRequestAsync($"RolUsuario/{id}");
+                var res = await _repository.SendGetRequestAsync($"RolUsuario/{id}");
                 return View(await res.Content.ReadFromJsonAsync<GetRolUsuarioModel>());
             }
             catch (Exception ex)
@@ -88,7 +90,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendPatchRequestAsync("RolUsuario/actualizar", rol);
+                var res = await _repository.SendPatchRequestAsync("RolUsuario/actualizar", rol);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -103,8 +105,8 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendGetRequestAsync($"RolUsuario/{id}");
-                return View(await res.Content.ReadFromJsonAsync<GetTarifaModel>());
+                var res = await _repository.SendGetRequestAsync($"RolUsuario/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetRolUsuarioModel>());
             }
             catch (Exception ex)
             {
@@ -121,7 +123,7 @@ namespace SGHT.Web.Api.Controllers
             try
             {
                 collection.IdRolUsuario = id;
-                var res = await SendDeleteRequestAsync("RolUsuario/eliminar", collection);
+                var res = await _repository.SendDeleteRequestAsync("RolUsuario/eliminar", collection);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

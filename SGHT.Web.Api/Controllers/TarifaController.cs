@@ -1,14 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SGHT.Http.Repositories.Interfaces;
 using SGHT.Model.Model.tarifa;
-using SGHT.Web.Api.Controllers.Base;
+using SGHT.Web.Api.Base;
 
 namespace SGHT.Web.Api.Controllers
 {
     public class TarifaController : BaseController
     {
         private readonly ILogger<TarifaController> _logger;
-        public TarifaController(IConfiguration configuration, ILogger<TarifaController> logger, IHttpClientService httpClientService, IErrorHandler errorHandler) : base(configuration, logger, httpClientService, errorHandler)
+        private readonly ITarifaHttpRepository _tarifaHttpRepository;
+        public TarifaController(ILogger<TarifaController> logger, ITarifaHttpRepository tarifaHttpRepository)
         {
+            _tarifaHttpRepository = tarifaHttpRepository;
             _logger = logger;
         }
 
@@ -17,7 +20,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendGetRequestAsync("Tarifas");
+                var res = await _tarifaHttpRepository.SendGetRequestAsync("Tarifas");
                 return View(await res.Content.ReadFromJsonAsync<List<GetTarifaModel>>());
             }
             catch (Exception ex)
@@ -32,7 +35,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendGetRequestAsync($"Tarifas/{id}");
+                var res = await _tarifaHttpRepository.SendGetRequestAsync($"Tarifas/{id}");
                 return View(await res.Content.ReadFromJsonAsync<GetTarifaModel>());
             }
             catch (Exception ex)
@@ -55,7 +58,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendPostRequestAsync("Tarifas/crear", tarifa);
+                var res = await _tarifaHttpRepository.SendPostRequestAsync("Tarifas/crear", tarifa);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -70,7 +73,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendGetRequestAsync($"Tarifas/{id}");
+                var res = await _tarifaHttpRepository.SendGetRequestAsync($"Tarifas/{id}");
                 return View(await res.Content.ReadFromJsonAsync<GetTarifaModel>());
             }
             catch (Exception ex)
@@ -87,7 +90,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendPatchRequestAsync("Tarifas/actualizar", tarifa);
+                var res = await _tarifaHttpRepository.SendPatchRequestAsync("Tarifas/actualizar", tarifa);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -102,7 +105,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendGetRequestAsync($"Tarifas/{id}");
+                var res = await _tarifaHttpRepository.SendGetRequestAsync($"Tarifas/{id}");
                 return View(await res.Content.ReadFromJsonAsync<GetTarifaModel>());
             }
             catch (Exception ex)
@@ -119,7 +122,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendDeleteRequestAsync("Tarifas/eliminar", collection);
+                var res = await _tarifaHttpRepository.SendDeleteRequestAsync("Tarifas/eliminar", collection);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

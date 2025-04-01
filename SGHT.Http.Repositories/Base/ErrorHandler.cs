@@ -1,6 +1,8 @@
-using System.Net;
+﻿using System.Net;
+using Microsoft.Extensions.Logging;
+using SGHT.Web.Api.Controllers.Base;
 
-namespace SGHT.Web.Api.Controllers.Base
+namespace SGHT.Http.Repositories.Base
 {
     public class ErrorHandler : IErrorHandler
     {
@@ -20,10 +22,10 @@ namespace SGHT.Web.Api.Controllers.Base
                 case HttpStatusCode.NotFound:
                     return new KeyNotFoundException($"Resource not found at {url}");
                 case HttpStatusCode.BadRequest:
-                    return new BadHttpRequestException($"Incorrect form of body at {url}");
+                    return new HttpRequestException($"Incorrect form of body at {url}");
                 default:
                     return new HttpRequestException($"Error in {method}: {await result.Content.ReadAsStringAsync()}");
             }
         }
     }
-} 
+}

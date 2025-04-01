@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SGHT.Application\SGHT.Application.csproj" />
+    <ProjectReference Include="..\SGHT.Http.Repositories\SGHT.Http.Repositories.csproj" />
     <ProjectReference Include="..\SGHT.Persistance\SGHT.Persistance.csproj" />
   </ItemGroup>
 

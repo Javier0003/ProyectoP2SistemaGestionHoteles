@@ -1,15 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SGHT.Http.Repositories.Interfaces;
 using SGHT.Model.Model.usuario;
-using SGHT.Web.Api.Controllers.Base;
+using SGHT.Web.Api.Base;
 
 namespace SGHT.Web.Api.Controllers
 {
     public class UsuariosController : BaseController
     {
         private readonly ILogger<UsuariosController> _logger;
-        public UsuariosController(IConfiguration configuration, ILogger<UsuariosController> logger, IHttpClientService httpClientService, IErrorHandler errorHandler) : base(configuration, logger, httpClientService, errorHandler) 
+        private readonly IUsuariosHttpRepository _usuariosHttpRepository;
+        public UsuariosController(ILogger<UsuariosController> logger, IUsuariosHttpRepository usuariosHttpRepository)
         {
             _logger = logger;
+            _usuariosHttpRepository = usuariosHttpRepository;
         }
 
         // GET: UsuariosController
@@ -17,7 +20,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendGetRequestAsync("Usuario");
+                var res = await _usuariosHttpRepository.SendGetRequestAsync("Usuario");
                 return View(await res.Content.ReadFromJsonAsync<List<GetUsuarioModel>>());
             }
             catch (Exception ex) 
@@ -32,7 +35,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendGetRequestAsync($"Usuario/{id}");
+                var res = await _usuariosHttpRepository.SendGetRequestAsync($"Usuario/{id}");
                 return View(await res.Content.ReadFromJsonAsync<GetUsuarioModel>());
             }
             catch (Exception ex)
@@ -55,7 +58,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendPostRequestAsync("Usuario/crear", usuario);
+                var res = await _usuariosHttpRepository.SendPostRequestAsync("Usuario/crear", usuario);
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
@@ -70,7 +73,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendGetRequestAsync($"Usuario/{id}");
+                var res = await _usuariosHttpRepository.SendGetRequestAsync($"Usuario/{id}");
                 return View(await res.Content.ReadFromJsonAsync<GetUsuarioModel>());
             }
             catch(Exception ex)
@@ -87,7 +90,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendPatchRequestAsync("Usuario/actualizar", usuario);
+                var res = await _usuariosHttpRepository.SendPatchRequestAsync("Usuario/actualizar", usuario);
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
@@ -102,7 +105,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendGetRequestAsync($"Usuario/{id}");
+                var res = await _usuariosHttpRepository.SendGetRequestAsync($"Usuario/{id}");
                 return View(await res.Content.ReadFromJsonAsync<GetUsuarioModel>());
             }
             catch(Exception ex)
@@ -119,7 +122,7 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                var res = await SendDeleteRequestAsync("Usuario/eliminar", collection);
+                var res = await _usuariosHttpRepository.SendDeleteRequestAsync("Usuario/eliminar", collection);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

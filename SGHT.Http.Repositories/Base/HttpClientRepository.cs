@@ -2,11 +2,11 @@ using System.Net.Http.Json;
 
 namespace SGHT.Web.Api.Controllers.Base
 {
-    public class HttpClientService : IHttpClientService
+    public class HttpClientRepository : IHttpClientRepository
     {
         private readonly HttpClient _httpClient;
 
-        public HttpClientService(HttpClient httpClient)
+        public HttpClientRepository(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }

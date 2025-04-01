@@ -1,3 +1,4 @@
+using SGHT.IOC.Dependancies;
 using SGHT.Web.Api.Controllers.Base;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,13 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Register HTTP client with base URL from configuration
-builder.Services.AddHttpClient<IHttpClientService, HttpClientService>(client =>
-{
-    client.BaseAddress = new Uri(builder.Configuration["baseUrl"]);
-});
+builder.Services.AddHttpClientDependancy(builder.Configuration["baseUrl"]);
+builder.Services.AddUsuarioHttpDependancy();
+builder.Services.AddHttpTarifaDependancy();
+builder.Services.AddHttpRolUsuarioDependancy();
 
 // Register error handler
-builder.Services.AddScoped<IErrorHandler, ErrorHandler>();
+builder.Services.AddHttpErrorHandlerDependancy();
 
 var app = builder.Build();
 
