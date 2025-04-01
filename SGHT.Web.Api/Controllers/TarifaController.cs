@@ -1,51 +1,44 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using SGHT.Domain.Base;
-using SGHT.Model.Model.rolUsuario;
+﻿using Microsoft.AspNetCore.Mvc;
 using SGHT.Model.Model.tarifa;
+using SGHT.Web.Api.Controllers.Base;
 
 namespace SGHT.Web.Api.Controllers
 {
-    public class TarifaController : Controller
+    public class TarifaController : BaseController
     {
+        private readonly ILogger<TarifaController> _logger;
+        public TarifaController(IConfiguration configuration, ILogger<TarifaController> logger, IHttpClientService httpClientService, IErrorHandler errorHandler) : base(configuration, logger, httpClientService, errorHandler)
+        {
+            _logger = logger;
+        }
+
         // GET: TarifaController
         public async Task<IActionResult> Index()
         {
-            List<GetTarifaModel> tarifas = new List<GetTarifaModel>();
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5223/api/");
-
-                var response = await client.GetAsync("Tarifas");
-
-                if (response.IsSuccessStatusCode)
-                    tarifas = await response.Content.ReadFromJsonAsync<List<GetTarifaModel>>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo las tarifas.";
-                    return View();
-                }
+                var res = await SendGetRequestAsync("Tarifas");
+                return View(await res.Content.ReadFromJsonAsync<List<GetTarifaModel>>());
             }
-
-            return View(tarifas);
+            catch (Exception ex)
+            {
+                _logger.LogError($"TarifaController.Index: {ex}");
+                return ViewBagError("Error obteniendo las tarifas.");
+            }
         }
 
         // GET: TarifaController/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5223/api/");
-
-                var response = await client.GetAsync($"Tarifas/{id}");
-
-                if (response.IsSuccessStatusCode)
-                    return View(await response.Content.ReadFromJsonAsync<GetTarifaModel>());
-                else
-                {
-                    ViewBag.Message = "Error obteniendo la tarifa.";
-                    return View();
-                }
+                var res = await SendGetRequestAsync($"Tarifas/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetTarifaModel>());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"TarifaController.Details: {ex}");
+                return ViewBagError("Erorr obteniendo la tarifa");
             }
         }
 
@@ -62,50 +55,29 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                OperationResult result;
-
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5223/api/");
-
-                    var response = await client.PostAsJsonAsync<CreateTarifaModel>("Tarifas/crear", tarifa);
-
-                    if (response.IsSuccessStatusCode)
-                        result = await response.Content.ReadFromJsonAsync<OperationResult>();
-                    else
-                    {
-                        ViewBag.Message = "Error creando el rol.";
-                        return View();
-                    }
-                }
+                var res = await SendPostRequestAsync("Tarifas/crear", tarifa);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"TarifaController.Create: {ex}");
+                return ViewBagError("Error creando la tarifa");
             }
         }
 
         // GET: TarifaController/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            GetTarifaModel usuario;
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5223/api/");
-
-                var response = await client.GetAsync($"Tarifas/{id}");
-
-                if (response.IsSuccessStatusCode)
-                    usuario = await response.Content.ReadFromJsonAsync<GetTarifaModel>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo la tarifa.";
-                    return View();
-                }
+                var res = await SendGetRequestAsync($"Tarifas/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetTarifaModel>());
             }
-
-            return View(usuario);
+            catch (Exception ex)
+            {
+                _logger.LogError($"TarifaController.Edit: {ex}");
+                return ViewBagError("Error Obteniendo la tarifa");
+            }
         }
 
         // POST: TarifaController/Edit/5
@@ -113,52 +85,31 @@ namespace SGHT.Web.Api.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, GetTarifaModel tarifa)
         {
-            OperationResult result;
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5223/api/");
-
-                    var response = await client.PatchAsJsonAsync<GetTarifaModel>("Tarifas/actualizar", tarifa);
-
-                    if (response.IsSuccessStatusCode)
-                        result = await response.Content.ReadFromJsonAsync<OperationResult>();
-                    else
-                    {
-                        ViewBag.Message = "Error actualizando la tarifa.";
-                        return View();
-                    }
-                }
-
+                var res = await SendPatchRequestAsync("Tarifas/actualizar", tarifa);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"TarifaController.Edit: {ex}");
+                return RedirectToAction(nameof(Edit));
             }
         }
 
         // GET: TarifaController/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            GetTarifaModel tarifa;
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5223/api/");
-
-                var response = await client.GetAsync($"Tarifas/{id}");
-
-                if (response.IsSuccessStatusCode)
-                    tarifa = await response.Content.ReadFromJsonAsync<GetTarifaModel>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo la tarifa.";
-                    return View();
-                }
+                var res = await SendGetRequestAsync($"Tarifas/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetTarifaModel>());
             }
-
-            return View(tarifa);
+            catch (Exception ex)
+            {
+                _logger.LogError($"TarifaController.Delete: {ex}");
+                return ViewBagError("Error obteniendo la tarifa");
+            }
         }
 
         // POST: TarifaController/Delete/5
@@ -168,29 +119,13 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5223/api/");
-
-                    var request = new HttpRequestMessage(HttpMethod.Delete, "Tarifas/eliminar")
-                    {
-                        Content = JsonContent.Create(collection)
-                    };
-
-                    var response = await client.SendAsync(request);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return RedirectToAction(nameof(Index));
-                    }
-
-                    ViewBag.Message = "Error eliminando la tarifa.";
-                    return View();
-                }
+                var res = await SendDeleteRequestAsync("Tarifas/eliminar", collection);
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"TarifaController.Delete: {ex}");
+                return ViewBagError("Error eliminando la tarifa");
             }
         }
     }

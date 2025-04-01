@@ -1,58 +1,44 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SGHT.Domain.Base;
 using SGHT.Model.Model.usuario;
+using SGHT.Web.Api.Controllers.Base;
 
 namespace SGHT.Web.Api.Controllers
 {
-    public class UsuariosController : Controller
+    public class UsuariosController : BaseController
     {
-        private readonly IConfiguration _configuration;
         private readonly ILogger<UsuariosController> _logger;
-        public UsuariosController(IConfiguration configuration, ILogger<UsuariosController> logger)
+        public UsuariosController(IConfiguration configuration, ILogger<UsuariosController> logger, IHttpClientService httpClientService, IErrorHandler errorHandler) : base(configuration, logger, httpClientService, errorHandler) 
         {
-            _configuration = configuration;
             _logger = logger;
         }
-
 
         // GET: UsuariosController
         public async Task<IActionResult> Index()
         {
-            List<GetUsuarioModel> usuarios = new List<GetUsuarioModel>();
-            using (var client = new HttpClient()) 
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-
-                var response = await client.GetAsync("Usuario");
-
-                if (response.IsSuccessStatusCode)
-                    usuarios = await response.Content.ReadFromJsonAsync<List<GetUsuarioModel>>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo los usuarios.";
-                    return View();
-                }
+                var res = await SendGetRequestAsync("Usuario");
+                return View(await res.Content.ReadFromJsonAsync<List<GetUsuarioModel>>());
             }
-
-            return View(usuarios);
+            catch (Exception ex) 
+            {
+                _logger.LogError($"UsuariosController.Index: {ex}");
+                return ViewBagError("Error obteniendo los usuarios.");
+            }
         }
 
         // GET: RolUsuarioController/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-
-                var response = await client.GetAsync($"Usuario/{id}");
-
-                if (response.IsSuccessStatusCode)
-                    return View(await response.Content.ReadFromJsonAsync<GetUsuarioModel>());
-                else
-                {
-                    ViewBag.Message = "Error obteniendo los usuarios.";
-                    return View();
-                }
+                var res = await SendGetRequestAsync($"Usuario/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetUsuarioModel>());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"UsuariosController.Details: {ex}");
+                return ViewBagError("Erorr obteniendo usuario");
             }
         }
 
@@ -69,50 +55,29 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                OperationResult result;
-
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
-
-                    var response = await client.PostAsJsonAsync<GetUsuarioModel>("Usuario/crear", usuario);
-
-                    if (response.IsSuccessStatusCode)
-                        result = await response.Content.ReadFromJsonAsync<OperationResult>();
-                    else
-                    {
-                        ViewBag.Message = "Error creando el usuario.";
-                        return View();
-                    }
-                }
+                var res = await SendPostRequestAsync("Usuario/crear", usuario);
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
             {
-                return View();
+                _logger.LogError($"UsuariosController.Create: {ex}");
+                return ViewBagError("Error creando el usuario");
             }
         }
 
         // GET: UsuariosController/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            GetUsuarioModel usuario;
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-
-                var response = await client.GetAsync($"Usuario/{id}");
-
-                if (response.IsSuccessStatusCode)
-                    usuario = await response.Content.ReadFromJsonAsync<GetUsuarioModel>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo el usuario.";
-                    return View();
-                }
+                var res = await SendGetRequestAsync($"Usuario/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetUsuarioModel>());
             }
-
-            return View(usuario);
+            catch(Exception ex)
+            {
+                _logger.LogError($"UsuariosController.Edit: {ex}");
+                return ViewBagError("Error Obteniendo el usuario");
+            }
         }
 
         // POST: UsuariosController/Edit/5
@@ -120,52 +85,31 @@ namespace SGHT.Web.Api.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, GetUsuarioModel usuario)
         {
-            OperationResult result;
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
-
-                    var response = await client.PatchAsJsonAsync<GetUsuarioModel>("Usuario/actualizar", usuario);
-
-                    if (response.IsSuccessStatusCode)
-                         result = await response.Content.ReadFromJsonAsync<OperationResult>();
-                    else
-                    {
-                        ViewBag.Message = "Error actualizando el usuario.";
-                        return View();
-                    }
-                }
-
+                var res = await SendPatchRequestAsync("Usuario/actualizar", usuario);
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                return View();
+                _logger.LogError($"UsuariosController.Edit: {ex}");
+                return RedirectToAction(nameof(Edit));
             }
         }
 
         // GET: UsuariosController/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            GetUsuarioModel usuario;
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-
-                var response = await client.GetAsync($"Usuario/{id}");
-
-                if (response.IsSuccessStatusCode)
-                    usuario = await response.Content.ReadFromJsonAsync<GetUsuarioModel>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo el usuario.";
-                    return View();
-                }
+                var res = await SendGetRequestAsync($"Usuario/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetUsuarioModel>());
             }
-
-            return View(usuario);
+            catch(Exception ex)
+            {
+                _logger.LogError($"UsuariosController.Delete: {ex}");
+                return ViewBagError("Error obteniendo el usuario");
+            }
         }
 
         // POST: UsuariosController/Delete/5
@@ -175,29 +119,13 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                using (var client = new HttpClient()) 
-                { 
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
-
-                    var request = new HttpRequestMessage(HttpMethod.Delete, "Usuario/eliminar")
-                    {
-                        Content = JsonContent.Create(collection)
-                    };
-
-                    var response = await client.SendAsync(request);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return RedirectToAction(nameof(Index));
-                    }
-
-                    ViewBag.Message = "Error eliminando el usuario.";
-                    return View();
-                }
+                var res = await SendDeleteRequestAsync("Usuario/eliminar", collection);
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"UsuariosController.Delete: {ex}");
+                return ViewBagError("Error eliminando usuario");
             }
         }
     }

@@ -5,7 +5,6 @@ using SGHT.API.Utils;
 using SGHT.Persistance.Entities.Users;
 using Microsoft.AspNetCore.Authorization;
 using SGHT.Domain.Base;
-using SGHT.Domain.Entities;
 
 namespace SGHT.API.Controllers
 {

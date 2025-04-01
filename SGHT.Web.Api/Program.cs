@@ -1,7 +1,18 @@
+using SGHT.Web.Api.Controllers.Base;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Register HTTP client with base URL from configuration
+builder.Services.AddHttpClient<IHttpClientService, HttpClientService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["baseUrl"]);
+});
+
+// Register error handler
+builder.Services.AddScoped<IErrorHandler, ErrorHandler>();
 
 var app = builder.Build();
 

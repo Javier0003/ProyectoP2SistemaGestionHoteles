@@ -37,35 +37,45 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.NombreCompleto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Correo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdRolUsuario)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Clave)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdUsuario)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaCreacion)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.IdUsuario }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.IdUsuario }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.IdUsuario })
-            </td>
-        </tr>
-}
+        @if(Model != null){
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NombreCompleto)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Correo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdRolUsuario)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Clave)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Estado)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdUsuario)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaCreacion)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.IdUsuario }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.IdUsuario }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.IdUsuario })
+                    </td>
+                </tr>
+            }
+        } else
+        {
+            <tr>
+                <td>
+                    @ViewBag.Message
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
