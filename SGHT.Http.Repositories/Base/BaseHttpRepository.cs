@@ -39,11 +39,6 @@ namespace SGHT.Http.Repositories.Base
             throw await _errorHandler.HandleErrorAsync(result, "Patch", url);
         }
 
-        /**
-         * <summary>
-         * HttpClient no permite enviar body con el metodo Delete
-         * </summary> 
-        */
         public virtual async Task<HttpResponseMessage> SendDeleteRequestAsync<T>(string url, T id) where T : class
         {
             var result = await _httpClientService.DeleteAsync(url, id);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SGHT.Domain.Entities;
 using SGHT.Http.Repositories.Interfaces;
 using SGHT.Model.Model.usuario;
 using SGHT.Web.Api.Base;
@@ -58,6 +59,8 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
+                if (usuario == null) throw new ArgumentNullException();
+
                 var res = await _usuariosHttpRepository.SendPostRequestAsync("Usuario/crear", usuario);
                 return RedirectToAction(nameof(Index));
             }
@@ -90,6 +93,8 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
+                if (usuario == null) throw new ArgumentNullException();
+
                 var res = await _usuariosHttpRepository.SendPatchRequestAsync("Usuario/actualizar", usuario);
                 return RedirectToAction(nameof(Index));
             }
@@ -118,11 +123,13 @@ namespace SGHT.Web.Api.Controllers
         // POST: UsuariosController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, EliminarUsuarioModel collection)
+        public async Task<IActionResult> Delete(int id, EliminarUsuarioModel usuario)
         {
             try
             {
-                var res = await _usuariosHttpRepository.SendDeleteRequestAsync("Usuario/eliminar", collection);
+                if (usuario == null) throw new ArgumentNullException();
+
+                var res = await _usuariosHttpRepository.SendDeleteRequestAsync("Usuario/eliminar", usuario);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
