@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SGHT.Domain\SGHT.Domain.csproj" />
     <ProjectReference Include="..\SGHT.IOC\SGHT.IOC.csproj" />
     <ProjectReference Include="..\SGHT.Model\SGHT.Model.csproj" />
   </ItemGroup>
