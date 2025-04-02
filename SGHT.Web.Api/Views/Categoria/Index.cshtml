@@ -1,0 +1,57 @@
+﻿@model IEnumerable<SGHT.Model.Model.categoria.GetCategoriaModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>IndexModel</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdCategoria)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaCreacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdServicio)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdCategoria)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaCreacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdServicio)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.IdCategoria }) |
+                @Html.ActionLink("Delete", "Delete", new {  id=item.IdCategoria })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
