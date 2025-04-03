@@ -11,6 +11,8 @@ builder.Services.AddHttpClientDependancy(builder.Configuration["baseUrl"]);
 builder.Services.AddUsuarioHttpDependancy();
 builder.Services.AddHttpTarifaDependancy();
 builder.Services.AddHttpRolUsuarioDependancy();
+builder.Services.AddHttpEstadoHabitacionDependancy();
+builder.Services.AddHttpPisoDependancy();
 
 // Register error handler
 builder.Services.AddHttpErrorHandlerDependancy();
