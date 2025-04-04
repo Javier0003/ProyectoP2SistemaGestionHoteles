@@ -1,152 +1,142 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SGHT.Http.Repositories.Interfaces;
 using SGHT.Model.Model.habitacion;
+using SGHT.Web.Api.Base;
 
 namespace SGHT.Web.Api.Controllers
 {
-    public class HabitacionController : Controller
+    public class HabitacionController : BaseController
     {
+        private readonly ILogger<HabitacionController> _logger;
+        private readonly IHabitacionHttpRepository _habitacionHttpRepository;
+        public HabitacionController(ILogger<HabitacionController> logger, IHabitacionHttpRepository habitacionHttpRepository)
+        {
+            _habitacionHttpRepository = habitacionHttpRepository;
+            _logger = logger;
+        }
+
+        // GET: HabitacionController
         public async Task<IActionResult> Index()
         {
-            List<GetHabitacionModel> habitacion = new List<GetHabitacionModel>();
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-                var response = await client.GetAsync("Habitacion");
-                if (response.IsSuccessStatusCode)
-                    habitacion = await response.Content.ReadFromJsonAsync<List<GetHabitacionModel>>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo las habitaciones.";
-                    return View();
-                }
+                var res = await _habitacionHttpRepository.SendGetRequestAsync("Habitaciones");
+                return View(await res.Content.ReadFromJsonAsync<List<GetHabitacionModel>>());
             }
-            return View(habitacion);
+            catch (Exception ex)
+            {
+                _logger.LogError($"HabitacionesController.Index: {ex}");
+                return ViewBagError("Error obteniendo las habitaciones.");
+            }
         }
 
+        // GET: HabitacionController/Details/2
         public async Task<IActionResult> Details(int id)
         {
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-                var response = await client.GetAsync($"Habitacion/{id}");
-                if (response.IsSuccessStatusCode)
-                    return View(await response.Content.ReadFromJsonAsync<GetHabitacionModel>());
-                else
-                {
-                    ViewBag.Message = "Error obteniendo las habitaciones.";
-                    return View();
-                }
+                var res = await _habitacionHttpRepository.SendGetRequestAsync($"Habitacion/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetHabitacionModel>());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"HabitacionController.Index: {ex}");
+                return ViewBagError("Error obteniendo las habitaciones.");
             }
         }
 
+        // GET: HabitacionController/Create
         public ActionResult Create()
         {
             return View();
         }
 
+        // POST: HabitacionController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateHabitacionModel habitacion)
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
-                    var response = await client.PostAsJsonAsync("Habitacion/crear", habitacion);
-                    if (response.IsSuccessStatusCode)
-                        return RedirectToAction(nameof(Index));
-                    ViewBag.Message = "Error creando la habitacion.";
-                    return View();
-                }
+                if (habitacion == null)
+                    throw new ArgumentNullException();
+
+                var res = await _habitacionHttpRepository.SendPostRequestAsync("Habitacion/crear", habitacion);
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"HabitacionController.Index: {ex}");
+                return ViewBagError("Error creando la habitacion.");
             }
         }
 
+        // GET: HabitacionController/Edit/2
         public async Task<IActionResult> Edit(int id)
         {
-            GetHabitacionModel habitacion;
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-                var response = await client.GetAsync($"Habitacion/{id}");
-                if (response.IsSuccessStatusCode)
-                    habitacion = await response.Content.ReadFromJsonAsync<GetHabitacionModel>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo la habitacion.";
-                    return View();
-                }
+                var res = await _habitacionHttpRepository.SendGetRequestAsync($"Habitacion/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetHabitacionModel>());
             }
-            return View(habitacion);
+            catch (Exception ex)
+            {
+                _logger.LogError($"HabitacionController.Index: {ex}");
+                return ViewBagError("Error obteniendo la habitacion.");
+            }
         }
 
+        // POST: HabitacionController/Edit/2
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, GetHabitacionModel habitacion)
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
-                    var response = await client.PatchAsJsonAsync("habitacion/actualizar", habitacion);
-                    if (response.IsSuccessStatusCode)
-                        return RedirectToAction(nameof(Index));
-                    ViewBag.Message = "Error actualizando la habitacion.";
-                    return View();
-                }
+                if (habitacion == null)
+                    throw new ArgumentNullException();
+
+                var res = await _habitacionHttpRepository.SendPatchRequestAsync("Habitacion/actualizar", habitacion);
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"HabitacionController.Edit: {ex}");
+                return RedirectToAction(nameof(Edit));
             }
         }
 
+        // GET: HabitacionController/Delete/2
         public async Task<IActionResult> Delete(int id)
-        {
-            GetHabitacionModel habitacion;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-                var response = await client.GetAsync($"Categoria/{id}");
-                if (response.IsSuccessStatusCode)
-                    habitacion = await response.Content.ReadFromJsonAsync<GetHabitacionModel>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo la habitacion.";
-                    return View();
-                }
-            }
-            return View(habitacion);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, DeleteHabitacionModel collection)
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
-                    var request = new HttpRequestMessage(HttpMethod.Delete, "habitacion/eliminar")
-                    {
-                        Content = JsonContent.Create(collection)
-                    };
-                    var response = await client.SendAsync(request);
-                    if (response.IsSuccessStatusCode)
-                        return RedirectToAction(nameof(Index));
-                    ViewBag.Message = "Error eliminando la habitacion.";
-                    return View();
-                }
+                var res = await _habitacionHttpRepository.SendGetRequestAsync($"Habitacion/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetHabitacionModel>());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"HabitacionController.Index: {ex}");
+                return ViewBagError("Error obteniendo la habitacion.");
+            }
+        }
+
+        // POST: HabitacionController/Delete/2
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id, DeleteHabitacionModel habitacion)
+        {
+            try
+            {
+                if (habitacion == null) throw new ArgumentNullException();
+
+                var res = await _habitacionHttpRepository.SendDeleteRequestAsync("Habitacion/eliminar", habitacion);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"HabitacionController.Delete: {ex}");
+                return ViewBagError("Error eliminando la habitacion");
             }
         }
     }

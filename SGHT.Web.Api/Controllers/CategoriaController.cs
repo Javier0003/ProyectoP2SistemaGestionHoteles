@@ -1,152 +1,142 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SGHT.Http.Repositories.Interfaces;
 using SGHT.Model.Model.categoria;
+using SGHT.Web.Api.Base;
 
 namespace SGHT.Web.Api.Controllers
 {
-    public class CategoriaController : Controller
+    public class CategoriaController : BaseController
     {
+        private readonly ILogger<CategoriaController> _logger;
+        private readonly ICategoriaHttpRepository _categoriaHttpRepository;
+        public CategoriaController(ILogger<CategoriaController> logger, ICategoriaHttpRepository categoriaHttpRepository)
+        {
+            _categoriaHttpRepository = categoriaHttpRepository;
+            _logger = logger;
+        }
+
+        // GET: CategoriaController
         public async Task<IActionResult> Index()
         {
-            List<GetCategoriaModel> categoria = new List<GetCategoriaModel>();
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-                var response = await client.GetAsync("Categoria");
-                if (response.IsSuccessStatusCode)
-                    categoria = await response.Content.ReadFromJsonAsync<List<GetCategoriaModel>>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo las categorias.";
-                    return View();
-                }
+                var res = await _categoriaHttpRepository.SendGetRequestAsync("Categorias");
+                return View(await res.Content.ReadFromJsonAsync<List<GetCategoriaModel>>());
             }
-            return View(categoria);
+            catch (Exception ex)
+            {
+                _logger.LogError($"CategoriaController.Index: {ex}");
+                return ViewBagError("Error obteniendo las categorias.");
+            }
         }
 
+        // GET: CategoriaController/Details/2
         public async Task<IActionResult> Details(int id)
         {
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-                var response = await client.GetAsync($"Categoria/{id}");
-                if (response.IsSuccessStatusCode)
-                    return View(await response.Content.ReadFromJsonAsync<GetCategoriaModel>());
-                else
-                {
-                    ViewBag.Message = "Error obteniendo las categorias.";
-                    return View();
-                }
+                var res = await _categoriaHttpRepository.SendGetRequestAsync($"Categorias/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetCategoriaModel>());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"CategoriaController.Index: {ex}");
+                return ViewBagError("Error obteniendo las categorias.");
             }
         }
 
+        // GET: CategoriaController/Create
         public ActionResult Create()
         {
             return View();
         }
 
+        // POST: CategoriaController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateCategoriaModel categoria)
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
-                    var response = await client.PostAsJsonAsync("Categoria/crear", categoria);
-                    if (response.IsSuccessStatusCode)
-                        return RedirectToAction(nameof(Index));
-                    ViewBag.Message = "Error creando la categoria.";
-                    return View();
-                }
+                if (categoria == null)
+                    throw new ArgumentNullException();
+
+                var res = await _categoriaHttpRepository.SendPostRequestAsync("Categoria/crear", categoria);
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"CategoriaController.Index: {ex}");
+                return ViewBagError("Error creando las categorias.");
             }
         }
 
+        // GET: CategoriaController/Edit/2
         public async Task<IActionResult> Edit(int id)
         {
-            GetCategoriaModel categoria;
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-                var response = await client.GetAsync($"Categoria/{id}");
-                if (response.IsSuccessStatusCode)
-                    categoria = await response.Content.ReadFromJsonAsync<GetCategoriaModel>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo las categorias.";
-                    return View();
-                }
+                var res = await _categoriaHttpRepository.SendGetRequestAsync($"Categoria/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetCategoriaModel>());
             }
-            return View(categoria);
+            catch (Exception ex)
+            {
+                _logger.LogError($"CategoriaController.Index: {ex}");
+                return ViewBagError("Error obteniendo las categorias.");
+            }
         }
 
+        // POST: CategoriaController/Edit/2
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, GetCategoriaModel categoria)
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
-                    var response = await client.PatchAsJsonAsync("categoria/actualizar", categoria);
-                    if (response.IsSuccessStatusCode)
-                        return RedirectToAction(nameof(Index));
-                    ViewBag.Message = "Error actualizando el las categorias.";
-                    return View();
-                }
+                if (categoria == null)
+                    throw new ArgumentNullException();
+
+                var res = await _categoriaHttpRepository.SendPatchRequestAsync("Categoria/actualizar", categoria);
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"CategoriaController.Edit: {ex}");
+                return RedirectToAction(nameof(Edit));
             }
         }
 
+        // GET: CategoriaController/Delete/2
         public async Task<IActionResult> Delete(int id)
-        {
-             GetCategoriaModel categoria;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-                var response = await client.GetAsync($"Categoria/{id}");
-                if (response.IsSuccessStatusCode)
-                    categoria = await response.Content.ReadFromJsonAsync<GetCategoriaModel>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo las categorias.";
-                    return View();
-                }
-            }
-            return View(categoria);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, DeleteCategoriaModel collection)
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
-                    var request = new HttpRequestMessage(HttpMethod.Delete, "Categoria/eliminar")
-                    {
-                        Content = JsonContent.Create(collection)
-                    };
-                    var response = await client.SendAsync(request);
-                    if (response.IsSuccessStatusCode)
-                        return RedirectToAction(nameof(Index));
-                    ViewBag.Message = "Error eliminando la categoria.";
-                    return View();
-                }
+                var res = await _categoriaHttpRepository.SendGetRequestAsync($"Categoria/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetCategoriaModel>());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"CategoriaController.Index: {ex}");
+                return ViewBagError("Error obteniendo las categorias.");
+            }
+        }
+
+        // POST: CategoriaController/Delete/2
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id, DeleteCategoriaModel categoria)
+        {
+            try
+            {
+                if (categoria == null) throw new ArgumentNullException();
+
+                var res = await _categoriaHttpRepository.SendDeleteRequestAsync("Categorias/eliminar", categoria);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"CategoriaController.Delete: {ex}");
+                return ViewBagError("Error eliminando las categorias");
             }
         }
     }

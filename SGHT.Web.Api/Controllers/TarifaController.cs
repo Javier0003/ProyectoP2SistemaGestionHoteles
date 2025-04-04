@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SGHT.Domain.Entities;
 using SGHT.Http.Repositories.Interfaces;
 using SGHT.Model.Model.tarifa;
 using SGHT.Web.Api.Base;

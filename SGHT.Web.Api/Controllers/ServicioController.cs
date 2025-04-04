@@ -1,152 +1,142 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SGHT.Http.Repositories.Interfaces;
 using SGHT.Model.Model.servicio;
+using SGHT.Web.Api.Base;
 
 namespace SGHT.Web.Api.Controllers
 {
-    public class ServicioController : Controller
+    public class ServicioController : BaseController
     {
+        private readonly ILogger<ServicioController> _logger;
+        private readonly IServiciosHttpRepository _serviciosHttpRepository;
+        public ServicioController(ILogger<ServicioController> logger, IServiciosHttpRepository serviciosHttpRepository)
+        {
+            _serviciosHttpRepository = serviciosHttpRepository;
+            _logger = logger;
+        }
+
+        // GET: ServicioController
         public async Task<IActionResult> Index()
         {
-            List<GetServicioModel> servicio = new List<GetServicioModel>();
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-                var response = await client.GetAsync("Servicios");
-                if (response.IsSuccessStatusCode)
-                    servicio = await response.Content.ReadFromJsonAsync<List<GetServicioModel>>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo el servicio.";
-                    return View();
-                }
+                var res = await _serviciosHttpRepository.SendGetRequestAsync("Servicios");
+                return View(await res.Content.ReadFromJsonAsync<List<GetServicioModel>>());
             }
-            return View(servicio);
+            catch (Exception ex)
+            {
+                _logger.LogError($"ServiciosController.Index: {ex}");
+                return ViewBagError("Error obteniendo los servicios.");
+            }
         }
 
+        // GET: ServiciosController/Details/2
         public async Task<IActionResult> Details(int id)
         {
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-                var response = await client.GetAsync($"Servicio/{id}");
-                if (response.IsSuccessStatusCode)
-                    return View(await response.Content.ReadFromJsonAsync<GetServicioModel>());
-                else
-                {
-                    ViewBag.Message = "Error obteniendo el servicio.";
-                    return View();
-                }
+                var res = await _serviciosHttpRepository.SendGetRequestAsync($"Servicios/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetServicioModel>());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ServicioController.Index: {ex}");
+                return ViewBagError("Error obteniendo los servicios.");
             }
         }
 
+        // GET: ServiciosController/Create
         public ActionResult Create()
         {
             return View();
         }
 
+        // POST: ServicioController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateServicioModel servicio)
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
-                    var response = await client.PostAsJsonAsync("Servicio/crear", servicio);
-                    if (response.IsSuccessStatusCode)
-                        return RedirectToAction(nameof(Index));
-                    ViewBag.Message = "Error creando el servicio.";
-                    return View();
-                }
+                if (servicio == null)
+                    throw new ArgumentNullException();
+
+                var res = await _serviciosHttpRepository.SendPostRequestAsync("Servicio/crear", servicio);
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"ServicioController.Index: {ex}");
+                return ViewBagError("Error creando el servicio.");
             }
         }
 
+        // GET: ServicioController/Edit/2
         public async Task<IActionResult> Edit(int id)
         {
-            GetServicioModel servicio;
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-                var response = await client.GetAsync($"Servicio/{id}");
-                if (response.IsSuccessStatusCode)
-                    servicio = await response.Content.ReadFromJsonAsync<GetServicioModel>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo el servicio.";
-                    return View();
-                }
+                var res = await _serviciosHttpRepository.SendGetRequestAsync($"Servicio/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetServicioModel>());
             }
-            return View(servicio);
+            catch (Exception ex)
+            {
+                _logger.LogError($"ServicioController.Index: {ex}");
+                return ViewBagError("Error obteniendo el servicio.");
+            }
         }
 
+        // POST: ServicioController/Edit/2
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, GetServicioModel servicio)
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
-                    var response = await client.PatchAsJsonAsync("servicio/actualizar", servicio);
-                    if (response.IsSuccessStatusCode)
-                        return RedirectToAction(nameof(Index));
-                    ViewBag.Message = "Error actualizando el; servicio.";
-                    return View();
-                }
+                if (servicio == null)
+                    throw new ArgumentNullException();
+
+                var res = await _serviciosHttpRepository.SendPatchRequestAsync("Servicio/actualizar", servicio);
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"ServicioController.Edit: {ex}");
+                return RedirectToAction(nameof(Edit));
             }
         }
 
+        // GET: ServicioController/Delete/2
         public async Task<IActionResult> Delete(int id)
-        {
-            GetServicioModel servicio;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-                var response = await client.GetAsync($"Servicio/{id}");
-                if (response.IsSuccessStatusCode)
-                    servicio = await response.Content.ReadFromJsonAsync<GetServicioModel>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo el servicio.";
-                    return View();
-                }
-            }
-            return View(servicio);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, DeleteServicioModel collection)
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
-                    var request = new HttpRequestMessage(HttpMethod.Delete, "Servicio/eliminar")
-                    {
-                        Content = JsonContent.Create(collection)
-                    };
-                    var response = await client.SendAsync(request);
-                    if (response.IsSuccessStatusCode)
-                        return RedirectToAction(nameof(Index));
-                    ViewBag.Message = "Error eliminando el servicio.";
-                    return View();
-                }
+                var res = await _serviciosHttpRepository.SendGetRequestAsync($"Servicio/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetServicioModel>());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"ServicioController.Index: {ex}");
+                return ViewBagError("Error obteniendo el servicio.");
+            }
+        }
+
+        // POST: ServicioController/Delete/2
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id, DeleteServicioModel servicio)
+        {
+            try
+            {
+                if (servicio == null) throw new ArgumentNullException();
+
+                var res = await _serviciosHttpRepository.SendDeleteRequestAsync("Servicio/eliminar", servicio);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ServicioController.Delete: {ex}");
+                return ViewBagError("Error eliminando el servicio");
             }
         }
     }
