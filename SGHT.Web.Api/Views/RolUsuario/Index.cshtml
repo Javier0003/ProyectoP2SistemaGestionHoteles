@@ -28,26 +28,32 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdRolUsuario)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaCreacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new {  id=item.IdRolUsuario  }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.IdRolUsuario }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.IdRolUsuario })
-            </td>
-        </tr>
-}
+        @if (Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdRolUsuario)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaCreacion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Estado)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descripcion)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.IdRolUsuario }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.IdRolUsuario }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.IdRolUsuario })
+                    </td>
+                </tr>
+            }
+        }
+  
+
     </tbody>
 </table>
