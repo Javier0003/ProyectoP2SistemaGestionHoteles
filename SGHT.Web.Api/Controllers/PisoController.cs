@@ -1,42 +1,46 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SGHT.Domain.Base;
+using SGHT.Http.Repositories.Interfaces;
 using SGHT.Model.Model.Piso;
+using SGHT.Web.Api.Base;
 
 namespace SGHT.Web.Api.Controllers
 {
-    public class PisoController : Controller
+    public class PisoController : BaseController
     {
+        private readonly ILogger<PisoController> _logger;
+        private readonly IPisoHttpRepository _pisoHttpRepository;
+
+        public PisoController(ILogger<PisoController> logger, IPisoHttpRepository pisoHttpRepository)
+        {
+            _logger = logger;
+            _pisoHttpRepository = pisoHttpRepository;
+        }
+
         public async Task<IActionResult> Index()
         {
-            List<GetPisoModel> pisos = new List<GetPisoModel>();
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5223/api/");
-                var response = await client.GetAsync("Piso");
-                if (response.IsSuccessStatusCode)
-                    pisos = await response.Content.ReadFromJsonAsync<List<GetPisoModel>>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo los Pisos.";
-                    return View();
-                }
+                var res = await _pisoHttpRepository.SendGetRequestAsync("Piso");
+                return View(await res.Content.ReadFromJsonAsync<List<GetPisoModel>>());
             }
-            return View(pisos);
+            catch (Exception ex)
+            {
+                _logger.LogError($"PisoController.Index: {ex}");
+                return ViewBagError("Error obteniendo los pisos.");
+            }
         }
 
         public async Task<IActionResult> Details(int id)
         {
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5223/api/");
-                var response = await client.GetAsync($"Piso/{id}");
-                if (response.IsSuccessStatusCode)
-                    return View(await response.Content.ReadFromJsonAsync<GetPisoModel>());
-                else
-                {
-                    ViewBag.Message = "Error obteniendo el Piso.";
-                    return View();
-                }
+                var res = await _pisoHttpRepository.SendGetRequestAsync($"Piso/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetPisoModel>());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"PisoController.Details: {ex}");
+                return ViewBagError("Error obteniendo el piso.");
             }
         }
 
@@ -47,42 +51,34 @@ namespace SGHT.Web.Api.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreatePisoModel piso)
+        public async Task<IActionResult> Create(GetPisoModel piso)
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5223/api/");
-                    var response = await client.PostAsJsonAsync("Piso/crear", piso);
-                    if (response.IsSuccessStatusCode)
-                        return RedirectToAction(nameof(Index));
-                    ViewBag.Message = "Error creando el Piso.";
-                    return View();
-                }
+                if (piso == null) throw new ArgumentNullException();
+
+                var res = await _pisoHttpRepository.SendPostRequestAsync("Piso/crear", piso);
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"PisoController.Create: {ex}");
+                return ViewBagError("Error creando el piso.");
             }
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            GetPisoModel piso;
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5223/api/");
-                var response = await client.GetAsync($"Piso/{id}");
-                if (response.IsSuccessStatusCode)
-                    piso = await response.Content.ReadFromJsonAsync<GetPisoModel>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo el Piso.";
-                    return View();
-                }
+                var res = await _pisoHttpRepository.SendGetRequestAsync($"Piso/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetPisoModel>());
             }
-            return View(piso);
+            catch (Exception ex)
+            {
+                _logger.LogError($"PisoController.Edit: {ex}");
+                return ViewBagError("Error obteniendo el piso.");
+            }
         }
 
         [HttpPost]
@@ -91,63 +87,47 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5223/api/");
-                    var response = await client.PatchAsJsonAsync("Piso/actualizar", piso);
-                    if (response.IsSuccessStatusCode)
-                        return RedirectToAction(nameof(Index));
-                    ViewBag.Message = "Error actualizando el Piso.";
-                    return View();
-                }
+                if (piso == null) throw new ArgumentNullException();
+
+                var res = await _pisoHttpRepository.SendPatchRequestAsync("Piso/actualizar", piso);
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"PisoController.Edit: {ex}");
+                return RedirectToAction(nameof(Edit));
             }
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            GetPisoModel piso;
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5223/api/");
-                var response = await client.GetAsync($"Piso/{id}");
-                if (response.IsSuccessStatusCode)
-                    piso = await response.Content.ReadFromJsonAsync<GetPisoModel>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo el Piso.";
-                    return View();
-                }
+                var res = await _pisoHttpRepository.SendGetRequestAsync($"Piso/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetPisoModel>());
             }
-            return View(piso);
+            catch (Exception ex)
+            {
+                _logger.LogError($"PisoController.Delete: {ex}");
+                return ViewBagError("Error obteniendo el piso.");
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, DeletePisoModel collection)
+        public async Task<IActionResult> Delete(int id, DeletePisoModel piso)
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5223/api/");
-                    var request = new HttpRequestMessage(HttpMethod.Delete, "Piso/eliminar")
-                    {
-                        Content = JsonContent.Create(collection)
-                    };
-                    var response = await client.SendAsync(request);
-                    if (response.IsSuccessStatusCode)
-                        return RedirectToAction(nameof(Index));
-                    ViewBag.Message = "Error eliminando el Piso.";
-                    return View();
-                }
+                if (piso == null) throw new ArgumentNullException();
+
+                var res = await _pisoHttpRepository.SendDeleteRequestAsync("Piso/eliminar", piso);
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"PisoController.Delete: {ex}");
+                return ViewBagError("Error eliminando el piso.");
             }
         }
     }
