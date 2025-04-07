@@ -8,5 +8,6 @@ namespace SGHT.Web.Api.Controllers.Base
         Task<HttpResponseMessage> PostAsJsonAsync<T>(string url, T body) where T : class;
         Task<HttpResponseMessage> PatchAsJsonAsync<T>(string url, T body) where T : class;
         Task<HttpResponseMessage> DeleteAsync<T>(string url, T id) where T : class;
+        Task<HttpResponseMessage> PutAsJsonAsync<T>(string url, T body) where T : class;
     }
 } 

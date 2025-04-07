@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SGHT.Model.Model.Cliente;
 
 namespace SGHT.Web.Api.Base
 {

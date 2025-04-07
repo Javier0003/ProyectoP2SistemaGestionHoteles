@@ -39,5 +39,10 @@ namespace SGHT.Web.Api.Controllers.Base
             };
             return await _httpClient.SendAsync(request);
         }
+
+        public async Task<HttpResponseMessage> PutAsJsonAsync<T>(string url, T body) where T : class
+        {
+            return await _httpClient.PutAsJsonAsync(url, body);
+        }
     }
 } 
