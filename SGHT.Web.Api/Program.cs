@@ -13,11 +13,15 @@ builder.Services.AddHttpTarifaDependancy();
 builder.Services.AddHttpRolUsuarioDependancy();
 builder.Services.AddHttpEstadoHabitacionDependancy();
 builder.Services.AddHttpPisoDependancy();
+builder.Services.AddHttpClienteDependancy();
+builder.Services.AddHttpRecepcionDependancy();
 
 // Register error handler
 builder.Services.AddHttpErrorHandlerDependancy();
 
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

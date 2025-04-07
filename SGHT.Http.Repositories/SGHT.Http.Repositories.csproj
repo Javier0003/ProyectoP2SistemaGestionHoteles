@@ -11,4 +11,9 @@
     <PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.23.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SGHT.Domain\SGHT.Domain.csproj" />
+    <ProjectReference Include="..\SGHT.Model\SGHT.Model.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,51 +1,47 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SGHT.Domain.Base;
+using SGHT.Http.Repositories.Interfaces;
 using SGHT.Model.Model.Cliente;
-using SGHT.Model.Model.Recepcion;
+using SGHT.Web.Api.Base;
 
 namespace SGHT.Web.Api.Controllers
 {
-    public class clienteController : Controller
+    public class clienteController : BaseController
     {
+        private readonly ILogger<clienteController> _logger;
+        private readonly IClienteHttpRepository _clienteHttpRepository;
+        public clienteController(ILogger<clienteController> logger, IClienteHttpRepository clienteHttpRepository)
+        {
+            _clienteHttpRepository = clienteHttpRepository;
+            _logger = logger;
+        }
+
         // GET: clienteController
         public async Task<IActionResult> Index()
         {
-            List<GetClienteModel> clientes = new List<GetClienteModel>();
-            
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-
-                var response = await client.GetAsync("Cliente");
-
-                if (response.IsSuccessStatusCode)
-                    clientes = await response.Content.ReadFromJsonAsync<List<GetClienteModel>>();
-                else
-                {
-                    ViewBag.Message = "Error obteniendo los clientes.";
-                    return View();
-                }
+                var res = await _clienteHttpRepository.SendGetRequestAsync("Cliente");
+                return View(await res.Content.ReadFromJsonAsync<List<GetClienteModel>>());
             }
-
-            return View(clientes);
+            catch(Exception ex)
+            {
+                _logger.LogError($"clienteController.Index: {ex}");
+                return ViewBagError("Error obteniendo los clientes.");
+            }
         }
 
         // GET: clienteController/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-
-                var response = await client.GetAsync($"Cliente/{id}");
-
-                if (response.IsSuccessStatusCode)
-                    return View(await response.Content.ReadFromJsonAsync<GetClienteModel>());
-                else
-                {
-                    ViewBag.Message = "Error obteniendo el cliente.";
-                    return View();
-                }
+                var res = await _clienteHttpRepository.SendGetRequestAsync($"Cliente/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetClienteModel>());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"clienteController.Details: {ex}");
+                return ViewBagError("Error obteniendo los clientes.");
             }
         }
 
@@ -60,78 +56,67 @@ namespace SGHT.Web.Api.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AgregarClienteModel cliente)
         {
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
+                if (cliente == null) throw new ArgumentNullException();
 
-                var response = await client.PostAsJsonAsync("Cliente", cliente);
-
-                if (response.IsSuccessStatusCode)
-                    return RedirectToAction("Index");
-                else
-                {
-                    ViewBag.Message = "Error creando el cliente.";
-                    return View();
-                }
+                var res = await _clienteHttpRepository.SendPostRequestAsync("Cliente/crear", cliente);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"clienteController.Create: {ex}");
+                return ViewBagError("Error guardando al cliente");
             }
         }
 
         // GET: clienteController/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-
-                var response = await client.GetAsync($"Cliente/{id}");
-
-                if (response.IsSuccessStatusCode)
-                    return View(await response.Content.ReadFromJsonAsync<GetClienteModel>());
-                else
-                {
-                    ViewBag.Message = "Error obteniendo el cliente.";
-                    return View();
-                }
+                var res = await _clienteHttpRepository.SendGetRequestAsync($"Cliente/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetClienteModel>());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"clienteController.Edit: {ex}");
+                return ViewBagError("Error Obteniendo el cliente");
             }
         }
 
         // PUT: clienteController/Edit/5
-        [HttpPut]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ActualizarCliente cliente)
         {
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
+                if (cliente == null) throw new ArgumentNullException();
 
-                var response = await client.PutAsJsonAsync($"Cliente/{id}", cliente);
+                var res = await _clienteHttpRepository.SendPatchRequestAsync("Cliente/actualizar", cliente);
+                return RedirectToAction(nameof(Index));
 
-                if (response.IsSuccessStatusCode)
-                    return RedirectToAction("Index");
-                else
-                {
-                    ViewBag.Message = "Error actualizando el cliente.";
-                    return View();
-                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"clienteController.Edit: {ex}");
+                return RedirectToAction(nameof(Edit));
             }
         }
 
         // GET: RecepcionController/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            using (var client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:5118/api/");
-
-                var response = await client.GetAsync($"Cliente/{id}");
-
-                if (response.IsSuccessStatusCode)
-                    return View(await response.Content.ReadFromJsonAsync<GetClienteModel>());
-                else
-                {
-                    ViewBag.Message = "Error obteniendo el cliente.";
-                    return View();
-                }
+                var res = await _clienteHttpRepository.SendGetRequestAsync($"Cliente/{id}");
+                return View(await res.Content.ReadFromJsonAsync<GetClienteModel>());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"clienteController.Delete: {ex}");
+                return ViewBagError("Error obteniendo el cliente");
             }
         }
 
@@ -142,30 +127,15 @@ namespace SGHT.Web.Api.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://localhost:5118/api/");
+                if (cliente == null) throw new ArgumentNullException();
 
-                    var request = new HttpRequestMessage(HttpMethod.Delete, "Cliente/eliminar")
-                    {
-                        Content = JsonContent.Create(cliente)
-                    };
-
-                    var response = await client.SendAsync(request);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return RedirectToAction(nameof(Index));
-                    }
-
-                    ViewBag.Message = "Error eliminando el cliente.";
-                    return View();
-                }
-
+                var res = await _clienteHttpRepository.SendDeleteRequestAsync("Cliente/eliminar", cliente);
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError($"clienteController.Delete: {ex}");
+                return ViewBagError("Error eliminando al cliente");
             }
         }
 

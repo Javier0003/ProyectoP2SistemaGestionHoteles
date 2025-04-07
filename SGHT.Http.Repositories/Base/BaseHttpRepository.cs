@@ -46,5 +46,7 @@ namespace SGHT.Http.Repositories.Base
 
             throw await _errorHandler.HandleErrorAsync(result, "Delete", url);
         }
+
+        
     }
 }
